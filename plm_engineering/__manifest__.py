@@ -4,7 +4,7 @@
     'version': '18.0.1.0.0',
     'summary': 'Custom PLM: Version-controlled Products, BoMs & ECO Approval Workflows',
     'description': """
-        100% Custom PLM Engineering Change Order System
+        PLM Engineering Change Order System
         ================================================
         All models are fully custom — no dependency on product.template or mrp.bom.
 
@@ -52,6 +52,8 @@
         'web.assets_backend': [
             'plm_engineering/static/src/css/plm_styles.css',
             'plm_engineering/static/src/xml/plm_dashboard.xml',
+            'plm_engineering/static/src/xml/plm_sidebar.xml',
+            'plm_engineering/static/src/js/plm_sidebar.js',
             'plm_engineering/static/src/js/plm_dashboard.js',
         ],
     },
