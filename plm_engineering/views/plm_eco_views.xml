@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ══════════════════════════════════════════════════
+         ECO FORM VIEW
+    ══════════════════════════════════════════════════ -->
+    <record id="view_plm_eco_form" model="ir.ui.view">
+        <field name="name">plm.eco.form</field>
+        <field name="model">plm.eco</field>
+        <field name="arch" type="xml">
+            <form string="Engineering Change Order">
+                <header>
+                    <!-- Stage status bar -->
+                    <field name="stage_id" widget="statusbar"
+                           options="{'clickable': '1'}"
+                           readonly="state == 'done'"/>
+
+                    <!-- ▶ Start Review (from Draft) -->
+                    <button name="action_start_review"
+                            string="▶ Start Review"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+
+                    <!-- 🔔 Request Approval (when stage requires it) -->
+                    <button name="action_request_approval"
+                            string="🔔 Request Approval"
+                            type="object"
+                            class="btn-warning"
+                            invisible="state == 'draft' or state == 'done' or not stage_id"/>
+
+                    <!-- ✅ Approve (Approver role) -->
+                    <button name="action_approve"
+                            string="✅ Approve"
+                            type="object"
+                            class="btn-success"
+                            groups="plm_engineering.group_plm_approver"
+                            invisible="state != 'in_review'"/>
+
+                    <!-- ❌ Reject (Approver role) -->
+                    <button name="action_reject"
+                            string="❌ Reject"
+                            type="object"
+                            class="btn-danger"
+                            groups="plm_engineering.group_plm_approver"
+                            invisible="state != 'in_review'"/>
+
+                    <!-- ✔ Validate &amp; Apply -->
+                    <button name="action_validate"
+                            string="✔ Validate &amp; Apply"
+                            type="object"
+                            class="btn-success"
+                            invisible="state not in ['approved', 'in_review'] or state == 'draft' or state == 'done'"/>
+
+                    <!-- 🚫 Cancel -->
+                    <button name="action_cancel"
+                            string="🚫 Cancel"
+                            type="object"
+                            invisible="state == 'done' or state == 'draft'"
+                            confirm="Are you sure you want to cancel this ECO?"/>
+
+                    <!-- ↩ Reset to Draft (Manager) -->
+                    <button name="action_reset_to_draft"
+                            string="↩ Reset to Draft"
+                            type="object"
+                            invisible="state == 'draft' or state == 'done'"
+                            groups="plm_engineering.group_plm_manager"/>
+
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,in_review,approved,done"/>
+                </header>
+
+                <sheet>
+                    <!-- Smart Buttons -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_comparison" type="object"
+                                class="oe_stat_button" icon="fa-exchange"
+                                invisible="change_count == 0">
+                            <field name="change_count" widget="statinfo" string="Changes"/>
+                        </button>
+                        <button name="action_view_audit" type="object"
+                                class="oe_stat_button" icon="fa-history">
+                            <field name="audit_count" widget="statinfo" string="Audit Events"/>
+                        </button>
+                        <button name="action_view_approvals" type="object"
+                                class="oe_stat_button" icon="fa-check-circle"
+                                invisible="approval_count == 0">
+                            <field name="approval_count" widget="statinfo" string="Approvals"/>
+                        </button>
+                    </div>
+
+                    <!-- Title + Reference -->
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="ECO Title..."
+                                   readonly="state == 'done'"/>
+                        </h1>
+                        <div style="display:flex; gap:16px; align-items:center; margin-top:4px;">
+                            <span class="text-muted">
+                                <i class="fa fa-tag"/> &amp;nbsp;
+                                <field name="reference" readonly="1"/>
+                            </span>
+                            <field name="priority" widget="priority"/>
+                        </div>
+                    </div>
+
+                    <!-- Main Fields -->
+                    <group>
+                        <group string="ECO Details">
+                            <field name="eco_type"
+                                   widget="radio"
+                                   options="{'horizontal': true}"
+                                   readonly="state == 'done'"/>
+                            <field name="product_id"
+                                   domain="[('status', '=', 'active')]"
+                                   options="{'no_create_edit': True}"
+                                   readonly="state == 'done'"/>
+                            <field name="bom_id"
+                                   invisible="eco_type != 'bom'"
+                                   domain="[('product_id', '=', product_id), ('status', '=', 'active')]"
+                                   options="{'no_create_edit': True}"
+                                   readonly="state == 'done'"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="effective_date"
+                                   readonly="state == 'done'"/>
+                        </group>
+                        <group string="Versioning">
+                            <field name="version_update"
+                                   widget="toggle_button"
+                                   options="{'active': 'Create New Version', 'inactive': 'Apply to Same Version'}"
+                                   readonly="state == 'done'"/>
+                            <field name="current_version" readonly="1"
+                                   string="Current Version"/>
+                            <field name="new_version_label" readonly="1"
+                                   string="New Version (Preview)"
+                                   invisible="not version_update"/>
+                            <field name="kanban_state" widget="state_selection"
+                                   readonly="state == 'done'"/>
+                        </group>
+                    </group>
+
+                    <!-- Applied info -->
+                    <group invisible="state != 'done'" string="Applied Info">
+                        <field name="applied_date" readonly="1"/>
+                        <field name="applied_by_id" readonly="1"
+                               widget="many2one_avatar_user"/>
+                    </group>
+
+                    <!-- Tab Notebook -->
+                    <notebook>
+
+                        <!-- Product Changes Tab -->
+                        <page string="Product Changes" name="product_changes"
+                              invisible="eco_type != 'product'">
+                            <div class="alert alert-info mb-3" role="alert"
+                                 invisible="product_change_ids">
+                                <i class="fa fa-info-circle"/>
+                                Select a product above to auto-populate current values.
+                                Then update the <b>Proposed Value</b> column with your changes.
+                            </div>
+                            <field name="product_change_ids" nolabel="1"
+                                   readonly="state == 'done'">
+                                <list editable="bottom"
+                                      decoration-success="change_status == 'modified'"
+                                      decoration-danger="change_status == 'removed'"
+                                      decoration-info="change_status == 'added'"
+                                      decoration-muted="change_status == 'unchanged'">
+                                    <field name="field_name" string="Field"/>
+                                    <field name="field_label" column_invisible="True"/>
+                                    <field name="old_value" string="Current Value" readonly="1"/>
+                                    <field name="new_value" string="Proposed Value"/>
+                                    <field name="change_status" widget="badge"
+                                           decoration-success="change_status == 'modified'"
+                                           decoration-danger="change_status == 'removed'"
+                                           decoration-info="change_status == 'added'"
+                                           decoration-muted="change_status == 'unchanged'"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <!-- Component Changes Tab -->
+                        <page string="Component Changes" name="bom_changes"
+                              invisible="eco_type != 'bom'">
+                            <div class="alert alert-info mb-3" role="alert"
+                                 invisible="bom_change_ids">
+                                <i class="fa fa-info-circle"/>
+                                Select a BoM above to load all current components.
+                                Adjust quantities, or set Change Type to Added / Removed.
+                            </div>
+                            <field name="bom_change_ids" nolabel="1"
+                                   readonly="state == 'done'">
+                                <list editable="bottom"
+                                      decoration-success="change_type == 'added'"
+                                      decoration-danger="change_type == 'removed'"
+                                      decoration-warning="change_type == 'modified'"
+                                      decoration-muted="change_type == 'unchanged'">
+                                    <field name="component_id"
+                                           domain="[('status', '=', 'active')]"/>
+                                    <field name="change_type" widget="badge"
+                                           decoration-success="change_type == 'added'"
+                                           decoration-danger="change_type == 'removed'"
+                                           decoration-warning="change_type == 'modified'"
+                                           decoration-muted="change_type == 'unchanged'"/>
+                                    <field name="old_qty" string="Current Qty" readonly="1"/>
+                                    <field name="new_qty" string="Proposed Qty"/>
+                                    <field name="qty_diff" string="Diff" readonly="1"
+                                           decoration-success="qty_diff &gt; 0"
+                                           decoration-danger="qty_diff &lt; 0"/>
+                                    <field name="uom" string="UoM" readonly="1"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <!-- Operation Changes Tab -->
+                        <page string="Operation Changes" name="op_changes"
+                              invisible="eco_type != 'bom'">
+                            <field name="operation_change_ids" nolabel="1"
+                                   readonly="state == 'done'">
+                                <list editable="bottom"
+                                      decoration-success="change_type == 'added'"
+                                      decoration-danger="change_type == 'removed'"
+                                      decoration-warning="change_type == 'modified'"
+                                      decoration-muted="change_type == 'unchanged'">
+                                    <field name="operation_name" string="Operation"/>
+                                    <field name="work_center" string="Work Center"/>
+                                    <field name="change_type" widget="badge"
+                                           decoration-success="change_type == 'added'"
+                                           decoration-danger="change_type == 'removed'"
+                                           decoration-warning="change_type == 'modified'"
+                                           decoration-muted="change_type == 'unchanged'"/>
+                                    <field name="old_duration" string="Current (min)" readonly="1"/>
+                                    <field name="new_duration" string="Proposed (min)"/>
+                                    <field name="duration_diff" string="Diff (min)" readonly="1"
+                                           decoration-success="duration_diff &gt; 0"
+                                           decoration-danger="duration_diff &lt; 0"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <!-- Approvals Tab -->
+                        <page string="Approvals" name="approvals">
+                            <field name="approval_ids" nolabel="1" readonly="1">
+                                <list decoration-success="state == 'approved'"
+                                      decoration-danger="state == 'rejected'"
+                                      decoration-warning="state == 'pending'"
+                                      decoration-muted="state == 'cancelled'">
+                                    <field name="requested_by_id" string="Requested By"
+                                           widget="many2one_avatar_user"/>
+                                    <field name="reviewed_by_id" string="Reviewed By"
+                                           widget="many2one_avatar_user"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'approved'"
+                                           decoration-danger="state == 'rejected'"
+                                           decoration-warning="state == 'pending'"/>
+                                    <field name="review_date" string="Date"/>
+                                    <field name="note"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <!-- Audit Trail Tab -->
+                        <page string="Audit Trail" name="audit">
+                            <field name="audit_log_ids" nolabel="1" readonly="1">
+                                <list default_order="timestamp desc">
+                                    <field name="timestamp"/>
+                                    <field name="user_id" widget="many2one_avatar_user"/>
+                                    <field name="action"/>
+                                    <field name="model_name" string="Model" optional="hide"/>
+                                    <field name="record_name" string="Record / Field"/>
+                                    <field name="change_summary" string="Change"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <!-- Notes Tab -->
+                        <page string="Notes" name="notes">
+                            <field name="note" nolabel="1"
+                                   placeholder="Add internal notes, context, or references here..."/>
+                        </page>
+
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ══════════════════════════════════════════════════
+         ECO LIST VIEW
+    ══════════════════════════════════════════════════ -->
+    <record id="view_plm_eco_list" model="ir.ui.view">
+        <field name="name">plm.eco.list</field>
+        <field name="model">plm.eco</field>
+        <field name="arch" type="xml">
+            <list string="Engineering Change Orders"
+                  decoration-success="state == 'done'"
+                  decoration-warning="state == 'in_review'"
+                  decoration-info="state == 'approved'"
+                  decoration-muted="state == 'draft'">
+                <field name="priority" widget="priority" optional="show"/>
+                <field name="reference" string="Reference"/>
+                <field name="name" string="Title"/>
+                <field name="eco_type" widget="badge"
+                       decoration-info="eco_type == 'product'"
+                       decoration-warning="eco_type == 'bom'"/>
+                <field name="product_id" string="Product"/>
+                <field name="bom_id" string="BoM" optional="show"/>
+                <field name="current_version" string="Version"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="effective_date"/>
+                <field name="stage_id"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'done'"
+                       decoration-warning="state == 'in_review'"
+                       decoration-info="state == 'approved'"
+                       decoration-muted="state == 'draft'"/>
+                <field name="change_count" string="Changes"/>
+                <field name="is_approved" string="Approved" optional="show"/>
+                <button name="action_view_comparison" type="object"
+                        string="📊 Compare" class="btn-sm btn-outline-primary"
+                        invisible="change_count == 0"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ══════════════════════════════════════════════════
+         ECO KANBAN VIEW
+    ══════════════════════════════════════════════════ -->
+    <record id="view_plm_eco_kanban" model="ir.ui.view">
+        <field name="name">plm.eco.kanban</field>
+        <field name="model">plm.eco</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="stage_id"
+                    class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="reference"/>
+                <field name="eco_type"/>
+                <field name="product_id"/>
+                <field name="user_id"/>
+                <field name="stage_id"/>
+                <field name="state"/>
+                <field name="priority"/>
+                <field name="kanban_state"/>
+                <field name="change_count"/>
+                <field name="current_version"/>
+                <field name="effective_date"/>
+                <field name="is_approved"/>
+                <templates>
+                    <t t-name="card" class="oe_kanban_card oe_kanban_global_click">
+                        <!-- Card Top -->
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+                            <div style="font-weight:700;font-size:13px;line-height:1.3;">
+                                <field name="name"/>
+                            </div>
+                            <field name="priority" widget="priority"/>
+                        </div>
+                        <!-- Reference + Kanban State -->
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                            <span style="font-size:11px;color:#6c757d;">
+                                <field name="reference"/>
+                            </span>
+                            <field name="kanban_state" widget="state_selection"/>
+                        </div>
+                        <!-- Badges -->
+                        <div style="margin-bottom:8px;">
+                            <field name="eco_type" widget="badge"/>
+                            &amp;nbsp;
+                            <span style="font-size:11px;background:#e9ecef;
+                                         color:#495057;padding:2px 8px;border-radius:10px;">
+                                v: <field name="current_version"/>
+                            </span>
+                        </div>
+                        <!-- Product -->
+                        <div style="font-size:12px;color:#495057;margin-bottom:4px;">
+                            📦 <field name="product_id"/>
+                        </div>
+                        <!-- Changes count -->
+                        <div style="font-size:12px;color:#6c757d;" t-if="record.change_count.value">
+                            🔄 <t t-out="record.change_count.value"/> change(s)
+                        </div>
+                        <!-- Effective date -->
+                        <div style="font-size:12px;color:#6c757d;" t-if="record.effective_date.value">
+                            📅 <field name="effective_date"/>
+                        </div>
+                        <!-- Footer -->
+                        <div style="display:flex;justify-content:space-between;
+                                    align-items:center;margin-top:10px;
+                                    padding-top:8px;border-top:1px solid #dee2e6;">
+                            <field name="state" widget="badge"
+                                   decoration-success="state == 'done'"
+                                   decoration-warning="state == 'in_review'"
+                                   decoration-info="state == 'approved'"
+                                   decoration-muted="state == 'draft'"/>
+                            <field name="user_id" widget="many2one_avatar_user"
+                                   options="{'size': 24}"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ══════════════════════════════════════════════════
+         ECO SEARCH VIEW
+    ══════════════════════════════════════════════════ -->
+    <record id="view_plm_eco_search" model="ir.ui.view">
+        <field name="name">plm.eco.search</field>
+        <field name="model">plm.eco</field>
+        <field name="arch" type="xml">
+            <search string="Search ECOs">
+                <field name="name" string="Title"/>
+                <field name="reference"/>
+                <field name="product_id"/>
+                <field name="user_id"/>
+                <field name="stage_id"/>
+                <!-- Filters -->
+                <filter string="My ECOs" name="my_ecos"
+                        domain="[('user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="In Review" name="review" domain="[('state', '=', 'in_review')]"/>
+                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
+                <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
+                <separator/>
+                <filter string="Product ECOs" name="ptype" domain="[('eco_type', '=', 'product')]"/>
+                <filter string="BoM ECOs" name="btype" domain="[('eco_type', '=', 'bom')]"/>
+                <separator/>
+                <filter string="Urgent / Critical" name="urgent"
+                        domain="[('priority', 'in', ['2', '3'])]"/>
+                <!-- Group By -->
+                <group expand="0" string="Group By">
+                    <filter string="Stage" name="grp_stage" context="{'group_by': 'stage_id'}"/>
+                    <filter string="ECO Type" name="grp_type" context="{'group_by': 'eco_type'}"/>
+                    <filter string="Product" name="grp_product" context="{'group_by': 'product_id'}"/>
+                    <filter string="Responsible" name="grp_user" context="{'group_by': 'user_id'}"/>
+                    <filter string="Month" name="grp_month"
+                            context="{'group_by': 'effective_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ══════════════════════════════════════════════════
+         ACTIONS
+    ══════════════════════════════════════════════════ -->
+    <record id="action_plm_eco" model="ir.actions.act_window">
+        <field name="name">Engineering Change Orders</field>
+        <field name="res_model">plm.eco</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_plm_eco_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No ECOs yet!</p>
+            <p>
+                Create an Engineering Change Order to propose controlled changes to
+                <b>PLM Products</b> or <b>Bills of Materials</b>.
+                All changes go through a review and approval workflow before becoming active.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_plm_eco_my" model="ir.actions.act_window">
+        <field name="name">My ECOs</field>
+        <field name="res_model">plm.eco</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('user_id', '=', uid)]</field>
+        <field name="search_view_id" ref="view_plm_eco_search"/>
+    </record>
+
+    <record id="action_plm_eco_pending" model="ir.actions.act_window">
+        <field name="name">Pending Approval</field>
+        <field name="res_model">plm.eco</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', '=', 'in_review')]</field>
+        <field name="search_view_id" ref="view_plm_eco_search"/>
+    </record>
+
+</odoo>

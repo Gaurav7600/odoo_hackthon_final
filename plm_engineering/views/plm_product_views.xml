@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_plm_product_attachments" model="ir.actions.act_window">
+        <field name="name">Product Attachments</field>
+        <field name="res_model">ir.attachment</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('res_model', '=', 'plm.product'), ('res_id', '=', active_id)]</field>
+    </record>
+
+    <!-- ══════════════════════════════════════════
+         PRODUCT FORM VIEW
+    ══════════════════════════════════════════ -->
+    <record id="view_plm_product_form" model="ir.ui.view">
+        <field name="name">plm.product.form</field>
+        <field name="model">plm.product</field>
+        <field name="arch" type="xml">
+            <form string="PLM Product">
+                <header>
+                    <!-- Archived banner action -->
+                    <button name="action_create_eco" type="object"
+                            string="+ Create ECO"
+                            class="btn-primary"
+                            invisible="status == 'archived'"
+                            groups="plm_engineering.group_plm_user"/>
+                </header>
+                <sheet>
+                    <!-- Archived warning -->
+                    <div class="alert alert-danger o_form_sheet_warning" role="alert"
+                         invisible="status != 'archived'">
+                        <i class="fa fa-lock"/> &amp;nbsp;
+                        <strong>Archived (PLM):</strong>
+                        This product version is <b>read-only</b> and retained for traceability.
+                        To make changes, create a <b>Product ECO</b>.
+                    </div>
+
+                    <!-- Smart Buttons -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_boms" type="object"
+                                class="oe_stat_button" icon="fa-list-ol"
+                                invisible="bom_count == 0">
+                            <field name="bom_count" widget="statinfo" string="BoMs"/>
+                        </button>
+                        <button name="action_view_ecos" type="object"
+                                class="oe_stat_button" icon="fa-exchange"
+                                invisible="eco_count == 0">
+                            <field name="eco_count" widget="statinfo" string="ECOs"/>
+                        </button>
+                        <button name="action_view_version_history" type="object"
+                                class="oe_stat_button" icon="fa-code-fork"
+                                invisible="version_count == 0">
+                            <field name="version_count" widget="statinfo" string="Sub-Versions"/>
+                        </button>
+                        <button name="%(plm_engineering.action_plm_product_attachments)d"
+                                type="action"
+                                class="oe_stat_button" icon="fa-paperclip"
+                                invisible="attachment_count == 0">
+                            <field name="attachment_count" widget="statinfo" string="Files"/>
+                        </button>
+                    </div>
+
+                    <!-- Title block -->
+                    <div class="oe_title">
+                        <label for="name" string="Product Name"/>
+                        <h1>
+                            <field name="name"
+                                   placeholder="Enter product name..."
+                                   readonly="status == 'archived'"/>
+                        </h1>
+                        <!-- Version + Status badges -->
+                        <div style="display:flex;gap:12px;align-items:center;margin-top:4px;">
+                            <span style="font-size:13px;color:#6c757d;">Version:</span>
+                            <field name="version" readonly="1"
+                                   widget="badge" style="font-size:13px;"/>
+                            <field name="status" widget="badge"
+                                   decoration-success="status == 'active'"
+                                   decoration-danger="status == 'archived'"/>
+                            <field name="priority" widget="priority"/>
+                        </div>
+                    </div>
+
+                    <!-- Main fields -->
+                    <group>
+                        <group string="Product Details">
+                            <field name="internal_ref"
+                                   readonly="status == 'archived'"/>
+                            <field name="category"
+                                   readonly="status == 'archived'"/>
+                            <field name="uom"
+                                   readonly="status == 'archived'"
+                                   string="Unit of Measure"/>
+                            <field name="currency_id" readonly="1"/>
+                        </group>
+                        <group string="Pricing">
+                            <field name="sale_price"
+                                   widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"
+                                   readonly="status == 'archived'"/>
+                            <field name="cost_price"
+                                   widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"
+                                   readonly="status == 'archived'"/>
+                        </group>
+                    </group>
+
+                    <!-- Versioning info (read-only) -->
+                    <group string="PLM Version Info" col="3">
+                        <field name="version" readonly="1"/>
+                        <field name="version_number" readonly="1"/>
+                        <field name="parent_product_id" readonly="1"/>
+                        <field name="created_by_eco_id" readonly="1"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Description" name="desc">
+                            <field name="description"
+                                   placeholder="Product description, specifications, notes..."
+                                   readonly="status == 'archived'"/>
+                        </page>
+                        <page string="Attachments" name="attachments">
+                            <field name="attachment_ids" widget="many2many_binary"
+                                   readonly="status == 'archived'"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ══════════════════════════════════════════
+         PRODUCT LIST VIEW
+    ══════════════════════════════════════════ -->
+    <record id="view_plm_product_list" model="ir.ui.view">
+        <field name="name">plm.product.list</field>
+        <field name="model">plm.product</field>
+        <field name="arch" type="xml">
+            <list string="PLM Products"
+                  decoration-muted="status == 'archived'"
+                  decoration-success="status == 'active'">
+                <field name="name" string="Product Name"/>
+                <field name="internal_ref" string="Reference" optional="show"/>
+                <field name="category" optional="show"/>
+                <field name="version" string="Version"/>
+                <field name="sale_price" string="Sale Price" widget="monetary"
+                       options="{'currency_field': 'currency_id'}"/>
+                <field name="cost_price" string="Cost Price" widget="monetary"
+                       options="{'currency_field': 'currency_id'}"/>
+                <field name="uom" string="UoM" optional="show"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'active'"
+                       decoration-danger="status == 'archived'"/>
+                <field name="bom_count" string="BoMs" optional="show"/>
+                <field name="eco_count" string="ECOs" optional="show"/>
+                <field name="currency_id" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ══════════════════════════════════════════
+         PRODUCT KANBAN VIEW
+    ══════════════════════════════════════════ -->
+    <record id="view_plm_product_kanban" model="ir.ui.view">
+        <field name="name">plm.product.kanban</field>
+        <field name="model">plm.product</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="version"/>
+                <field name="status"/>
+                <field name="sale_price"/>
+                <field name="cost_price"/>
+                <field name="category"/>
+                <field name="bom_count"/>
+                <field name="eco_count"/>
+                <field name="priority"/>
+                <templates>
+                    <t t-name="card" class="oe_kanban_card oe_kanban_global_click">
+                        <div class="oe_kanban_content">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                </div>
+                                <field name="priority" widget="priority"/>
+                            </div>
+                            <div class="o_kanban_record_body mt-1">
+                                <div>
+                                    <span class="badge rounded-pill text-bg-secondary">
+                                        <field name="version"/>
+                                    </span>
+                                    &amp;nbsp;
+                                    <field name="status" widget="badge"
+                                           decoration-success="status == 'active'"
+                                           decoration-danger="status == 'archived'"/>
+                                </div>
+                                <div class="mt-1 text-muted">
+                                    🏷 <field name="category"/>
+                                </div>
+                                <div class="mt-1">
+                                    💰 Sale: <field name="sale_price"/> &amp;nbsp;
+                                    📦 Cost: <field name="cost_price"/>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_bottom mt-2">
+                                <span class="text-muted" t-if="record.bom_count.value">
+                                    📋 <t t-out="record.bom_count.value"/> BoM(s)
+                                </span>
+                                <span class="text-muted ms-2" t-if="record.eco_count.value">
+                                    🔄 <t t-out="record.eco_count.value"/> ECO(s)
+                                </span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ══════════════════════════════════════════
+         PRODUCT SEARCH VIEW
+    ══════════════════════════════════════════ -->
+    <record id="view_plm_product_search" model="ir.ui.view">
+        <field name="name">plm.product.search</field>
+        <field name="model">plm.product</field>
+        <field name="arch" type="xml">
+            <search string="Search Products">
+                <field name="name" string="Product Name"/>
+                <field name="internal_ref" string="Reference"/>
+                <field name="version"/>
+                <filter string="Active" name="active"
+                        domain="[('status', '=', 'active')]"/>
+                <filter string="Archived" name="archived"
+                        domain="[('status', '=', 'archived')]"/>
+                <separator/>
+                <filter string="Finished Goods" name="finished"
+                        domain="[('category', '=', 'finished_good')]"/>
+                <filter string="Raw Materials" name="raw"
+                        domain="[('category', '=', 'raw_material')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Category" name="grp_cat"
+                            context="{'group_by': 'category'}"/>
+                    <filter string="Status" name="grp_status"
+                            context="{'group_by': 'status'}"/>
+                    <filter string="Version" name="grp_version"
+                            context="{'group_by': 'version'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_plm_product" model="ir.actions.act_window">
+        <field name="name">PLM Products</field>
+        <field name="res_model">plm.product</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('status', '=', 'active')]</field>
+        <field name="search_view_id" ref="view_plm_product_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No PLM Products yet!</p>
+            <p>Create your first custom PLM product. Changes are always made through ECOs — never directly.</p>
+        </field>
+    </record>
+
+    <record id="action_plm_product_archived" model="ir.actions.act_window">
+        <field name="name">Archived Products</field>
+        <field name="res_model">plm.product</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('status', '=', 'archived')]</field>
+        <field name="search_view_id" ref="view_plm_product_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No archived products.</p>
+            <p>Products archived by ECO workflows appear here for audit purposes. They are read-only.</p>
+        </field>
+    </record>
+
+    <record id="action_plm_product_all" model="ir.actions.act_window">
+        <field name="name">All Products (All Versions)</field>
+        <field name="res_model">plm.product</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="view_plm_product_search"/>
+    </record>
+
+
+</odoo>

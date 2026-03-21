@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="module_category_plm" model="ir.module.category">
+            <field name="name">PLM Engineering</field>
+            <field name="description">Product Lifecycle Management and ECO workflows</field>
+            <field name="sequence">25</field>
+        </record>
+
+        <!-- Operations: read-only view of active Products & BoMs -->
+        <record id="group_plm_operations" model="res.groups">
+            <field name="name">Operations User</field>
+            <field name="category_id" ref="module_category_plm"/>
+            <field name="comment">View active Products and BoMs only. Cannot create or modify ECOs.</field>
+        </record>
+
+        <!-- Engineering User: create/modify ECOs, propose changes -->
+        <record id="group_plm_user" model="res.groups">
+            <field name="name">Engineering User</field>
+            <field name="category_id" ref="module_category_plm"/>
+            <field name="implied_ids" eval="[(4, ref('group_plm_operations'))]"/>
+            <field name="comment">Create and modify ECOs, propose product/BoM changes, initiate approval workflows.</field>
+        </record>
+
+        <!-- Approver: review, approve, or reject ECOs -->
+        <record id="group_plm_approver" model="res.groups">
+            <field name="name">Approver</field>
+            <field name="category_id" ref="module_category_plm"/>
+            <field name="implied_ids" eval="[(4, ref('group_plm_user'))]"/>
+            <field name="comment">Review, approve, or reject ECOs. Controls when changes become effective.</field>
+        </record>
+
+        <!-- Admin/Manager: full access + configure stages -->
+        <record id="group_plm_manager" model="res.groups">
+            <field name="name">Administrator</field>
+            <field name="category_id" ref="module_category_plm"/>
+            <field name="implied_ids" eval="[(4, ref('group_plm_approver'))]"/>
+            <field name="comment">Full PLM access. Configure stages, approval rules, manage master data.</field>
+        </record>
+
+    </data>
+</odoo>

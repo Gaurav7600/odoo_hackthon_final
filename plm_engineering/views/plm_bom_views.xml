@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ══════════════════════════════════════════
+         BOM FORM VIEW
+    ══════════════════════════════════════════ -->
+    <record id="view_plm_bom_form" model="ir.ui.view">
+        <field name="name">plm.bom.form</field>
+        <field name="model">plm.bom</field>
+        <field name="arch" type="xml">
+            <form string="PLM Bill of Materials">
+                <header>
+                    <button name="action_create_eco" type="object"
+                            string="+ Create ECO"
+                            class="btn-primary"
+                            invisible="status == 'archived'"
+                            groups="plm_engineering.group_plm_user"/>
+                </header>
+                <sheet>
+                    <!-- Archived warning -->
+                    <div class="alert alert-danger o_form_sheet_warning" role="alert"
+                         invisible="status != 'archived'">
+                        <i class="fa fa-lock"/> &amp;nbsp;
+                        <strong>Archived (PLM):</strong>
+                        This BoM version is <b>read-only</b>. Create a <b>BoM ECO</b> to propose changes.
+                    </div>
+
+                    <!-- Smart Buttons -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_ecos" type="object"
+                                class="oe_stat_button" icon="fa-history">
+                            <field name="eco_count" widget="statinfo" string="ECOs"/>
+                        </button>
+                        <button name="action_view_components" type="object"
+                                class="oe_stat_button" icon="fa-cubes">
+                            <field name="component_count" widget="statinfo" string="Components"/>
+                        </button>
+                        <button name="action_view_operations" type="object"
+                                class="oe_stat_button" icon="fa-cog">
+                            <field name="operation_count" widget="statinfo" string="Operations"/>
+                        </button>
+                    </div>
+
+                    <div class="oe_title">
+                        <label for="name" string="BoM Reference"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. iPhone 17 — v1 BoM"
+                                   readonly="status == 'archived'"/>
+                        </h1>
+                        <div style="display:flex;gap:12px;align-items:center;margin-top:4px;">
+                            <span style="font-size:13px;color:#6c757d;">Version:</span>
+                            <field name="version" readonly="1" widget="badge"/>
+                            <field name="status" widget="badge"
+                                   decoration-success="status == 'active'"
+                                   decoration-danger="status == 'archived'"/>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Product">
+                            <field name="product_id"
+                                   domain="[('status', '=', 'active')]"
+                                   readonly="status == 'archived'"
+                                   options="{'no_create_edit': True}"/>
+                            <field name="product_qty"
+                                   readonly="status == 'archived'"
+                                   string="Produces Qty"/>
+                            <field name="product_uom" string="Unit" readonly="1"/>
+                        </group>
+                        <group string="PLM Version Info">
+                            <field name="version" readonly="1"/>
+                            <field name="version_number" readonly="1"/>
+                            <field name="created_by_eco_id" readonly="1"/>
+                            <field name="total_component_cost" string="Est. Component Cost"
+                                   widget="monetary"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <!-- ── Components Tab ── -->
+                        <page string="Components" name="components">
+                            <div class="alert alert-info" role="alert"
+                                 invisible="line_ids">
+                                <strong>💡 Tip:</strong>
+                                Add components (raw materials or sub-assemblies) and their required quantities.
+                            </div>
+                            <field name="line_ids" nolabel="1"
+                                   readonly="status == 'archived'">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="component_id"
+                                           domain="[('status', '=', 'active')]"
+                                           options="{'no_create_edit': True}"/>
+                                    <field name="quantity"/>
+                                    <field name="uom" readonly="1"/>
+                                    <field name="cost_price" string="Unit Cost" readonly="1"/>
+                                    <field name="subtotal_cost" string="Subtotal" readonly="1"/>
+                                    <field name="note" optional="show"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="total_component_cost" string="Total Component Cost"
+                                       readonly="1" class="oe_subtotal_footer_separator"
+                                       widget="monetary"/>
+                            </group>
+                        </page>
+
+                        <!-- ── Operations Tab ── -->
+                        <page string="Operations / Routing" name="operations">
+                            <div class="alert alert-info" role="alert"
+                                 invisible="operation_ids">
+                                <strong>💡 Tip:</strong>
+                                Define the manufacturing steps (operations) with their work centers and duration.
+                            </div>
+                            <field name="operation_ids" nolabel="1"
+                                   readonly="status == 'archived'">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name" string="Operation"/>
+                                    <field name="work_center"/>
+                                    <field name="duration_minutes" string="Duration (min)"/>
+                                    <field name="note" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <!-- ── Notes Tab ── -->
+                        <page string="Notes" name="notes">
+                            <field name="notes" nolabel="1"
+                                   placeholder="Manufacturing instructions, notes about this BoM version..."
+                                   readonly="status == 'archived'"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ══════════════════════════════════════════
+         BOM LIST VIEW
+    ══════════════════════════════════════════ -->
+    <record id="view_plm_bom_list" model="ir.ui.view">
+        <field name="name">plm.bom.list</field>
+        <field name="model">plm.bom</field>
+        <field name="arch" type="xml">
+            <list string="PLM Bills of Materials"
+                  decoration-muted="status == 'archived'"
+                  decoration-success="status == 'active'">
+                <field name="name" string="BoM Reference"/>
+                <field name="product_id" string="Product"/>
+                <field name="product_qty" string="Produces Qty"/>
+                <field name="product_uom" string="Unit" optional="show"/>
+                <field name="version" string="Version"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'active'"
+                       decoration-danger="status == 'archived'"/>
+                <field name="component_count" string="Components"/>
+                <field name="operation_count" string="Operations"/>
+                <field name="total_component_cost" string="Est. Cost" widget="monetary"
+                       optional="show"/>
+                <field name="eco_count" string="ECOs" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ══════════════════════════════════════════
+         BOM SEARCH VIEW
+    ══════════════════════════════════════════ -->
+    <record id="view_plm_bom_search" model="ir.ui.view">
+        <field name="name">plm.bom.search</field>
+        <field name="model">plm.bom</field>
+        <field name="arch" type="xml">
+            <search string="Search BoMs">
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="version"/>
+                <filter string="Active" name="active" domain="[('status', '=', 'active')]"/>
+                <filter string="Archived" name="archived" domain="[('status', '=', 'archived')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Product" name="grp_product" context="{'group_by': 'product_id'}"/>
+                    <filter string="Status" name="grp_status" context="{'group_by': 'status'}"/>
+                    <filter string="Version" name="grp_version" context="{'group_by': 'version'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_plm_bom" model="ir.actions.act_window">
+        <field name="name">PLM Bills of Materials</field>
+        <field name="res_model">plm.bom</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('status', '=', 'active')]</field>
+        <field name="search_view_id" ref="view_plm_bom_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No BoMs yet!</p>
+            <p>Create Bills of Materials for your PLM products. All changes are managed through ECOs.</p>
+        </field>
+    </record>
+
+    <record id="action_plm_bom_archived" model="ir.actions.act_window">
+        <field name="name">Archived BoMs</field>
+        <field name="res_model">plm.bom</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('status', '=', 'archived')]</field>
+        <field name="search_view_id" ref="view_plm_bom_search"/>
+    </record>
+
+    <record id="action_plm_bom_all" model="ir.actions.act_window">
+        <field name="name">All BoMs (All Versions)</field>
+        <field name="res_model">plm.bom</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_plm_bom_search"/>
+    </record>
+
+    <record id="view_plm_bom_line_list" model="ir.ui.view">
+        <field name="name">plm.bom.line.list</field>
+        <field name="model">plm.bom.line</field>
+        <field name="arch" type="xml">
+            <list string="BoM Components" default_order="sequence, id">
+                <field name="sequence"/>
+                <field name="bom_id" optional="show"/>
+                <field name="component_id"/>
+                <field name="quantity"/>
+                <field name="uom"/>
+                <field name="cost_price" string="Unit Cost"/>
+                <field name="subtotal_cost" string="Subtotal"/>
+                <field name="note" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_plm_bom_operation_list" model="ir.ui.view">
+        <field name="name">plm.bom.operation.list</field>
+        <field name="model">plm.bom.operation</field>
+        <field name="arch" type="xml">
+            <list string="BoM Operations" default_order="sequence, id">
+                <field name="sequence"/>
+                <field name="bom_id" optional="show"/>
+                <field name="name" string="Operation"/>
+                <field name="work_center"/>
+                <field name="duration_minutes" string="Duration (min)"/>
+                <field name="note" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>

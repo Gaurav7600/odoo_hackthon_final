@@ -1,0 +1,175 @@
+/* ════════════════════════════════════════════════════════
+   PLM Engineering — Custom Stylesheet
+   Odoo 18 Backend
+════════════════════════════════════════════════════════ */
+
+/* ── PLM Root App icon color accent ───────────────── */
+.o_app[data-menu-xmlid="plm_engineering.menu_plm_root"] .o_app_icon {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    border-radius: 12px;
+}
+
+/* ── Version badge pill ────────────────────────────── */
+.plm-version-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    background: #e9ecef;
+    color: #495057;
+    padding: 2px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.03em;
+}
+
+/* ── Archived product / BoM warning strip ──────────── */
+.o_form_sheet_warning.alert-danger {
+    border-left: 5px solid #dc3545;
+    border-radius: 0 6px 6px 0;
+    font-size: 13px;
+    margin-bottom: 14px;
+}
+
+/* ── Smart buttons: statinfo larger number ─────────── */
+.oe_stat_button .o_stat_value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a2e;
+}
+
+/* ── ECO Form: stage status bar accent ─────────────── */
+.o_statusbar_status .o_arrow_button.btn-primary {
+    background-color: #0f3460 !important;
+    border-color: #0f3460 !important;
+}
+
+/* ── Kanban card: PLM override ─────────────────────── */
+.o_kanban_record.oe_kanban_card {
+    border-radius: 10px;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: box-shadow 0.15s ease, transform 0.1s ease;
+}
+.o_kanban_record.oe_kanban_card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    transform: translateY(-1px);
+}
+
+/* ── Kanban: Done column header ────────────────────── */
+.o_kanban_group .o_column_title:has(+ .o_kanban_counter) {
+    font-weight: 700;
+}
+
+/* ── Change comparison dialog: wider modal ──────────── */
+.modal-dialog:has(.plm-comparison-body) {
+    max-width: 900px;
+}
+
+/* ── Diff table: smooth row colors ─────────────────── */
+.plm-diff-table tbody tr {
+    transition: filter 0.1s ease;
+}
+.plm-diff-table tbody tr:hover {
+    filter: brightness(0.97);
+}
+
+/* ── ECO list: Reference column ────────────────────── */
+.o_list_view td[name="reference"] {
+    font-family: 'SFMono-Regular', 'Consolas', monospace;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+/* ── Audit log: action column highlight ─────────────── */
+.o_list_view td[name="action"] {
+    font-weight: 600;
+    color: #0f3460;
+}
+
+/* ── Audit log: immutable notice in form ─────────────── */
+.alert-warning {
+    border-left: 4px solid #ffc107;
+}
+
+/* ── ECO type badge overrides ───────────────────────── */
+.o_field_badge span.badge[class*="text-bg-info"] {
+    background-color: #0dcaf0 !important;
+    color: #000 !important;
+}
+
+/* ── Priority stars ─────────────────────────────────── */
+.o_priority .fa-star { color: #ffc107; }
+.o_priority .fa-star-o { color: #dee2e6; }
+
+/* ── Product/BoM form: version info strip ───────────── */
+.plm-version-strip {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 0 10px 0;
+    border-bottom: 1px dashed #dee2e6;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: #6c757d;
+}
+
+/* ── BoM component table: subtotal row ──────────────── */
+.oe_subtotal_footer_separator {
+    font-weight: 700;
+    font-size: 14px;
+    border-top: 2px solid #dee2e6 !important;
+}
+
+/* ── State badge colors (force override) ────────────── */
+.o_field_badge[name="state"] .badge,
+.o_field_badge[name="status"] .badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+}
+
+/* ── Notebook active tab ─────────────────────────────── */
+.o_notebook .nav-link.active {
+    font-weight: 700;
+    border-bottom: 3px solid #0f3460;
+    color: #0f3460;
+}
+
+/* ── Report list: change count center ───────────────── */
+.o_list_view td[name="change_count"] {
+    text-align: center;
+    font-weight: 700;
+}
+
+/* ── Responsive adjustments ─────────────────────────── */
+@media (max-width: 768px) {
+    .plm-comparison-body table {
+        font-size: 12px;
+    }
+    .plm-comparison-body table td,
+    .plm-comparison-body table th {
+        padding: 6px 8px !important;
+    }
+    .modal-dialog:has(.plm-comparison-body) {
+        max-width: 98vw;
+    }
+}
+
+/* ── Kanban: stage column header colors ─────────────── */
+.o_kanban_view .o_kanban_group:nth-child(1) .o_column_title { color: #6c757d; }
+.o_kanban_view .o_kanban_group:nth-child(2) .o_column_title { color: #0d6efd; }
+.o_kanban_view .o_kanban_group:nth-child(3) .o_column_title { color: #fd7e14; }
+.o_kanban_view .o_kanban_group:nth-child(4) .o_column_title { color: #28a745; font-weight: 700; }
+
+/* ── ECO form header button spacing ─────────────────── */
+.o_form_statusbar > .btn {
+    margin-right: 6px;
+    border-radius: 6px;
+}
+
+/* ── Toggle button for version_update ───────────────── */
+.o_field_toggle_button.o_field_widget .o_toggle_button_success {
+    background-color: #28a745;
+    border-color: #28a745;
+}

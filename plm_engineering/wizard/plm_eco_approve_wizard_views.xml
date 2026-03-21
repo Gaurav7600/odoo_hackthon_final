@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_plm_eco_approve_wizard_form" model="ir.ui.view">
+        <field name="name">plm.eco.approve.wizard.form</field>
+        <field name="model">plm.eco.approve.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Validate &amp; Apply ECO">
+                <sheet>
+                    <!-- Warning Banner -->
+                    <div class="alert alert-danger" role="alert">
+                        <h5 class="alert-heading">
+                            <i class="fa fa-exclamation-triangle"/> &amp;nbsp;
+                            Irreversible Action — Please Review Carefully
+                        </h5>
+                        <p><field name="warning_msg" readonly="1" nolabel="1"/></p>
+                    </div>
+
+                    <!-- ECO Summary -->
+                    <group string="ECO Summary">
+                        <field name="eco_name"       string="ECO Title"    readonly="1"/>
+                        <field name="eco_reference"  string="Reference"    readonly="1"/>
+                        <field name="eco_type"       string="ECO Type"     readonly="1"/>
+                        <field name="product_name"   string="Product"      readonly="1"/>
+                        <field name="change_count"   string="Total Changes" readonly="1"/>
+                    </group>
+
+                    <!-- Version Change Summary -->
+                    <group string="Version Change">
+                        <field name="version_update"      readonly="1" widget="boolean_toggle"/>
+                        <field name="current_version"     string="From Version"    readonly="1"/>
+                        <field name="new_version_label"   string="To Version"      readonly="1"
+                               invisible="not version_update"/>
+                    </group>
+
+                    <!-- Confirmation -->
+                    <group string="Confirmation">
+                        <field name="closing_note"
+                               string="Closing Note (optional)"
+                               placeholder="e.g. Approved in weekly engineering review, 2025-01-15"/>
+                        <field name="confirm_ref"
+                               string="Type Reference to Confirm"
+                               placeholder="e.g. ECO/2025/0001"
+                               help="Type the exact ECO reference number to confirm this action."/>
+                        <field name="eco_reference" string="Expected Reference" readonly="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_confirm" type="object"
+                            string="✔ Confirm &amp; Apply ECO"
+                            class="btn-success btn-lg"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_plm_eco_approve_wizard" model="ir.actions.act_window">
+        <field name="name">Validate ECO</field>
+        <field name="res_model">plm.eco.approve.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_eco_id': active_id}</field>
+    </record>
+
+</odoo>
