@@ -234,7 +234,7 @@
     <record id="action_plm_product" model="ir.actions.act_window">
         <field name="name">PLM Products</field>
         <field name="res_model">plm.product</field>
-        <field name="view_mode">list,kanban,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="domain">[('status', '=', 'active')]</field>
         <field name="search_view_id" ref="view_plm_product_search"/>
         <field name="help" type="html">
@@ -246,7 +246,7 @@
     <record id="action_plm_product_archived" model="ir.actions.act_window">
         <field name="name">Archived Products</field>
         <field name="res_model">plm.product</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="domain">[('status', '=', 'archived')]</field>
         <field name="search_view_id" ref="view_plm_product_search"/>
         <field name="help" type="html">
@@ -258,7 +258,7 @@
     <record id="action_plm_product_all" model="ir.actions.act_window">
         <field name="name">All Products (All Versions)</field>
         <field name="res_model">plm.product</field>
-        <field name="view_mode">list,kanban,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="search_view_id" ref="view_plm_product_search"/>
     </record>
 
