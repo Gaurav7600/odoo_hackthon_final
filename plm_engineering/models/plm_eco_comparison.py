@@ -7,26 +7,13 @@ class PlmEcoComparisonWizard(models.TransientModel):
     _name = 'plm.eco.comparison.wizard'
     _description = 'ECO Versioned Change Comparison'
 
-    eco_id = fields.Many2one(
-        'plm.eco',
-        string='ECO',
-        required=True,
-        ondelete='cascade',
-    )
+    eco_id = fields.Many2one('plm.eco', string='ECO', required=True, ondelete='cascade')
     eco_name = fields.Char(related='eco_id.name', string='ECO Title', readonly=True)
     eco_type = fields.Selection(related='eco_id.eco_type', string='ECO Type', readonly=True)
-    current_version = fields.Char(
-        related='eco_id.current_version', string='Current Version', readonly=True
-    )
-    new_version_label = fields.Char(
-        related='eco_id.new_version_label', string='New Version', readonly=True
-    )
+    current_version = fields.Char(related='eco_id.current_version', string='Current Version', readonly=True)
+    new_version_label = fields.Char(related='eco_id.new_version_label', string='New Version', readonly=True)
 
-    comparison_html = fields.Html(
-        string='Change Comparison',
-        compute='_compute_comparison_html',
-        sanitize=False,
-    )
+    comparison_html = fields.Html(string='Change Comparison', compute='_compute_comparison_html', sanitize=False)
 
     def _simple_badge(self, change_type):
         labels = {
@@ -77,7 +64,6 @@ class PlmEcoComparisonWizard(models.TransientModel):
         return f'{sign}{diff:g}{suffix}'
 
     def _build_bom_comparison(self, eco):
-        """Build HTML for BoM ECO comparison."""
         bom_name = eco.bom_id.name if eco.bom_id else eco.product_id.name
         old_ver = eco.current_version or 'v1'
         new_ver = eco.new_version_label or 'v2'

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Component, useState, onMounted, onWillUnmount } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -13,7 +11,6 @@ export class PlmSidebar extends Component {
         this.action = useService("action");
         this.menu   = useService("menu");
 
-        // ── FIX 1: store menus in reactive state so re-renders trigger when menus load ──
         this.state = useState({
             collapsed:    false,
             mobileOpen:   false,
@@ -22,7 +19,6 @@ export class PlmSidebar extends Component {
             menus:        [],   // reactive cache of top-level menus for current app
         });
 
-        // Bind all methods — required to keep `this` in OWL template callbacks
         this.onMenuClick      = this.onMenuClick.bind(this);
         this.onSubMenuClick   = this.onSubMenuClick.bind(this);
         this.toggleSection    = this.toggleSection.bind(this);
@@ -62,11 +58,9 @@ export class PlmSidebar extends Component {
             this._hideNavbar();
             this._onResize();
 
-            // ── FIX 1: sync active menu + load menus into reactive state ──
             this._syncActiveMenu();
             this._loadMenus();
 
-            // ── FIX 1: poll briefly until menus are available (Odoo lazy-loads menu tree) ──
             this._menuPollTimer = setInterval(() => {
                 const menus = this._fetchTopMenus();
                 if (menus.length > 0) {
@@ -76,7 +70,6 @@ export class PlmSidebar extends Component {
                 }
             }, 120);
 
-            // Stop polling after 5 s regardless
             setTimeout(() => {
                 if (this._menuPollTimer) {
                     clearInterval(this._menuPollTimer);
@@ -99,12 +92,6 @@ export class PlmSidebar extends Component {
         });
     }
 
-    // ── Read Odoo menu ────────────────────────────────────────────────────────
-
-    /**
-     * FIX 1 – internal helper that does the actual tree lookup.
-     * Returns [] if the tree isn't ready yet (safe to call repeatedly).
-     */
     _fetchTopMenus() {
         try {
             const currentApp = this.menu.getCurrentApp();
@@ -116,25 +103,16 @@ export class PlmSidebar extends Component {
         }
     }
 
-    /**
-     * FIX 1 – push menus into reactive state so the template reacts.
-     */
     _loadMenus() {
         const menus = this._fetchTopMenus();
         this.state.menus = menus;
     }
 
-    /**
-     * FIX 1 – template now reads from this.state.menus (reactive).
-     * Kept as a method so the XML template call `getTopMenus()` still works.
-     */
     getTopMenus() {
         return this.state.menus;
     }
 
-    /**
-     * Returns children of a menu item node (from tree structure).
-     */
+
     getChildren(menuNode) {
         return menuNode?.childrenTree || [];
     }
@@ -143,16 +121,11 @@ export class PlmSidebar extends Component {
         return (menuNode?.childrenTree || []).length > 0;
     }
 
-    /**
-     * Get the current app info (name, icon etc.)
-     */
     getCurrentApp() {
         return this.menu.getCurrentApp();
     }
 
-    /**
-     * Get all available apps for the app switcher
-     */
+
     getAllApps() {
         return this.menu.getApps();
     }
@@ -164,14 +137,10 @@ export class PlmSidebar extends Component {
         }
     }
 
-    // ── Navigate using Odoo's menu ───────────────────────────────────────────
-
     async onMenuClick(menuNode) {
         if (this.hasChildren(menuNode)) {
-            // Toggle accordion for items with children
             this.toggleSection(menuNode.id);
         } else {
-            // Leaf node — navigate
             await this._doNavigate(menuNode);
         }
     }
@@ -185,7 +154,6 @@ export class PlmSidebar extends Component {
         if (window.innerWidth < 992) this.state.mobileOpen = false;
         try {
             await this.menu.selectMenu(menuNode);
-            // ── FIX 1: reload menus after navigation (app may have changed) ──
             this._loadMenus();
         } catch (e) {
             console.warn("[PLM Sidebar] Menu nav failed:", menuNode, e);
@@ -197,32 +165,20 @@ export class PlmSidebar extends Component {
         if (window.innerWidth < 992) this.state.mobileOpen = false;
         try {
             await this.menu.selectMenu(app);
-            // ── FIX 1: reload menus after app switch ──
             this._loadMenus();
-            // Short retry in case childrenTree isn't populated immediately
             setTimeout(() => this._loadMenus(), 300);
         } catch (e) {
             console.warn("[PLM Sidebar] App switch failed:", app, e);
         }
     }
 
-    // ── FIX 2: Logout ────────────────────────────────────────────────────────
-
-    /**
-     * Logs the current user out by redirecting to Odoo's /web/session/logout.
-     */
     async logout() {
-        // Odoo's standard logout endpoint — clears session cookie server-side
         browser.location.href = "/web/session/logout?redirect=/web/login";
     }
-
-    // ── Accordion ────────────────────────────────────────────────────────────
 
     toggleSection(id) {
         this.state.expanded[id] = !this.state.expanded[id];
     }
-
-    // ── Collapse / expand ────────────────────────────────────────────────────
 
     expand() {
         this.state.collapsed = false;
@@ -238,17 +194,11 @@ export class PlmSidebar extends Component {
         this.state.mobileOpen = false;
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
-
     isActive(menuId)     { return this.state.activeMenuId === menuId; }
     isSectionOpen(id)    { return !!this.state.expanded[id]; }
     isMobileOpen()       { return this.state.mobileOpen; }
     isCollapsed()        { return this.state.collapsed; }
 
-    /**
-     * Get a FontAwesome icon class for a menu item.
-     * Uses the menu's web_icon field if available, otherwise picks by name.
-     */
     getMenuIcon(menuNode) {
         if (menuNode.web_icon) {
             const parts = menuNode.web_icon.split(",");

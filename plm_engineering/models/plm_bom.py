@@ -10,55 +10,17 @@ class PlmBom(models.Model):
     _order = 'product_id, version_number desc'
     _rec_name = 'display_name_full'
 
-    name = fields.Char(
-        string='BoM Reference',
-        required=True,
-        tracking=True,
-        help='Descriptive name for this Bill of Materials.',
-    )
-    product_id = fields.Many2one(
-        'plm.product',
-        string='Product',
-        required=True,
-        ondelete='restrict',
-        tracking=True,
-        domain="[('status', '=', 'active')]",
-        help='The product this BoM produces. Only active products are selectable.',
-    )
-    product_qty = fields.Float(
-        string='Produces Quantity',
-        default=1.0,
-        digits=(12, 4),
-        required=True,
-        help='The output quantity this BoM produces.',
-    )
-    product_uom = fields.Many2one(
-        string='Unit of Measure',
-        related='product_id.product_uom',
-        readonly=True,
-    )
+    name = fields.Char(string='BoM Reference',required=True,tracking=True,help='Descriptive name for this Bill of Materials.')
+    product_id = fields.Many2one('plm.product',string='Product',required=True,ondelete='restrict',tracking=True,domain="[('status', '=', 'active')]",help='The product this BoM produces. Only active products are selectable.')
+
+    product_qty = fields.Float(string='Produces Quantity',default=1.0,digits=(12, 4),required=True,help='The output quantity this BoM produces.')
+
+    product_uom = fields.Many2one(string='Unit of Measure',related='product_id.product_uom',readonly=True)
     notes = fields.Text(string='Notes / Instructions')
 
-    version = fields.Char(
-        string='BoM Version',
-        default='v1',
-        required=True,
-        copy=False,
-        tracking=True,
-    )
-    version_number = fields.Integer(
-        string='Version Number',
-        default=1,
-        copy=False,
-        readonly=True,
-    )
-    created_by_eco_id = fields.Many2one(
-        'plm.eco',
-        string='Created by ECO',
-        copy=False,
-        readonly=True,
-        ondelete='set null',
-    )
+    version = fields.Char(string='BoM Version',default='v1',required=True,copy=False,tracking=True)
+    version_number = fields.Integer(string='Version Number',default=1,copy=False,readonly=True)
+    created_by_eco_id = fields.Many2one('plm.eco',string='Created by ECO',copy=False,readonly=True,ondelete='set null')
 
     status = fields.Selection([
         ('active', 'Active'),
@@ -67,47 +29,17 @@ class PlmBom(models.Model):
         default='active',
         required=True,
         copy=False,
-        tracking=True,
-        help='Active: usable in Manufacturing Orders.\n'
-            'Archived: read-only, retained for audit.',
+        tracking=True
     )
 
-    line_ids = fields.One2many(
-        'plm.bom.line',
-        'bom_id',
-        string='Components',
-        copy=True,
-    )
-    operation_ids = fields.One2many(
-        'plm.bom.operation',
-        'bom_id',
-        string='Operations',
-        copy=True,
-    )
+    line_ids = fields.One2many('plm.bom.line','bom_id', string='Components ', copy=True)
+    operation_ids = fields.One2many('plm.bom.operation','bom_id', string='Operations', copy=True)
 
-    display_name_full = fields.Char(
-        compute='_compute_display_name_full',
-        store=True,
-        string='Full Name',
-    )
-    component_count = fields.Integer(
-        compute='_compute_counts',
-        string='Components',
-    )
-    operation_count = fields.Integer(
-        compute='_compute_counts',
-        string='Operations',
-    )
-    eco_count = fields.Integer(
-        compute='_compute_eco_count',
-        string='ECOs',
-    )
-    total_component_cost = fields.Float(
-        compute='_compute_total_cost',
-        string='Est. Component Cost',
-        digits=(16, 4),
-        store=False,
-    )
+    display_name_full = fields.Char(compute='_compute_display_name_full', store=True, string='Full Name')
+    component_count = fields.Integer(compute='_compute_counts', string='Components')
+    operation_count = fields.Integer(compute='_compute_counts', string='Operations ')
+    eco_count = fields.Integer(compute='_compute_eco_count', string='ECOs')
+    total_component_cost = fields.Float(compute='_compute_total_cost', string='Est. Component Cost', digits=(16, 4),store=False)
 
 
     @api.depends('name', 'product_id', 'version', 'status')
@@ -215,44 +147,13 @@ class PlmBomLine(models.Model):
     )
     sequence = fields.Integer(string='Sequence', default=10)
 
-    component_id = fields.Many2one(
-        'plm.product',
-        string='Component',
-        required=True,
-        ondelete='restrict',
-        domain="[('status', '=', 'active')]",
-        help='Component product. Only active products are selectable.',
-    )
-    component_name = fields.Char(
-        related='component_id.name',
-        string='Component Name',
-        readonly=True,
-        store=True,
-    )
-    quantity = fields.Float(
-        string='Quantity',
-        default=1.0,
-        digits=(12, 4),
-        required=True,
-    )
-    product_uom = fields.Many2one(
-        'plm.product.uom',
-        string='Unit of Measure',
-        related='component_id.product_uom',
-        readonly=True,
-    )
-    cost_price = fields.Float(
-        related='component_id.cost_price',
-        string='Unit Cost',
-        readonly=True,
-        digits=(16, 4),
-    )
-    subtotal_cost = fields.Float(
-        compute='_compute_subtotal',
-        string='Subtotal Cost',
-        digits=(16, 4),
-        store=True,
-    )
+    component_id = fields.Many2one('plm.product',string='Component',required=True,ondelete='restrict',domain="[('status', '=', 'active')]",help='Component product. Only active products are selectable.')
+
+    component_name = fields.Char(related='component_id.name',string='Component Name', readonly=True, store=True)
+    quantity = fields.Float(string='Quantity', default=1.0, digits=(12, 4), required=True)
+    product_uom = fields.Many2one('plm.product.uom', string='Unit of Measure',related='component_id.product_uom',readonly=True)
+    cost_price = fields.Float(related='component_id.cost_price', string='Unit Cost', readonly=True, digits=(16, 4))
+    subtotal_cost = fields.Float(compute='_compute_subtotal', string='Subtotal Cost', digits=(16, 4), store=True)
     note = fields.Char(string='Note')
 
     @api.depends('quantity', 'cost_price')
@@ -264,10 +165,7 @@ class PlmBomLine(models.Model):
     def _check_quantity(self):
         for line in self:
             if line.quantity <= 0:
-                raise ValidationError(
-                    _("Quantity for component '%s' must be greater than zero.")
-                    % line.component_id.name
-                )
+                raise ValidationError(f"Quantity for component {line.component_id.name} must be greater than zero.")
 
 
 class PlmBomOperation(models.Model):
@@ -275,27 +173,11 @@ class PlmBomOperation(models.Model):
     _description = 'PLM BoM Operation'
     _order = 'sequence, id'
 
-    bom_id = fields.Many2one(
-        'plm.bom',
-        string='Bill of Materials',
-        required=True,
-        ondelete='cascade',
-        index=True,
-    )
+    bom_id = fields.Many2one('plm.bom',string='Bill of Materials',required=True,ondelete='cascade',index=True)
     sequence = fields.Integer(string='Sequence', default=10)
     name = fields.Char(string='Operation Name', required=True)
-    work_center = fields.Char(
-        string='Work Center',
-        required=True,
-        help='e.g. Assembly Line, Paint Floor, Packaging Line',
-    )
-    duration_minutes = fields.Float(
-        string='Duration (min)',
-        default=0.0,
-        digits=(8, 2),
-        required=True,
-        help='Time required for this operation in minutes.',
-    )
+    work_center = fields.Char(string='Work Center',required=True)
+    duration_minutes = fields.Float(string='Duration (min)', default=0.0, digits=(8, 2), required=True, help='Time required for this operation in minutes.')
     note = fields.Char(string='Note')
 
     @api.constrains('duration_minutes')

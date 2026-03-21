@@ -4,14 +4,11 @@ from odoo.exceptions import ValidationError
 
 
 class PlmEcoProductChange(models.Model):
-    """Proposed field-level change on a PLM Product inside an ECO."""
     _name = 'plm.eco.product.change'
     _description = 'ECO Product Field Change'
     _order = 'eco_id, id'
 
-    eco_id = fields.Many2one(
-        'plm.eco', required=True, ondelete='cascade', index=True,
-    )
+    eco_id = fields.Many2one('plm.eco', required=True, ondelete='cascade', index=True)
     field_name = fields.Selection([
         ('name',        'Product Name'),
         ('sale_price',  'Sale Price'),
@@ -19,11 +16,7 @@ class PlmEcoProductChange(models.Model):
         ('description', 'Description'),
     ], string='Field', required=True)
 
-    field_label = fields.Char(
-        string='Field Label',
-        compute='_compute_label',
-        store=True,
-    )
+    field_label = fields.Char(string='Field Label', compute='_compute_label', store=True)
     old_value = fields.Char(string='Current Value', readonly=True)
     new_value = fields.Char(string='Proposed Value')
 
@@ -59,14 +52,11 @@ class PlmEcoProductChange(models.Model):
 
 
 class PlmEcoBomChange(models.Model):
-    """Proposed component-level change on a PLM BoM inside an ECO."""
     _name = 'plm.eco.bom.change'
     _description = 'ECO BoM Component Change'
     _order = 'eco_id, change_type, id'
 
-    eco_id = fields.Many2one(
-        'plm.eco', required=True, ondelete='cascade', index=True,
-    )
+    eco_id = fields.Many2one('plm.eco', required=True, ondelete='cascade', index=True)
     component_id = fields.Many2one(
         'plm.product',
         string='Component',

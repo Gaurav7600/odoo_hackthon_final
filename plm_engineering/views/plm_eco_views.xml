@@ -38,7 +38,7 @@
                             invisible="state not in ('approved', 'in_review') or state == 'cancelled'"/>
 
                     <button name="action_cancel"
-                            string="🚫 Cancel ECO"
+                            string="Cancel ECO"
                             type="object"
                             class="btn-danger"
                             invisible="state in ('done', 'draft', 'cancelled')"
@@ -50,7 +50,6 @@
                             invisible="state in ('draft', 'done', 'cancelled')"
                             groups="plm_engineering.group_plm_manager"/>
 
-                    <!-- Versioned Change Comparison button -->
                     <button name="action_view_change_comparison"
                             string=" View Comparison"
                             type="object"
@@ -72,7 +71,6 @@
                                 invisible="approval_count == 0">
                             <field name="approval_count" widget="statinfo" string="Approvals"/>
                         </button>
-                        <!-- Versioned Change Comparison smart button -->
                         <button name="action_view_change_comparison"
                                 type="object"
                                 class="oe_stat_button"
@@ -83,15 +81,13 @@
                         </button>
                     </div>
 
-                    <!-- is_cancelled hidden field for invisible/readonly expressions -->
                     <field name="is_cancelled" invisible="1"/>
 
-                    <!-- CANCELLED banner — shown when state = cancelled -->
                     <div class="alert alert-secondary" role="alert"
                          style="margin-bottom:12px;border-left:5px solid #6c757d;
                                 background:#f1f3f5;display:flex;align-items:center;gap:10px;"
                          invisible="state != 'cancelled'">
-                        <i class="fa fa-ban fa-lg" style="color:#6c757d;"/>
+                        <i class="fa fa-ban fa-lg" style="color:#6c757d;" title='cancel'/>
                         <div>
                             <strong>This ECO has been cancelled.</strong>
                             All fields are read-only. No further action can be taken.

@@ -179,7 +179,7 @@ class PlmEco(models.Model):
         compute='_compute_change_count',
         string='Total Changes',
         store=True,
-        group_operator='sum',
+        aggregator='sum',
     )
 
     note = fields.Html(string='Internal Notes')
@@ -201,7 +201,6 @@ class PlmEco(models.Model):
                 'is_approved', 'is_cancelled')
     def _compute_state(self):
         for eco in self:
-            # is_cancelled overrides ALL stage logic — checked first
             if eco.is_cancelled:
                 eco.state = 'cancelled'
             elif not eco.stage_id:
@@ -448,13 +447,6 @@ class PlmEco(models.Model):
         return self._apply_eco()
 
     def action_cancel(self):
-        """
-        Cancel this ECO permanently.
-        - Sets is_cancelled = True so _compute_state returns 'cancelled'
-        - Stage is NOT changed — ECO stays frozen at its current stage
-        - All pending approvals are cancelled
-        - Form returns in read-only mode (every field is readonly when state='cancelled')
-        """
         self.ensure_one()
         if self.state == 'done':
             raise UserError(_("A completed ECO cannot be cancelled."))
@@ -463,16 +455,12 @@ class PlmEco(models.Model):
 
         prev_state = self.state
 
-        # Cancel pending approvals
         self.approval_ids.filtered(
             lambda a: a.state == 'pending'
         ).write({'state': 'cancelled'})
 
-        # Find the Cancelled stage (configured in Settings > ECO Stages)
         cancel_stage = self.env['plm.eco.stage']._get_cancel_stage()
 
-        # Move to Cancelled stage + set the flag
-        # Both together ensure: statusbar shows Cancelled + state computes to 'cancelled'
         vals = {'is_cancelled': True}
         if cancel_stage:
             vals['stage_id'] = cancel_stage.id
@@ -483,7 +471,7 @@ class PlmEco(models.Model):
             self.reference, prev_state, 'Cancelled'
         )
         self.message_post(
-            body=_('🚫 ECO has been <b>cancelled</b>. This record is now read-only.')
+            body=_('ECO has been <b>cancelled</b>. This record is now read-only.')
         )
 
     def action_reset_to_draft(self):
@@ -721,7 +709,6 @@ class PlmEco(models.Model):
         })
 
     def action_view_change_comparison(self):
-        """Open the versioned change comparison wizard for this ECO."""
         self.ensure_one()
         wizard = self.env['plm.eco.comparison.wizard'].create({'eco_id': self.id})
         return {

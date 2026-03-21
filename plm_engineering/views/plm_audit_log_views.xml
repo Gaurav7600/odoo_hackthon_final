@@ -5,7 +5,7 @@
         <field name="name">plm.eco.approval.list</field>
         <field name="model">plm.eco.approval</field>
         <field name="arch" type="xml">
-            <list string="ECO Approvals" default_order="create_date desc">
+            <list string="ECO Approvals">
                 <field name="eco_id" string="ECO"/>
                 <field name="eco_reference" string="Reference" optional="show"/>
                 <field name="requested_by_id" string="Requested By" widget="many2one_avatar_user"/>

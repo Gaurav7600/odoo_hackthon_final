@@ -6,7 +6,6 @@
         <field name="arch" type="xml">
             <form string="Versioned Change Comparison" class="o_form_readonly">
 
-                <!-- Invisible field bindings -->
                 <field name="eco_id" invisible="1"/>
                 <field name="eco_type" invisible="1"/>
                 <field name="eco_name" invisible="1"/>

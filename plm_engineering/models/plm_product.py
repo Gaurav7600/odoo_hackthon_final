@@ -4,11 +4,6 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class PlmProduct(models.Model):
-    """
-    Custom PLM Product Master.
-    Stores versioned product definitions independently of Odoo's product.template.
-    Every change goes through an ECO — no direct edits to master data.
-    """
     _name = 'plm.product'
     _description = 'PLM Product Master'
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -65,7 +60,7 @@ class PlmProduct(models.Model):
         'ir.attachment',
         'plm_product_attachment_rel',
         'product_id', 'attachment_id',
-        string='Attachments',
+        string='Attachments ',
         help='Technical drawings, specifications, certificates, etc.',
     )
     attachment_count = fields.Integer(
@@ -180,21 +175,15 @@ class PlmProduct(models.Model):
                 ('id', '!=', rec.id),
             ]
             if self.search(domain, limit=1):
-                raise ValidationError(
-                    _("Product '%s' already has a version '%s'. "
-                    "Each product version must be unique.") % (rec.name, rec.version)
-                )
+                raise ValidationError(f"Product {rec.name} already has a version {rec.version} Each product version must be unique.")
 
     def write(self, vals):
         protected = {'name', 'sale_price', 'cost_price', 'product_uom', 'category',
                     'internal_ref', 'description', 'attachment_ids'}
         for rec in self:
             if rec.status == 'archived' and any(f in vals for f in protected):
-                raise UserError(
-                    _("Product '%s (%s)' is Archived and cannot be edited directly.\n\n"
+                raise UserError(f"Product {rec.name} {rec.version} is Archived and cannot be edited directly.\n\n"
                     "Create an Engineering Change Order (ECO) to propose changes.")
-                    % (rec.name, rec.version)
-                )
         return super().write(vals)
 
     def action_view_boms(self):
@@ -219,7 +208,6 @@ class PlmProduct(models.Model):
         }
 
     def action_view_version_history(self):
-        """Walk up to root and show all related versions."""
         self.ensure_one()
         root = self
         while root.parent_product_id:
@@ -241,7 +229,6 @@ class PlmProduct(models.Model):
         return ids
 
     def action_create_eco(self):
-        """Shortcut: create an ECO from the product form."""
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',

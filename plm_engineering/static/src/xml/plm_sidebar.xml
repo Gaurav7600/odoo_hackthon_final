@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<!-- ═══════════════════════════════════════════════════════════
-     LEVEL-3 sub-sub items (deepest)
-════════════════════════════════════════════════════════════ -->
 <t t-name="plm_engineering.SidebarLevel3">
     <t t-foreach="items" t-as="item" t-key="item.id">
         <div t-att-class="'plm-ssi' + (isActive(item.id) ? ' plm-ssi--on' : '')"
@@ -15,13 +12,9 @@
     </t>
 </t>
 
-<!-- ═══════════════════════════════════════════════════════════
-     LEVEL-2 sub items
-════════════════════════════════════════════════════════════ -->
 <t t-name="plm_engineering.SidebarLevel2">
     <t t-foreach="items" t-as="item" t-key="item.id">
         <t t-if="hasChildren(item)">
-            <!-- Sub-item with children → nested accordion -->
             <div t-att-class="'plm-si' + (isActive(item.id) || isSectionOpen(item.id) ? ' plm-si--on' : '')"
                  t-att-data-tip="item.name"
                  t-on-click="() => this.toggleSection(item.id)">
@@ -39,7 +32,6 @@
             </t>
         </t>
         <t t-else="">
-            <!-- Leaf sub-item -->
             <div t-att-class="'plm-si' + (isActive(item.id) ? ' plm-si--on' : '')"
                  t-att-data-tip="item.name"
                  t-on-click="() => this.onSubMenuClick(item)">
@@ -50,20 +42,15 @@
     </t>
 </t>
 
-<!-- ═══════════════════════════════════════════════════════════
-     MAIN SIDEBAR
-════════════════════════════════════════════════════════════ -->
+
 <t t-name="plm_engineering.PlmSidebar">
 
-    <!-- Mobile backdrop -->
     <div t-att-class="isMobileOpen() ? 'plm-backdrop on' : 'plm-backdrop'"
          t-on-click="closeMobile"/>
 
     <nav t-att-class="'plm-sb' + (isMobileOpen() ? ' mob-open' : '')">
 
-        <!-- ── Header ── -->
         <div class="plm-hdr">
-            <!-- App logo / icon -->
             <div class="plm-logo" title="Current App">
                 <t t-set="_app" t-value="getCurrentApp()"/>
                 <t t-if="_app and _app.web_icon_data">
@@ -74,18 +61,15 @@
                 </t>
             </div>
 
-            <!-- App name -->
             <div class="plm-brand">
                 <t t-set="_app2" t-value="getCurrentApp()"/>
                 <span class="plm-brand-n" t-esc="_app2 ? _app2.name : 'Menu'"/>
             </div>
 
-            <!-- Collapse btn (hidden when collapsed via CSS) -->
             <button class="plm-cbtn" t-on-click="collapse" title="Collapse">
                 <i class="fa fa-angle-left"/>
             </button>
 
-            <!-- Mobile close -->
             <t t-if="isMobileOpen()">
                 <button class="plm-cbtn" t-on-click="closeMobile" title="Close">
                     <i class="fa fa-times"/>
@@ -93,19 +77,15 @@
             </t>
         </div>
 
-        <!-- Expand btn: only visible when collapsed -->
         <button class="plm-expand-btn" t-on-click="expand" title="Expand">
             <i class="fa fa-angle-right"/>
         </button>
 
-        <!-- ── Nav (dynamic from Odoo menu) ── -->
         <div class="plm-nav">
 
-            <!-- FIX 1: reads from this.state.menus (reactive) instead of calling getMenuAsTree inline -->
             <t t-set="_menus" t-value="getTopMenus()"/>
 
             <t t-if="_menus.length === 0">
-                <!-- No menus loaded yet / no app selected -->
                 <div style="padding:20px 12px; color:var(--sm); font-size:12px; text-align:center;">
                     <i class="fa fa-spinner fa-spin" style="display:block; font-size:20px; margin-bottom:8px;"/>
                     Loading menu...
@@ -115,7 +95,6 @@
             <t t-foreach="_menus" t-as="menuItem" t-key="menuItem.id">
 
                 <t t-if="hasChildren(menuItem)">
-                    <!-- ── Parent menu item (accordion) ── -->
                     <div t-att-class="'plm-ni' + (isActive(menuItem.id) || isSectionOpen(menuItem.id) ? ' plm-ni--on' : '')"
                          t-att-data-tip="menuItem.name"
                          t-on-click="() => this.onMenuClick(menuItem)">
@@ -126,7 +105,6 @@
                         <i t-att-class="'fa plm-ch' + (isSectionOpen(menuItem.id) ? ' fa-chevron-down plm-ch--o' : ' fa-chevron-right')"/>
                     </div>
 
-                    <!-- Children -->
                     <t t-if="isSectionOpen(menuItem.id)">
                         <div class="plm-sg">
                             <t t-call="plm_engineering.SidebarLevel2">
@@ -137,7 +115,6 @@
 
                 </t>
                 <t t-else="">
-                    <!-- ── Leaf menu item ── -->
                     <div t-att-class="'plm-ni' + (isActive(menuItem.id) ? ' plm-ni--on' : '')"
                          t-att-data-tip="menuItem.name"
                          t-on-click="() => this.onMenuClick(menuItem)">
@@ -150,11 +127,9 @@
 
             </t>
 
-            <!-- Divider before app switcher -->
             <div class="plm-divider"/>
             <div class="plm-lbl">Switch App</div>
 
-            <!-- App switcher: show all Odoo apps -->
             <t t-foreach="getAllApps()" t-as="app" t-key="app.id">
                 <t t-set="_isCurrent" t-value="getCurrentApp() and getCurrentApp().id === app.id"/>
                 <div t-att-class="'plm-ni' + (_isCurrent ? ' plm-ni--on' : '')"
@@ -173,9 +148,8 @@
                 </div>
             </t>
 
-        </div><!-- /plm-nav -->
+        </div>
 
-        <!-- ── FIX 2: Logout button (above footer) ── -->
         <button class="plm-logout" t-on-click="logout" title="Log Out">
             <i class="fa fa-sign-out"/>
             <span class="plm-logout-txt">Log Out</span>
