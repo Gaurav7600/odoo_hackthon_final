@@ -17,7 +17,6 @@ class PlmEco(models.Model):
     _order = 'create_date desc, id desc'
     _rec_name = 'name'
 
-    # ── Identity ─────────────────────────────────────────────────────
     name = fields.Char(
         string='ECO Title',
         required=True,
@@ -48,7 +47,6 @@ class PlmEco(models.Model):
              'BoM ECO: changes to components, quantities, and operations.',
     )
 
-    # ── Related Documents ─────────────────────────────────────────────
     product_id = fields.Many2one(
         'plm.product',
         string='Product',
@@ -65,7 +63,6 @@ class PlmEco(models.Model):
         help='Required for BoM ECOs. Must belong to the selected product.',
     )
 
-    # ── People & Dates ────────────────────────────────────────────────
     user_id = fields.Many2one(
         'res.users',
         string='Responsible Engineer',
@@ -89,7 +86,6 @@ class PlmEco(models.Model):
         copy=False,
     )
 
-    # ── Stage / State ─────────────────────────────────────────────────
     stage_id = fields.Many2one(
         'plm.eco.stage',
         string='Stage',
@@ -123,13 +119,12 @@ class PlmEco(models.Model):
         tracking=True,
     )
 
-    # ── Versioning ────────────────────────────────────────────────────
     version_update = fields.Boolean(
         string='Create New Version on Apply',
         default=True,
         tracking=True,
         help='Enabled → a new version is created when this ECO is applied.\n'
-             'Disabled → changes are applied to the existing version directly.',
+            'Disabled → changes are applied to the existing version directly.',
     )
     current_version = fields.Char(
         string='Current Version',
@@ -142,7 +137,6 @@ class PlmEco(models.Model):
         store=False,
     )
 
-    # ── Change Lines ──────────────────────────────────────────────────
     product_change_ids = fields.One2many(
         'plm.eco.product.change',
         'eco_id',
@@ -162,7 +156,6 @@ class PlmEco(models.Model):
         copy=True,
     )
 
-    # ── Approval Records ──────────────────────────────────────────────
     approval_ids = fields.One2many(
         'plm.eco.approval',
         'eco_id',
@@ -173,7 +166,6 @@ class PlmEco(models.Model):
         string='Approvals',
     )
 
-    # ── Audit Logs ────────────────────────────────────────────────────
     audit_log_ids = fields.One2many(
         'plm.audit.log',
         'eco_id',
@@ -184,16 +176,15 @@ class PlmEco(models.Model):
         string='Audit Events',
     )
 
-    # ── Counts ────────────────────────────────────────────────────────
     change_count = fields.Integer(
         compute='_compute_change_count',
         string='Total Changes',
+        store=True,
+        group_operator='sum',
     )
 
-    # ── Notes ─────────────────────────────────────────────────────────
     note = fields.Html(string='Internal Notes')
 
-    # ── Overdue ────────────────────────────────────────────────────────
     is_overdue = fields.Boolean(
         string='Overdue',
         compute='_compute_is_overdue',
@@ -206,13 +197,9 @@ class PlmEco(models.Model):
         store=True,
     )
 
-    # ══════════════════════════════════════════════════════════════════
-    #  Compute Methods
-    # ══════════════════════════════════════════════════════════════════
-
     @api.depends('stage_id', 'stage_id.is_final_stage',
-                 'stage_id.is_start_stage', 'stage_id.is_approval_required',
-                 'is_approved')
+                'stage_id.is_start_stage', 'stage_id.is_approval_required',
+                'is_approved')
     def _compute_state(self):
         for eco in self:
             if not eco.stage_id:
@@ -280,10 +267,6 @@ class PlmEco(models.Model):
                 eco.days_until_effective = 0
                 eco.is_overdue = False
 
-    # ══════════════════════════════════════════════════════════════════
-    #  onchange helpers
-    # ══════════════════════════════════════════════════════════════════
-
     @api.onchange('eco_type')
     def _onchange_eco_type(self):
         self.product_change_ids = [(5,)]
@@ -344,10 +327,6 @@ class PlmEco(models.Model):
                 }))
             self.operation_change_ids = op_vals
 
-    # ══════════════════════════════════════════════════════════════════
-    #  ORM Overrides
-    # ══════════════════════════════════════════════════════════════════
-
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -360,10 +339,6 @@ class PlmEco(models.Model):
         for rec in records:
             rec._log('ECO Created', 'plm.eco', rec.reference, False, rec.name)
         return records
-
-    # ══════════════════════════════════════════════════════════════════
-    #  Validation helper
-    # ══════════════════════════════════════════════════════════════════
 
     def _validate_mandatory_fields(self):
         self.ensure_one()
@@ -384,10 +359,6 @@ class PlmEco(models.Model):
                 % '\n'.join(errors)
             )
 
-    # ══════════════════════════════════════════════════════════════════
-    #  Button Actions
-    # ══════════════════════════════════════════════════════════════════
-
     def action_start_review(self):
         """Draft → move to the next stage (In Review / Approval)."""
         self.ensure_one()
@@ -407,9 +378,8 @@ class PlmEco(models.Model):
         if not self.stage_id.is_approval_required:
             raise UserError(
                 _("The current stage '%s' does not require approval.\n"
-                  "Use 'Validate & Apply' instead.") % self.stage_id.name
+                "Use 'Validate & Apply' instead.") % self.stage_id.name
             )
-        # Create approval record
         self.env['plm.eco.approval'].create({
             'eco_id': self.id,
             'requested_by_id': self.env.user.id,
@@ -418,9 +388,8 @@ class PlmEco(models.Model):
         self._log('Approval Requested', 'plm.eco', self.reference, 'Draft', 'Pending Approval')
         self.message_post(
             body=_('Approval requested by %s. '
-                   'Awaiting Approver review.') % self.env.user.name
+                'Awaiting Approver review.') % self.env.user.name
         )
-        # Schedule activity for approvers
         approver_group = self.env.ref(
             'plm_engineering.group_plm_approver', raise_if_not_found=False
         )
@@ -453,7 +422,6 @@ class PlmEco(models.Model):
         self.message_post(
             body=_(' ECO approved by %s.') % self.env.user.name
         )
-        # Auto-advance to next stage
         self._advance_stage()
 
     def action_reject(self):
@@ -473,7 +441,7 @@ class PlmEco(models.Model):
         self._log('ECO Rejected', 'plm.eco', self.reference, 'Pending', 'Rejected')
         self.message_post(
             body=_(' ECO rejected by %s. '
-                   'Please revise and re-submit.') % self.env.user.name
+                'Please revise and re-submit.') % self.env.user.name
         )
 
     def action_validate(self):
@@ -482,7 +450,7 @@ class PlmEco(models.Model):
         if self.stage_id.is_approval_required and not self.is_approved:
             raise UserError(
                 _("This stage requires approval before validation.\n"
-                  "Please request approval first.")
+                "Please request approval first.")
             )
         return self._apply_eco()
 
@@ -544,10 +512,6 @@ class PlmEco(models.Model):
             'context': {'default_eco_id': self.id},
         }
 
-    # ══════════════════════════════════════════════════════════════════
-    #  Private: apply ECO changes
-    # ══════════════════════════════════════════════════════════════════
-
     def _apply_eco(self):
         self.ensure_one()
         if self.eco_type == 'product':
@@ -566,7 +530,7 @@ class PlmEco(models.Model):
         self._log('ECO Applied', 'plm.eco', self.reference, 'Open', 'Done')
         self.message_post(
             body=_(
-                '🎉 ECO <b>applied successfully</b>.<br/>'
+                ' ECO <b>applied successfully</b>.<br/>'
                 'Version: <b>%s → %s</b>'
             ) % (self.current_version, self.new_version_label)
         )
@@ -584,7 +548,6 @@ class PlmEco(models.Model):
         if not p:
             return
 
-        # Build vals dict from change lines
         field_map = {
             'name': 'name',
             'sale_price': 'sale_price',
@@ -606,11 +569,10 @@ class PlmEco(models.Model):
             else:
                 vals[odoo_field] = chg.new_value
             self._log('Field Changed', 'plm.product',
-                      chg.field_label, chg.old_value, chg.new_value)
+                    chg.field_label, chg.old_value, chg.new_value)
 
         if self.version_update:
             new_ver = self._next_version_str(p.version or 'v1')
-            # Create new product version
             new_p_vals = {
                 'name': vals.get('name', p.name),
                 'sale_price': vals.get('sale_price', p.sale_price),
@@ -625,17 +587,14 @@ class PlmEco(models.Model):
                 'status': 'active',
                 'created_by_eco_id': self.id,
             }
-            # Use sudo to bypass the write-protection on archived products
             new_p = self.env['plm.product'].sudo().create(new_p_vals)
-            # Archive the old version — bypass write protection via sudo
             p.sudo().write({'status': 'archived'})
             self._log('Version Created', 'plm.product',
-                      p.name, p.version, new_ver)
+                    p.name, p.version, new_ver)
             self._log('Version Archived', 'plm.product',
-                      p.name, 'Active', 'Archived')
+                    p.name, 'Active', 'Archived')
         else:
             if vals:
-                # Bypass archived-write-guard using sudo since ECO approval is the gate
                 p.sudo().write(vals)
 
     def _apply_bom_changes(self):
@@ -646,7 +605,6 @@ class PlmEco(models.Model):
 
         if self.version_update:
             new_ver = self._next_version_str(bom.version or 'v1')
-            # Deep-copy the BoM
             new_bom = self.env['plm.bom'].sudo().create({
                 'name': bom.name,
                 'product_id': bom.product_id.id,
@@ -658,7 +616,6 @@ class PlmEco(models.Model):
                 'created_by_eco_id': self.id,
             })
 
-            # Copy existing lines then apply changes
             for line in bom.line_ids:
                 self.env['plm.bom.line'].sudo().create({
                     'bom_id': new_bom.id,
@@ -677,11 +634,9 @@ class PlmEco(models.Model):
                     'sequence': op.sequence,
                 })
 
-            # Apply component changes to new_bom
             self._patch_bom_lines(new_bom)
             self._patch_bom_operations(new_bom)
 
-            # Archive old BoM
             bom.sudo().write({'status': 'archived'})
             self._log('BoM Version Created', 'plm.bom', bom.name, bom.version, new_ver)
             self._log('BoM Archived', 'plm.bom', bom.name, 'Active', 'Archived')
@@ -702,15 +657,15 @@ class PlmEco(models.Model):
                         'quantity': chg.new_qty,
                     })
                 self._log('Component Added', 'plm.bom.line',
-                          chg.component_id.name, '0', str(chg.new_qty))
+                        chg.component_id.name, '0', str(chg.new_qty))
             elif chg.change_type == 'removed':
                 existing.sudo().unlink()
                 self._log('Component Removed', 'plm.bom.line',
-                          chg.component_id.name, str(chg.old_qty), '0')
+                        chg.component_id.name, str(chg.old_qty), '0')
             elif chg.change_type == 'modified' and existing:
                 existing[0].sudo().write({'quantity': chg.new_qty})
                 self._log('Component Modified', 'plm.bom.line',
-                          chg.component_id.name, str(chg.old_qty), str(chg.new_qty))
+                        chg.component_id.name, str(chg.old_qty), str(chg.new_qty))
 
     def _patch_bom_operations(self, bom):
         for chg in self.operation_change_ids:
@@ -724,17 +679,17 @@ class PlmEco(models.Model):
                         'duration_minutes': chg.new_duration,
                     })
                 self._log('Operation Added', 'plm.bom.operation',
-                          chg.operation_name, '0', str(chg.new_duration) + ' min')
+                        chg.operation_name, '0', str(chg.new_duration) + ' min')
             elif chg.change_type == 'removed':
                 existing.sudo().unlink()
                 self._log('Operation Removed', 'plm.bom.operation',
-                          chg.operation_name, str(chg.old_duration) + ' min', '0')
+                        chg.operation_name, str(chg.old_duration) + ' min', '0')
             elif chg.change_type == 'modified' and existing:
                 existing[0].sudo().write({'duration_minutes': chg.new_duration})
                 self._log('Operation Modified', 'plm.bom.operation',
-                          chg.operation_name,
-                          str(chg.old_duration) + ' min',
-                          str(chg.new_duration) + ' min')
+                        chg.operation_name,
+                        str(chg.old_duration) + ' min',
+                        str(chg.new_duration) + ' min')
 
     def _advance_stage(self):
         """Move to the next stage after current."""

@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- ══════════════════════════════════════════════════════
-         PLM REAL-TIME OWL DASHBOARD — Client Action
-         Registered tag: plm_engineering.plm_dashboard_action
-    ══════════════════════════════════════════════════════ -->
-
     <record id="action_plm_dashboard" model="ir.actions.client">
         <field name="name">PLM Dashboard</field>
         <field name="tag">plm_engineering.plm_dashboard_action</field>
         <field name="target">main</field>
     </record>
-
 
 </odoo>

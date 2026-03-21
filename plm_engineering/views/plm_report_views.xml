@@ -1,25 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- ══════════════════════════════════════════════
-         ECO SUMMARY REPORT — Read-Only List
-    ══════════════════════════════════════════════ -->
     <record id="view_plm_eco_report_list" model="ir.ui.view">
         <field name="name">plm.eco.report.list</field>
         <field name="model">plm.eco</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <list string="ECO Report"
-                  create="false" delete="false"
-                  decoration-success="state == 'done'"
-                  decoration-warning="state == 'in_review'"
-                  decoration-info="state == 'approved'"
-                  decoration-muted="state == 'draft'">
+                create="false" delete="false"
+                decoration-success="state == 'done'"
+                decoration-warning="state == 'in_review'"
+                decoration-info="state == 'approved'"
+                decoration-muted="state == 'draft'">
                 <field name="reference" string="ECO Ref"/>
                 <field name="name" string="Title"/>
                 <field name="eco_type" widget="badge"
-                       decoration-info="eco_type == 'product'"
-                       decoration-warning="eco_type == 'bom'"/>
+                        decoration-info="eco_type == 'product'"
+                        decoration-warning="eco_type == 'bom'"/>
                 <field name="product_id" string="Product"/>
                 <field name="bom_id" string="BoM" optional="show"/>
                 <field name="current_version" string="Version"/>
@@ -28,10 +25,10 @@
                 <field name="applied_date" string="Applied On" optional="show"/>
                 <field name="stage_id"/>
                 <field name="state" widget="badge"
-                       decoration-success="state == 'done'"
-                       decoration-warning="state == 'in_review'"
-                       decoration-info="state == 'approved'"
-                       decoration-muted="state == 'draft'"/>
+                        decoration-success="state == 'done'"
+                        decoration-warning="state == 'in_review'"
+                        decoration-info="state == 'approved'"
+                        decoration-muted="state == 'draft'"/>
                 <field name="change_count" string="# Changes"/>
                 <button name="action_view_comparison" type="object"
                         string="View Changes"
@@ -41,7 +38,6 @@
         </field>
     </record>
 
-    <!-- ECO Report Search View -->
     <record id="view_plm_eco_report_search" model="ir.ui.view">
         <field name="name">plm.eco.report.search</field>
         <field name="model">plm.eco</field>
@@ -76,7 +72,6 @@
         </field>
     </record>
 
-    <!-- Pivot Report -->
     <record id="view_plm_eco_pivot" model="ir.ui.view">
         <field name="name">plm.eco.pivot</field>
         <field name="model">plm.eco</field>
@@ -89,7 +84,6 @@
         </field>
     </record>
 
-    <!-- Bar Graph -->
     <record id="view_plm_eco_graph" model="ir.ui.view">
         <field name="name">plm.eco.graph</field>
         <field name="model">plm.eco</field>
@@ -101,38 +95,31 @@
         </field>
     </record>
 
-    <!-- ══════════════════════════════════════════════
-         PRODUCT VERSION HISTORY LIST
-    ══════════════════════════════════════════════ -->
     <record id="view_plm_product_version_list" model="ir.ui.view">
         <field name="name">plm.product.version.list</field>
         <field name="model">plm.product</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <list string="Product Version History"
-                  create="false" delete="false"
-                  decoration-muted="status == 'archived'"
-                  decoration-success="status == 'active'">
+                    create="false" delete="false"
+                    decoration-muted="status == 'archived'"
+                    decoration-success="status == 'active'">
                 <field name="name" string="Product Name"/>
                 <field name="version" string="Version"/>
                 <field name="version_number" string="Ver #" optional="show"/>
                 <field name="sale_price" string="Sale Price" widget="monetary"
-                       options="{'currency_field': 'currency_id'}"/>
+                        options="{'currency_field': 'currency_id'}"/>
                 <field name="cost_price" string="Cost Price" widget="monetary"
-                       options="{'currency_field': 'currency_id'}"/>
+                        options="{'currency_field': 'currency_id'}"/>
                 <field name="status" widget="badge"
-                       decoration-success="status == 'active'"
-                       decoration-danger="status == 'archived'"/>
+                        decoration-success="status == 'active'"
+                        decoration-danger="status == 'archived'"/>
                 <field name="parent_product_id" string="Previous Version" optional="show"/>
                 <field name="created_by_eco_id" string="Created By ECO" optional="show"/>
                 <field name="currency_id" column_invisible="True"/>
             </list>
         </field>
     </record>
-
-    <!-- ══════════════════════════════════════════════
-         ACTIONS
-    ══════════════════════════════════════════════ -->
 
     <record id="action_plm_eco_report" model="ir.actions.act_window">
         <field name="name">ECO Report</field>

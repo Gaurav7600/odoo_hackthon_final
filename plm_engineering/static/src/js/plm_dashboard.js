@@ -4,11 +4,6 @@ import { Component, useState, onMounted, onWillUnmount, useRef } from "@odoo/owl
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  PLM Real-Time Dashboard — Odoo 18 OWL Component
-//  Polls server every 30 seconds for live metrics.
-// ─────────────────────────────────────────────────────────────────────────────
-
 export class PlmDashboard extends Component {
     static template = "plm_engineering.PlmDashboard";
     static props = {
@@ -54,7 +49,6 @@ export class PlmDashboard extends Component {
         });
     }
 
-    // ── Data Loading ────────────────────────────────────────────────────────
 
     async _loadData() {
         try {
@@ -84,8 +78,6 @@ export class PlmDashboard extends Component {
         }
     }
 
-    // ── Manual refresh ──────────────────────────────────────────────────────
-
     async onRefresh() {
         await this._loadData();
         this.notification.add("Dashboard refreshed", {
@@ -93,8 +85,6 @@ export class PlmDashboard extends Component {
             sticky: false,
         });
     }
-
-    // ── Computed helpers for templates ──────────────────────────────────────
 
     get lastRefreshLabel() {
         if (!this.state.lastRefresh) return "";
@@ -172,7 +162,6 @@ export class PlmDashboard extends Component {
         return `${Math.round((value / max) * 100)}%`;
     }
 
-    // ── Navigation Actions ───────────────────────────────────────────────────
 
     openEcoList = async () => {
         await this.action.doAction({

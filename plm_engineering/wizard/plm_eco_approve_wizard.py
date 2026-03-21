@@ -10,7 +10,6 @@ class PlmEcoApproveWizard(models.TransientModel):
 
     eco_id = fields.Many2one('plm.eco', required=True)
 
-    # Mirror key info for display
     eco_name = fields.Char(related='eco_id.name', readonly=True)
     eco_reference = fields.Char(related='eco_id.reference', readonly=True)
     eco_type = fields.Selection(related='eco_id.eco_type', readonly=True)

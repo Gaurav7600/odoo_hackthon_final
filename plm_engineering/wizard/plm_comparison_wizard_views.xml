@@ -7,17 +7,15 @@
         <field name="arch" type="xml">
             <form string="ECO Change Comparison">
                 <sheet>
-                    <!-- Summary row -->
                     <group col="4" class="mb-3">
                         <field name="eco_reference"    string="ECO Ref"    readonly="1"/>
                         <field name="eco_name"         string="ECO"        readonly="1"/>
                         <field name="current_version"  string="From"       readonly="1"/>
                         <field name="new_version_label" string="To"        readonly="1"/>
                     </group>
-                    <!-- Comparison HTML (generated dynamically from Python) -->
                     <div class="plm-comparison-body">
                         <field name="comparison_html" widget="html"
-                               nolabel="1" readonly="1" sanitize="0"/>
+                            nolabel="1" readonly="1" sanitize="0"/>
                     </div>
                 </sheet>
                 <footer>

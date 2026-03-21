@@ -4,7 +4,6 @@
 <t t-name="plm_engineering.PlmDashboard">
     <div class="plm-dashboard">
 
-        <!-- ══ LOADING STATE ════════════════════════════════════════════ -->
         <t t-if="state.loading">
             <div class="plm-dash-loading">
                 <div class="plm-spinner">
@@ -14,7 +13,6 @@
             </div>
         </t>
 
-        <!-- ══ ERROR STATE ══════════════════════════════════════════════ -->
         <t t-elif="state.error">
             <div class="plm-dash-error alert alert-danger">
                 <i class="fa fa-exclamation-triangle me-2"/>
@@ -25,11 +23,9 @@
             </div>
         </t>
 
-        <!-- ══ MAIN DASHBOARD ════════════════════════════════════════════ -->
         <t t-elif="state.data">
             <t t-set="d" t-value="state.data"/>
 
-            <!-- ── Header ──────────────────────────────────────────────── -->
             <div class="plm-dash-header">
                 <div class="plm-dash-header-left">
                     <div class="plm-dash-logo">
@@ -61,10 +57,8 @@
                 </div>
             </div>
 
-            <!-- ── KPI Row ─────────────────────────────────────────────── -->
             <div class="plm-kpi-row">
 
-                <!-- Total ECOs -->
                 <div class="plm-kpi-card plm-kpi-primary" t-on-click="openEcoList">
                     <div class="plm-kpi-icon"><i class="fa fa-file-text-o"/></div>
                     <div class="plm-kpi-body">
@@ -76,7 +70,6 @@
                     </div>
                 </div>
 
-                <!-- Pending Approval -->
                 <div class="plm-kpi-card plm-kpi-warning" t-on-click="openPendingApprovals">
                     <div class="plm-kpi-icon"><i class="fa fa-hourglass-half"/></div>
                     <div class="plm-kpi-body">
@@ -91,7 +84,6 @@
                     </div>
                 </div>
 
-                <!-- Applied Today -->
                 <div class="plm-kpi-card plm-kpi-success" t-on-click="openDoneEcos">
                     <div class="plm-kpi-icon"><i class="fa fa-check-circle"/></div>
                     <div class="plm-kpi-body">
@@ -103,7 +95,6 @@
                     </div>
                 </div>
 
-                <!-- Active Products -->
                 <div class="plm-kpi-card plm-kpi-purple" t-on-click="openProducts">
                     <div class="plm-kpi-icon"><i class="fa fa-cube"/></div>
                     <div class="plm-kpi-body">
@@ -115,7 +106,6 @@
                     </div>
                 </div>
 
-                <!-- Active BoMs -->
                 <div class="plm-kpi-card plm-kpi-teal" t-on-click="openBoms">
                     <div class="plm-kpi-icon"><i class="fa fa-sitemap"/></div>
                     <div class="plm-kpi-body">
@@ -129,13 +119,10 @@
 
             </div>
 
-            <!-- ── Main Grid ───────────────────────────────────────────── -->
             <div class="plm-main-grid">
 
-                <!-- LEFT COLUMN -->
                 <div class="plm-col-left">
 
-                    <!-- ECO Stage Pipeline -->
                     <div class="plm-panel">
                         <div class="plm-panel-header">
                             <i class="fa fa-random me-2"/>ECO Stage Pipeline
@@ -147,13 +134,13 @@
                                     t-on-click="() => this.openStageEcos(stage.id, stage.name)">
                                     <div class="plm-pipeline-header">
                                         <span class="plm-stage-dot"
-                                              t-att-style="'background:' + getStageColor(stage)"/>
+                                            t-att-style="'background:' + getStageColor(stage)"/>
                                         <span class="plm-stage-name" t-esc="stage.name"/>
                                         <span class="plm-stage-count" t-esc="stage.count"/>
                                     </div>
                                     <div class="plm-pipeline-bar-track">
                                         <div class="plm-pipeline-bar-fill"
-                                             t-att-style="'width:' + barWidth(stage.count, stageMax) + ';background:' + getStageColor(stage)"/>
+                                            t-att-style="'width:' + barWidth(stage.count, stageMax) + ';background:' + getStageColor(stage)"/>
                                     </div>
                                     <div class="plm-stage-badges">
                                         <t t-if="stage.is_start">
@@ -171,7 +158,6 @@
                         </div>
                     </div>
 
-                    <!-- ECO State Donut + Type Split -->
                     <div class="plm-panel plm-panel-stats">
                         <div class="plm-panel-header">
                             <i class="fa fa-pie-chart me-2"/>ECO Status Breakdown
@@ -179,7 +165,7 @@
                         <div class="plm-state-grid">
                             <t t-foreach="Object.entries(d.state_counts)" t-as="entry" t-key="entry[0]">
                                 <div class="plm-state-item"
-                                     t-att-style="'border-left:4px solid ' + getStateColor(entry[0])">
+                                    t-att-style="'border-left:4px solid ' + getStateColor(entry[0])">
                                     <span class="plm-state-count" t-esc="entry[1]"/>
                                     <span class="plm-state-label" t-esc="getStateLabel(entry[0])"/>
                                 </div>
@@ -199,7 +185,7 @@
                                 </div>
                                 <div class="plm-type-track">
                                     <div class="plm-type-fill plm-fill-product"
-                                         t-att-style="'width:' + barWidth(d.product_ecos, d.total_ecos || 1)"/>
+                                        t-att-style="'width:' + barWidth(d.product_ecos, d.total_ecos || 1)"/>
                                 </div>
                             </div>
                             <div class="plm-type-bar-wrap">
@@ -209,27 +195,26 @@
                                 </div>
                                 <div class="plm-type-track">
                                     <div class="plm-type-fill plm-fill-bom"
-                                         t-att-style="'width:' + barWidth(d.bom_ecos, d.total_ecos || 1)"/>
+                                        t-att-style="'width:' + barWidth(d.bom_ecos, d.total_ecos || 1)"/>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Priority Breakdown -->
                     <div class="plm-panel">
                         <div class="plm-panel-header">
                             <i class="fa fa-exclamation me-2"/>Priority Breakdown (Open ECOs)
                         </div>
                         <div class="plm-priority-list">
                             <t t-foreach="[['3','Critical'],['2','Very Urgent'],['1','Important'],['0','Normal']]"
-                               t-as="prio" t-key="prio[0]">
+                                t-as="prio" t-key="prio[0]">
                                 <div class="plm-priority-row">
                                     <span class="plm-prio-dot"
-                                          t-att-style="'background:' + getPriorityColor(prio[0])"/>
+                                            t-att-style="'background:' + getPriorityColor(prio[0])"/>
                                     <span class="plm-prio-label" t-esc="prio[1]"/>
                                     <div class="plm-prio-track">
                                         <div class="plm-prio-fill"
-                                             t-att-style="'width:' + barWidth(d.priority_counts[prio[0]] || 0, Math.max(...Object.values(d.priority_counts), 1)) + ';background:' + getPriorityColor(prio[0])"/>
+                                            t-att-style="'width:' + barWidth(d.priority_counts[prio[0]] || 0, Math.max(...Object.values(d.priority_counts), 1)) + ';background:' + getPriorityColor(prio[0])"/>
                                     </div>
                                     <span class="plm-prio-count" t-esc="d.priority_counts[prio[0]] || 0"/>
                                 </div>
@@ -257,10 +242,8 @@
 
                 </div>
 
-                <!-- RIGHT COLUMN -->
                 <div class="plm-col-right">
 
-                    <!-- Pending Approvals (shown to approvers/managers) -->
                     <t t-if="d.is_approver or d.is_manager">
                         <div class="plm-panel plm-panel-urgent">
                             <div class="plm-panel-header">
@@ -280,11 +263,11 @@
                                 <div class="plm-approval-list">
                                     <t t-foreach="d.pending_list" t-as="eco" t-key="eco.id">
                                         <div class="plm-approval-item"
-                                             t-on-click="() => openEcoById(eco.id)">
+                                            t-on-click="() => openEcoById(eco.id)">
                                             <div class="plm-approval-ref">
                                                 <span class="plm-ref-badge" t-esc="eco.reference"/>
                                                 <span t-att-class="'plm-prio-tag plm-prio-' + eco.priority"
-                                                      t-esc="getPriorityLabel(eco.priority)"/>
+                                                        t-esc="getPriorityLabel(eco.priority)"/>
                                             </div>
                                             <div class="plm-approval-name" t-esc="eco.name"/>
                                             <div class="plm-approval-meta">
@@ -304,7 +287,6 @@
                         </div>
                     </t>
 
-                    <!-- Recent ECOs -->
                     <div class="plm-panel">
                         <div class="plm-panel-header">
                             <i class="fa fa-history me-2"/>Recent Engineering Change Orders
@@ -330,13 +312,13 @@
                                         <span class="plm-eco-name" t-esc="eco.name"/>
                                         <span>
                                             <span t-att-class="eco.eco_type === 'bom' ? 'plm-type-tag plm-type-bom' : 'plm-type-tag plm-type-product'"
-                                                  t-esc="getEcoTypeLabel(eco.eco_type)"/>
+                                                t-esc="getEcoTypeLabel(eco.eco_type)"/>
                                         </span>
                                         <span class="plm-stage-text" t-esc="eco.stage"/>
                                         <span>
                                             <span class="plm-state-pill"
-                                                  t-att-style="'background:' + getStateColor(eco.state) + '22;color:' + getStateColor(eco.state)"
-                                                  t-esc="getStateLabel(eco.state)"/>
+                                                t-att-style="'background:' + getStateColor(eco.state) + '22;color:' + getStateColor(eco.state)"
+                                                t-esc="getStateLabel(eco.state)"/>
                                         </span>
                                     </div>
                                 </t>
@@ -347,7 +329,6 @@
                         </t>
                     </div>
 
-                    <!-- Recent Audit Activity -->
                     <div class="plm-panel">
                         <div class="plm-panel-header">
                             <i class="fa fa-shield me-2"/>Recent Audit Activity
@@ -389,7 +370,6 @@
                 </div>
             </div>
 
-            <!-- ── Footer ──────────────────────────────────────────────── -->
             <div class="plm-dash-footer">
                 <span><i class="fa fa-sync me-1"/>Auto-refreshes every 30 seconds</span>
                 <span>PLM Engineering Change Control</span>

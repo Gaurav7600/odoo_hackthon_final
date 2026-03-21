@@ -15,7 +15,6 @@ class PlmBom(models.Model):
     _order = 'product_id, version_number desc'
     _rec_name = 'display_name_full'
 
-    # ── Core Fields ──────────────────────────────────────────────────
     name = fields.Char(
         string='BoM Reference',
         required=True,
@@ -45,7 +44,6 @@ class PlmBom(models.Model):
     )
     notes = fields.Text(string='Notes / Instructions')
 
-    # ── Versioning ───────────────────────────────────────────────────
     version = fields.Char(
         string='BoM Version',
         default='v1',
@@ -67,7 +65,6 @@ class PlmBom(models.Model):
         ondelete='set null',
     )
 
-    # ── Status ───────────────────────────────────────────────────────
     status = fields.Selection([
         ('active', 'Active'),
         ('archived', 'Archived'),
@@ -77,10 +74,9 @@ class PlmBom(models.Model):
         copy=False,
         tracking=True,
         help='Active: usable in Manufacturing Orders.\n'
-             'Archived: read-only, retained for audit.',
+            'Archived: read-only, retained for audit.',
     )
 
-    # ── Components & Operations ──────────────────────────────────────
     line_ids = fields.One2many(
         'plm.bom.line',
         'bom_id',
@@ -94,7 +90,6 @@ class PlmBom(models.Model):
         copy=True,
     )
 
-    # ── Computed ─────────────────────────────────────────────────────
     display_name_full = fields.Char(
         compute='_compute_display_name_full',
         store=True,
@@ -119,9 +114,6 @@ class PlmBom(models.Model):
         store=False,
     )
 
-    # ═══════════════════════════════════════════════════
-    #  Compute
-    # ═══════════════════════════════════════════════════
 
     @api.depends('name', 'product_id', 'version', 'status')
     def _compute_display_name_full(self):
@@ -145,10 +137,6 @@ class PlmBom(models.Model):
         for b in self:
             b.total_component_cost = sum(b.line_ids.mapped('subtotal_cost'))
 
-    # ═══════════════════════════════════════════════════
-    #  Constraints
-    # ═══════════════════════════════════════════════════
-
     @api.constrains('product_id', 'version')
     def _check_unique_version(self):
         for rec in self:
@@ -163,24 +151,16 @@ class PlmBom(models.Model):
                     % (rec.product_id.name, rec.version)
                 )
 
-    # ═══════════════════════════════════════════════════
-    #  ORM Override — prevent direct edits to archived
-    # ═══════════════════════════════════════════════════
-
     def write(self, vals):
         protected = {'line_ids', 'operation_ids', 'product_id', 'product_qty', 'name'}
         for rec in self:
             if rec.status == 'archived' and any(f in vals for f in protected):
                 raise UserError(
                     _("BoM '%s' is Archived and cannot be edited directly.\n\n"
-                      "Create a BoM Engineering Change Order (ECO) to propose changes.")
+                    "Create a BoM Engineering Change Order (ECO) to propose changes.")
                     % rec.display_name_full
                 )
         return super().write(vals)
-
-    # ═══════════════════════════════════════════════════
-    #  Actions
-    # ═══════════════════════════════════════════════════
 
     def action_view_ecos(self):
         self.ensure_one()
@@ -249,7 +229,6 @@ class PlmBomLine(models.Model):
     )
     sequence = fields.Integer(string='Sequence', default=10)
 
-    # Component product — references plm.product
     component_id = fields.Many2one(
         'plm.product',
         string='Component',

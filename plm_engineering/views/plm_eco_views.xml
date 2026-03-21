@@ -1,35 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- ══════════════════════════════════════════════════
-         ECO FORM VIEW
-    ══════════════════════════════════════════════════ -->
     <record id="view_plm_eco_form" model="ir.ui.view">
         <field name="name">plm.eco.form</field>
         <field name="model">plm.eco</field>
         <field name="arch" type="xml">
             <form string="Engineering Change Order">
                 <header>
-                    <!-- Stage status bar -->
                     <field name="stage_id" widget="statusbar"
-                           options="{'clickable': '1'}"
-                           readonly="state == 'done'"/>
+                        options="{'clickable': '1'}"
+                        readonly="state == 'done'"/>
 
-                    <!-- ▶ Start Review (from Draft) -->
                     <button name="action_start_review"
                             string="Start Review"
                             type="object"
                             class="btn-primary"
                             invisible="state != 'draft'"/>
 
-                    <!--  Request Approval (when stage requires it) -->
                     <button name="action_request_approval"
                             string=" Request Approval"
                             type="object"
                             class="btn-warning"
                             invisible="state == 'draft' or state == 'done' or not stage_id"/>
 
-                    <!-- Approve (Approver role) -->
                     <button name="action_approve"
                             string=" Approve"
                             type="object"
@@ -37,7 +30,6 @@
                             groups="plm_engineering.group_plm_approver"
                             invisible="state != 'in_review'"/>
 
-                    <!--  Reject (Approver role) -->
                     <button name="action_reject"
                             string=" Reject"
                             type="object"
@@ -45,21 +37,18 @@
                             groups="plm_engineering.group_plm_approver"
                             invisible="state != 'in_review'"/>
 
-                    <!-- ✔ Validate &amp; Apply -->
                     <button name="action_validate"
                             string="Validate &amp; Apply"
                             type="object"
                             class="btn-success"
                             invisible="state not in ['approved', 'in_review'] or state == 'draft' or state == 'done'"/>
 
-                    <!--  Cancel -->
                     <button name="action_cancel"
                             string=" Cancel"
                             type="object"
                             invisible="state == 'done' or state == 'draft'"
                             confirm="Are you sure you want to cancel this ECO?"/>
 
-                    <!-- ↩ Reset to Draft (Manager) -->
                     <button name="action_reset_to_draft"
                             string="↩ Reset to Draft"
                             type="object"
@@ -67,11 +56,10 @@
                             groups="plm_engineering.group_plm_manager"/>
 
                     <field name="state" widget="statusbar"
-                           statusbar_visible="draft,in_review,approved,done"/>
+                        statusbar_visible="draft,in_review,approved,done"/>
                 </header>
 
                 <sheet>
-                    <!-- Smart Buttons -->
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_comparison" type="object"
                                 class="oe_stat_button" icon="fa-exchange"
@@ -89,21 +77,19 @@
                         </button>
                     </div>
 
-                    <!-- Overdue alert banner -->
                     <div class="alert alert-danger" role="alert"
-                         style="margin-bottom:12px;border-left:5px solid #dc3545;"
-                         invisible="not is_overdue">
+                        style="margin-bottom:12px;border-left:5px solid #dc3545;"
+                        invisible="not is_overdue">
                         <strong>This ECO is OVERDUE.</strong>
                         The effective date has passed and the ECO has not been applied.
                         Please review and take action immediately.
                     </div>
 
-                    <!-- Title + Reference -->
                     <div class="oe_title">
                         <label for="name"/>
                         <h1>
                             <field name="name" placeholder="ECO Title..."
-                                   readonly="state == 'done'"/>
+                                readonly="state == 'done'"/>
                         </h1>
                         <div style="display:flex; gap:16px; align-items:center; margin-top:4px;">
                             <span class="text-muted">
@@ -114,165 +100,157 @@
                         </div>
                     </div>
 
-                    <!-- Hidden computed fields needed by invisible attrs -->
                     <field name="is_overdue" invisible="1"/>
                     <field name="days_until_effective" invisible="1"/>
 
-                    <!-- Main Fields -->
                     <group>
                         <group string="ECO Details">
                             <field name="eco_type"
-                                   widget="radio"
-                                   options="{'horizontal': true}"
-                                   readonly="state == 'done'"/>
+                                    widget="radio"
+                                    options="{'horizontal': true}"
+                                    readonly="state == 'done'"/>
                             <field name="product_id"
-                                   domain="[('status', '=', 'active')]"
-                                   options="{'no_create_edit': True}"
-                                   readonly="state == 'done'"/>
+                                    domain="[('status', '=', 'active')]"
+                                    options="{'no_create_edit': True}"
+                                    readonly="state == 'done'"/>
                             <field name="bom_id"
-                                   invisible="eco_type != 'bom'"
-                                   domain="[('product_id', '=', product_id), ('status', '=', 'active')]"
-                                   options="{'no_create_edit': True}"
-                                   readonly="state == 'done'"/>
+                                    invisible="eco_type != 'bom'"
+                                    domain="[('product_id', '=', product_id), ('status', '=', 'active')]"
+                                    options="{'no_create_edit': True}"
+                                    readonly="state == 'done'"/>
                             <field name="user_id" widget="many2one_avatar_user"/>
                             <field name="effective_date"
-                                   readonly="state == 'done'"/>
+                                    readonly="state == 'done'"/>
                         </group>
                         <group string="Versioning">
                             <field name="version_update"
-                                   widget="toggle_button"
-                                   options="{'active': 'Create New Version', 'inactive': 'Apply to Same Version'}"
-                                   readonly="state == 'done'"/>
+                                    widget="toggle_button"
+                                    options="{'active': 'Create New Version', 'inactive': 'Apply to Same Version'}"
+                                    readonly="state == 'done'"/>
                             <field name="current_version" readonly="1"
-                                   string="Current Version"/>
+                                    string="Current Version"/>
                             <field name="new_version_label" readonly="1"
-                                   string="New Version (Preview)"
-                                   invisible="not version_update"/>
+                                    string="New Version (Preview)"
+                                    invisible="not version_update"/>
                             <field name="kanban_state" widget="state_selection"
-                                   readonly="state == 'done'"/>
+                                    readonly="state == 'done'"/>
                         </group>
                     </group>
 
-                    <!-- Applied info -->
                     <group invisible="state != 'done'" string="Applied Info">
                         <field name="applied_date" readonly="1"/>
                         <field name="applied_by_id" readonly="1"
-                               widget="many2one_avatar_user"/>
+                                widget="many2one_avatar_user"/>
                     </group>
 
-                    <!-- Tab Notebook -->
                     <notebook>
 
-                        <!-- Product Changes Tab -->
                         <page string="Product Changes" name="product_changes"
-                              invisible="eco_type != 'product'">
+                                invisible="eco_type != 'product'">
                             <div class="alert alert-info mb-3" role="alert"
-                                 invisible="product_change_ids">
+                                    invisible="product_change_ids">
                                 <i class="fa fa-info-circle"/>
                                 Select a product above to auto-populate current values.
                                 Then update the <b>Proposed Value</b> column with your changes.
                             </div>
                             <field name="product_change_ids" nolabel="1"
-                                   readonly="state == 'done'">
+                                    readonly="state == 'done'">
                                 <list editable="bottom"
-                                      decoration-success="change_status == 'modified'"
-                                      decoration-danger="change_status == 'removed'"
-                                      decoration-info="change_status == 'added'"
-                                      decoration-muted="change_status == 'unchanged'">
+                                    decoration-success="change_status == 'modified'"
+                                    decoration-danger="change_status == 'removed'"
+                                    decoration-info="change_status == 'added'"
+                                    decoration-muted="change_status == 'unchanged'">
                                     <field name="field_name" string="Field"/>
                                     <field name="field_label" column_invisible="True"/>
                                     <field name="old_value" string="Current Value" readonly="1"/>
                                     <field name="new_value" string="Proposed Value"/>
                                     <field name="change_status" widget="badge"
-                                           decoration-success="change_status == 'modified'"
-                                           decoration-danger="change_status == 'removed'"
-                                           decoration-info="change_status == 'added'"
-                                           decoration-muted="change_status == 'unchanged'"/>
+                                        decoration-success="change_status == 'modified'"
+                                        decoration-danger="change_status == 'removed'"
+                                        decoration-info="change_status == 'added'"
+                                        decoration-muted="change_status == 'unchanged'"/>
                                 </list>
                             </field>
                         </page>
 
                         <!-- Component Changes Tab -->
                         <page string="Component Changes" name="bom_changes"
-                              invisible="eco_type != 'bom'">
+                            invisible="eco_type != 'bom'">
                             <div class="alert alert-info mb-3" role="alert"
-                                 invisible="bom_change_ids">
+                                invisible="bom_change_ids">
                                 <i class="fa fa-info-circle"/>
                                 Select a BoM above to load all current components.
                                 Adjust quantities, or set Change Type to Added / Removed.
                             </div>
                             <field name="bom_change_ids" nolabel="1"
-                                   readonly="state == 'done'">
+                                readonly="state == 'done'">
                                 <list editable="bottom"
-                                      decoration-success="change_type == 'added'"
-                                      decoration-danger="change_type == 'removed'"
-                                      decoration-warning="change_type == 'modified'"
-                                      decoration-muted="change_type == 'unchanged'">
+                                    decoration-success="change_type == 'added'"
+                                    decoration-danger="change_type == 'removed'"
+                                    decoration-warning="change_type == 'modified'"
+                                    decoration-muted="change_type == 'unchanged'">
                                     <field name="component_id"
-                                           domain="[('status', '=', 'active')]"/>
+                                        domain="[('status', '=', 'active')]"/>
                                     <field name="change_type" widget="badge"
-                                           decoration-success="change_type == 'added'"
-                                           decoration-danger="change_type == 'removed'"
-                                           decoration-warning="change_type == 'modified'"
-                                           decoration-muted="change_type == 'unchanged'"/>
+                                        decoration-success="change_type == 'added'"
+                                        decoration-danger="change_type == 'removed'"
+                                        decoration-warning="change_type == 'modified'"
+                                        decoration-muted="change_type == 'unchanged'"/>
                                     <field name="old_qty" string="Current Qty" readonly="1"/>
                                     <field name="new_qty" string="Proposed Qty"/>
                                     <field name="qty_diff" string="Diff" readonly="1"
-                                           decoration-success="qty_diff &gt; 0"
-                                           decoration-danger="qty_diff &lt; 0"/>
+                                        decoration-success="qty_diff &gt; 0"
+                                        decoration-danger="qty_diff &lt; 0"/>
                                     <field name="uom" string="UoM" readonly="1"/>
                                 </list>
                             </field>
                         </page>
 
-                        <!-- Operation Changes Tab -->
                         <page string="Operation Changes" name="op_changes"
-                              invisible="eco_type != 'bom'">
+                                invisible="eco_type != 'bom'">
                             <field name="operation_change_ids" nolabel="1"
-                                   readonly="state == 'done'">
+                                    readonly="state == 'done'">
                                 <list editable="bottom"
-                                      decoration-success="change_type == 'added'"
-                                      decoration-danger="change_type == 'removed'"
-                                      decoration-warning="change_type == 'modified'"
-                                      decoration-muted="change_type == 'unchanged'">
+                                    decoration-success="change_type == 'added'"
+                                    decoration-danger="change_type == 'removed'"
+                                    decoration-warning="change_type == 'modified'"
+                                    decoration-muted="change_type == 'unchanged'">
                                     <field name="operation_name" string="Operation"/>
                                     <field name="work_center" string="Work Center"/>
                                     <field name="change_type" widget="badge"
-                                           decoration-success="change_type == 'added'"
-                                           decoration-danger="change_type == 'removed'"
-                                           decoration-warning="change_type == 'modified'"
-                                           decoration-muted="change_type == 'unchanged'"/>
+                                        decoration-success="change_type == 'added'"
+                                        decoration-danger="change_type == 'removed'"
+                                        decoration-warning="change_type == 'modified'"
+                                        decoration-muted="change_type == 'unchanged'"/>
                                     <field name="old_duration" string="Current (min)" readonly="1"/>
                                     <field name="new_duration" string="Proposed (min)"/>
                                     <field name="duration_diff" string="Diff (min)" readonly="1"
-                                           decoration-success="duration_diff &gt; 0"
-                                           decoration-danger="duration_diff &lt; 0"/>
+                                        decoration-success="duration_diff &gt; 0"
+                                        decoration-danger="duration_diff &lt; 0"/>
                                 </list>
                             </field>
                         </page>
 
-                        <!-- Approvals Tab -->
                         <page string="Approvals" name="approvals">
                             <field name="approval_ids" nolabel="1" readonly="1">
                                 <list decoration-success="state == 'approved'"
-                                      decoration-danger="state == 'rejected'"
-                                      decoration-warning="state == 'pending'"
-                                      decoration-muted="state == 'cancelled'">
+                                    decoration-danger="state == 'rejected'"
+                                    decoration-warning="state == 'pending'"
+                                    decoration-muted="state == 'cancelled'">
                                     <field name="requested_by_id" string="Requested By"
-                                           widget="many2one_avatar_user"/>
+                                        widget="many2one_avatar_user"/>
                                     <field name="reviewed_by_id" string="Reviewed By"
-                                           widget="many2one_avatar_user"/>
+                                        widget="many2one_avatar_user"/>
                                     <field name="state" widget="badge"
-                                           decoration-success="state == 'approved'"
-                                           decoration-danger="state == 'rejected'"
-                                           decoration-warning="state == 'pending'"/>
+                                        decoration-success="state == 'approved'"
+                                        decoration-danger="state == 'rejected'"
+                                        decoration-warning="state == 'pending'"/>
                                     <field name="review_date" string="Date"/>
                                     <field name="note"/>
                                 </list>
                             </field>
                         </page>
 
-                        <!-- Audit Trail Tab -->
                         <page string="Audit Trail" name="audit">
                             <field name="audit_log_ids" nolabel="1" readonly="1">
                                 <list default_order="timestamp desc">
@@ -286,10 +264,9 @@
                             </field>
                         </page>
 
-                        <!-- Notes Tab -->
                         <page string="Notes" name="notes">
                             <field name="note" nolabel="1"
-                                   placeholder="Add internal notes, context, or references here..."/>
+                                placeholder="Add internal notes, context, or references here..."/>
                         </page>
 
                     </notebook>
@@ -299,25 +276,22 @@
         </field>
     </record>
 
-    <!-- ══════════════════════════════════════════════════
-         ECO LIST VIEW
-    ══════════════════════════════════════════════════ -->
     <record id="view_plm_eco_list" model="ir.ui.view">
         <field name="name">plm.eco.list</field>
         <field name="model">plm.eco</field>
         <field name="arch" type="xml">
             <list string="Engineering Change Orders"
-                  decoration-success="state == 'done'"
-                  decoration-warning="state == 'in_review'"
-                  decoration-info="state == 'approved'"
-                  decoration-danger="is_overdue == True"
-                  decoration-muted="state == 'draft'">
+                decoration-success="state == 'done'"
+                decoration-warning="state == 'in_review'"
+                decoration-info="state == 'approved'"
+                decoration-danger="is_overdue == True"
+                decoration-muted="state == 'draft'">
                 <field name="priority" widget="priority" optional="show"/>
                 <field name="reference" string="Reference"/>
                 <field name="name" string="Title"/>
                 <field name="eco_type" widget="badge"
-                       decoration-info="eco_type == 'product'"
-                       decoration-warning="eco_type == 'bom'"/>
+                    decoration-info="eco_type == 'product'"
+                    decoration-warning="eco_type == 'bom'"/>
                 <field name="product_id" string="Product"/>
                 <field name="bom_id" string="BoM" optional="show"/>
                 <field name="current_version" string="Version"/>
@@ -327,11 +301,11 @@
                 <field name="is_overdue" string="Overdue" optional="show"/>
                 <field name="stage_id"/>
                 <field name="state" widget="badge"
-                       decoration-success="state == 'done'"
-                       decoration-warning="state == 'in_review'"
-                       decoration-info="state == 'approved'"
-                       decoration-danger="state == 'cancelled'"
-                       decoration-muted="state == 'draft'"/>
+                    decoration-success="state == 'done'"
+                    decoration-warning="state == 'in_review'"
+                    decoration-info="state == 'approved'"
+                    decoration-danger="state == 'cancelled'"
+                    decoration-muted="state == 'draft'"/>
                 <field name="change_count" string="Changes"/>
                 <field name="is_approved" string="Approved" optional="show"/>
                 <button name="action_view_comparison" type="object"
@@ -341,9 +315,6 @@
         </field>
     </record>
 
-    <!-- ══════════════════════════════════════════════════
-         ECO KANBAN VIEW
-    ══════════════════════════════════════════════════ -->
     <record id="view_plm_eco_kanban" model="ir.ui.view">
         <field name="name">plm.eco.kanban</field>
         <field name="model">plm.eco</field>
@@ -367,17 +338,16 @@
                 <field name="days_until_effective"/>
                 <field name="approval_count"/>
                 <templates>
-                    <t t-name="card" class="oe_kanban_card oe_kanban_global_click">
+                    <t t-name="card" class="oe_kanban_card oe_kanban_global_click mb-2">
 
-                        <!-- Overdue banner -->
                         <div t-if="record.is_overdue.raw_value"
-                             style="background:#dc354515;border-left:3px solid #dc3545;
-                                    padding:4px 10px;margin:-12px -12px 10px;
-                                    font-size:11px;font-weight:700;color:#dc3545;">
+                            style="background: #dc354515; border-left: 4px solid #dc3545;
+                            padding: 5px 9px; margin: -8px -8px 10px; font-size: 11px;
+                            font-weight: 700; color: #dc3545; border-radius: 8px;">
                             OVERDUE
                         </div>
 
-                        <!-- Card Top: Title + Priority -->
+
                         <div style="display:flex;justify-content:space-between;
                                     align-items:flex-start;margin-bottom:6px;">
                             <div style="font-weight:700;font-size:13px;
@@ -387,72 +357,66 @@
                             <field name="priority" widget="priority"/>
                         </div>
 
-                        <!-- Reference + Kanban State -->
                         <div style="display:flex;justify-content:space-between;
                                     align-items:center;margin-bottom:8px;">
                             <span style="font-size:11px;font-weight:700;
-                                         background:#1a1a2e;color:#fff;
-                                         padding:2px 8px;border-radius:4px;">
+                                        background:#1a1a2e;color:#fff;
+                                        padding:2px 8px;border-radius:4px;">
                                 <field name="reference"/>
                             </span>
                             <field name="kanban_state" widget="state_selection"/>
                         </div>
 
-                        <!-- ECO Type + Version badges -->
                         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
                             <field name="eco_type" widget="badge"/>
                             <span style="font-size:11px;background:#e9ecef;
-                                         color:#495057;padding:2px 8px;border-radius:10px;">
+                                        color:#495057;padding:2px 8px;border-radius:10px;">
                                 <field name="current_version"/>
                             </span>
                             <span t-if="record.is_approved.raw_value"
-                                  style="font-size:11px;background:#d1e7dd;
-                                         color:#0a3622;padding:2px 8px;border-radius:10px;">
+                                style="font-size:11px;background:#d1e7dd;
+                                color:#0a3622;padding:2px 8px;border-radius:10px;">
                                 Approved
                             </span>
                         </div>
 
-                        <!-- Product -->
                         <div style="font-size:12px;color:#495057;margin-bottom:4px;
                                     display:flex;align-items:center;gap:4px;">
                             <span></span>
                             <field name="product_id"/>
                         </div>
 
-                        <!-- Changes + Approvals row -->
                         <div style="display:flex;gap:12px;font-size:11px;
                                     color:#6c757d;margin-bottom:4px;">
                             <span t-if="record.change_count.value">
                                 <t t-out="record.change_count.value"/> change(s)
                             </span>
                             <span t-if="record.approval_count.value">
-                                ✔ <t t-out="record.approval_count.value"/> approval(s)
+                                <t t-out="record.approval_count.value"/> approval(s)
                             </span>
                         </div>
 
-                        <!-- Effective date + days remaining -->
                         <div t-if="record.effective_date.value"
-                             t-att-style="record.is_overdue.raw_value ?
-                                 'font-size:11px;color:#dc3545;font-weight:600;' :
-                                 'font-size:11px;color:#6c757d;'">
+                            t-att-style="record.is_overdue.raw_value ?
+                                'font-size:11px;color:#dc3545;font-weight:600;' :
+                                'font-size:11px;color:#6c757d;'">
                             <field name="effective_date"/>
                             <t t-if="!record.is_overdue.raw_value and record.days_until_effective.value > 0">
                                 (<t t-out="record.days_until_effective.value"/> days left)
                             </t>
                         </div>
 
-                        <!-- Footer: State + Avatar -->
                         <div style="display:flex;justify-content:space-between;
                                     align-items:center;margin-top:10px;
                                     padding-top:8px;border-top:1px solid #dee2e6;">
                             <field name="state" widget="badge"
-                                   decoration-success="state == 'done'"
-                                   decoration-warning="state == 'in_review'"
-                                   decoration-info="state == 'approved'"
-                                   decoration-danger="state == 'cancelled'"
-                                   decoration-muted="state == 'draft'"/>
+                                decoration-success="state == 'done'"
+                                decoration-warning="state == 'in_review'"
+                                decoration-info="state == 'approved'"
+                                decoration-danger="state == 'cancelled'"
+                                decoration-muted="state == 'draft'"/>
                             <field name="user_id" widget="many2one_avatar_user"
-                                   options="{'size': 24}"/>
+                                options="{'size': 24}"/>
                         </div>
                     </t>
                 </templates>
@@ -460,9 +424,6 @@
         </field>
     </record>
 
-    <!-- ══════════════════════════════════════════════════
-         ECO SEARCH VIEW
-    ══════════════════════════════════════════════════ -->
     <record id="view_plm_eco_search" model="ir.ui.view">
         <field name="name">plm.eco.search</field>
         <field name="model">plm.eco</field>
@@ -473,7 +434,6 @@
                 <field name="product_id"/>
                 <field name="user_id"/>
                 <field name="stage_id"/>
-                <!-- Filters -->
                 <filter string="My ECOs" name="my_ecos"
                         domain="[('user_id', '=', uid)]"/>
                 <separator/>
@@ -492,7 +452,6 @@
                 <separator/>
                 <filter string="Pending Approval" name="pending_approval"
                         domain="[('state', '=', 'in_review')]"/>
-                <!-- Group By -->
                 <group expand="0" string="Group By">
                     <filter string="Stage" name="grp_stage" context="{'group_by': 'stage_id'}"/>
                     <filter string="ECO Type" name="grp_type" context="{'group_by': 'eco_type'}"/>
@@ -505,9 +464,6 @@
         </field>
     </record>
 
-    <!-- ══════════════════════════════════════════════════
-         ACTIONS
-    ══════════════════════════════════════════════════ -->
     <record id="action_plm_eco" model="ir.actions.act_window">
         <field name="name">Engineering Change Orders</field>
         <field name="res_model">plm.eco</field>

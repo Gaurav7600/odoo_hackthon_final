@@ -28,7 +28,6 @@ class PlmComparisonWizard(models.TransientModel):
         for wiz in self:
             wiz.comparison_html = self._build_html(wiz.eco_id) if wiz.eco_id else ''
 
-    # ──────────────────────────────────────────────────
     def _build_html(self, eco):
         product_name = eco.product_id.display_name_full if eco.product_id else 'N/A'
         eco_type_label = dict(eco._fields['eco_type'].selection).get(eco.eco_type, eco.eco_type)
@@ -53,19 +52,19 @@ class PlmComparisonWizard(models.TransientModel):
   <!-- Legend -->
   <div style="display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap;">
     <span style="background:#d4edda;color:#155724;padding:4px 14px;border-radius:20px;
-                 font-size:12px;font-weight:600;border:1px solid #c3e6cb;">
+                font-size:12px;font-weight:600;border:1px solid #c3e6cb;">
       ▲ Added / Increased
     </span>
     <span style="background:#f8d7da;color:#721c24;padding:4px 14px;border-radius:20px;
-                 font-size:12px;font-weight:600;border:1px solid #f5c6cb;">
+                font-size:12px;font-weight:600;border:1px solid #f5c6cb;">
       ▼ Reduced / Removed
     </span>
     <span style="background:#fff3cd;color:#856404;padding:4px 14px;border-radius:20px;
-                 font-size:12px;font-weight:600;border:1px solid #ffeeba;">
+                font-size:12px;font-weight:600;border:1px solid #ffeeba;">
       ✎ Modified
     </span>
     <span style="background:#e9ecef;color:#495057;padding:4px 14px;border-radius:20px;
-                 font-size:12px;font-weight:600;border:1px solid #dee2e6;">
+                font-size:12px;font-weight:600;border:1px solid #dee2e6;">
       — Unchanged
     </span>
   </div>
@@ -79,7 +78,6 @@ class PlmComparisonWizard(models.TransientModel):
         html += '</div>'
         return html
 
-    # ── Product change table ──────────────────────────
     def _product_table(self, eco):
         rows = ''
         for c in eco.product_change_ids:
@@ -117,7 +115,6 @@ class PlmComparisonWizard(models.TransientModel):
     <tbody style="background:white;">{rows}</tbody>
   </table>"""
 
-    # ── BoM component table ───────────────────────────
     def _bom_component_table(self, eco):
         bom_label = eco.bom_id.display_name_full if eco.bom_id else 'N/A'
         rows = ''
@@ -163,7 +160,6 @@ class PlmComparisonWizard(models.TransientModel):
     <tbody style="background:white;">{rows}</tbody>
   </table>"""
 
-    # ── BoM operation table ───────────────────────────
     def _bom_operation_table(self, eco):
         rows = ''
         for op in eco.operation_change_ids:
@@ -209,7 +205,6 @@ class PlmComparisonWizard(models.TransientModel):
     <tbody style="background:white;">{rows}</tbody>
   </table>"""
 
-    # ── Helpers ───────────────────────────────────────
     def _row_style(self, change_type):
         styles = {
             'added':     ('background:#d4edda;border-left:4px solid #28a745;'),

@@ -30,7 +30,6 @@ class PlmDashboard(models.AbstractModel):
         week_ago = now - timedelta(days=7)
         month_ago = now - timedelta(days=30)
 
-        # ── ECO State Counts ───────────────────────────────────────────
         all_ecos = EcoModel.search([])
         state_counts = {
             'draft': 0,
@@ -56,17 +55,14 @@ class PlmDashboard(models.AbstractModel):
             ('applied_date', '>=', fields.Datetime.to_string(week_ago)),
         ])
 
-        # ── Priority Breakdown ─────────────────────────────────────────
         priority_counts = {'0': 0, '1': 0, '2': 0, '3': 0}
         for eco in all_ecos.filtered(lambda e: e.state not in ('done', 'cancelled')):
             if eco.priority in priority_counts:
                 priority_counts[eco.priority] += 1
 
-        # ── ECO Type Breakdown ─────────────────────────────────────────
         product_ecos = len(all_ecos.filtered(lambda e: e.eco_type == 'product'))
         bom_ecos = len(all_ecos.filtered(lambda e: e.eco_type == 'bom'))
 
-        # ── Stage Pipeline ─────────────────────────────────────────────
         stages = StageModel.search([], order='sequence asc')
         stage_pipeline = []
         for stage in stages:
@@ -82,13 +78,11 @@ class PlmDashboard(models.AbstractModel):
                 'fold': stage.fold,
             })
 
-        # ── Product & BoM Stats ────────────────────────────────────────
         active_products = ProductModel.search_count([('status', '=', 'active')])
         archived_products = ProductModel.search_count([('status', '=', 'archived')])
         active_boms = BomModel.search_count([('status', '=', 'active')])
         archived_boms = BomModel.search_count([('status', '=', 'archived')])
 
-        # ── Recent ECOs (last 8) ───────────────────────────────────────
         recent_ecos = EcoModel.search([], order='create_date desc', limit=8)
         recent_eco_list = []
         for eco in recent_ecos:
@@ -106,7 +100,6 @@ class PlmDashboard(models.AbstractModel):
                 'create_date': fields.Datetime.to_string(eco.create_date) if eco.create_date else '',
             })
 
-        # ── Pending Approvals (for approvers) ─────────────────────────
         pending_ecos = EcoModel.search([('state', '=', 'in_review')], limit=5)
         pending_list = []
         for eco in pending_ecos:
@@ -120,7 +113,6 @@ class PlmDashboard(models.AbstractModel):
                 'effective_date': fields.Date.to_string(eco.effective_date) if eco.effective_date else '',
             })
 
-        # ── Recent Audit Events (last 5) ───────────────────────────────
         recent_audit = AuditModel.search([], order='timestamp desc', limit=5)
         audit_list = []
         for log in recent_audit:
@@ -133,7 +125,6 @@ class PlmDashboard(models.AbstractModel):
                 'new_value': log.new_value or '',
             })
 
-        # ── Weekly ECO Trend (last 7 days) ─────────────────────────────
         weekly_trend = []
         for i in range(6, -1, -1):
             day = today - timedelta(days=i)
@@ -153,7 +144,6 @@ class PlmDashboard(models.AbstractModel):
                 'count': count,
             })
 
-        # ── Current user info ──────────────────────────────────────────
         user = self.env.user
         is_approver = user.has_group('plm_engineering.group_plm_approver')
         is_manager = user.has_group('plm_engineering.group_plm_manager')
@@ -165,7 +155,6 @@ class PlmDashboard(models.AbstractModel):
         ])
 
         return {
-            # KPI Cards
             'total_ecos': total_ecos,
             'pending_approval': pending_approval,
             'applied_today': applied_today,
@@ -175,32 +164,18 @@ class PlmDashboard(models.AbstractModel):
             'active_boms': active_boms,
             'archived_boms': archived_boms,
             'my_ecos_count': my_ecos_count,
-
-            # State breakdown
             'state_counts': state_counts,
-
-            # Priority
             'priority_counts': priority_counts,
-
-            # ECO type split
             'product_ecos': product_ecos,
             'bom_ecos': bom_ecos,
-
-            # Stage pipeline
             'stage_pipeline': stage_pipeline,
-
-            # Lists
             'recent_ecos': recent_eco_list,
             'pending_list': pending_list,
             'audit_list': audit_list,
             'weekly_trend': weekly_trend,
-
-            # User context
             'user_name': user.name,
             'is_approver': is_approver,
             'is_manager': is_manager,
             'is_engineer': is_engineer,
-
-            # Timestamp
             'generated_at': fields.Datetime.to_string(now),
         }

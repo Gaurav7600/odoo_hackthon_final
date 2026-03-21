@@ -88,7 +88,7 @@ class PlmEcoStage(models.Model):
                 if others:
                     raise ValidationError(
                         _("Only one stage can be the Final Stage. "
-                          "Please unmark '%s' first.") % others[0].name
+                        "Please unmark '%s' first.") % others[0].name
                     )
 
     @api.constrains('is_start_stage')
@@ -102,5 +102,5 @@ class PlmEcoStage(models.Model):
                 if others:
                     raise ValidationError(
                         _("Only one stage can be the Starting Stage. "
-                          "Please unmark '%s' first.") % others[0].name
+                        "Please unmark '%s' first.") % others[0].name
                     )

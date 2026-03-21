@@ -40,7 +40,6 @@ class PlmEcoApproval(models.Model):
         readonly=True,
     )
 
-    # Friendly icon-label
     state_display = fields.Char(compute='_compute_state_display', string='Status')
 
     @api.depends('state')
@@ -104,5 +103,5 @@ class PlmAuditLog(models.Model):
     def unlink(self):
         raise UserError(
             _("Audit log entries are immutable and cannot be deleted. "
-              "They ensure full PLM traceability.")
+            "They ensure full PLM traceability.")
         )

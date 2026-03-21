@@ -33,25 +33,19 @@
     'category': 'Manufacturing/PLM',
     'depends': ['base', 'mail', 'web'],
     'data': [
-        # Security
         'security/plm_security.xml',
         'security/ir.model.access.csv',
-        # Sequences & Default Data
         'data/plm_data.xml',
         'data/plm_demo_data.xml',
-        # Dashboard client action (before menu)
         'views/plm_dashboard_views.xml',
-        # Views
         'views/plm_product_views.xml',  
         'views/plm_bom_views.xml',
         'views/plm_eco_stage_views.xml',
         'views/plm_eco_views.xml',
         'views/plm_audit_log_views.xml',
         'views/plm_report_views.xml',
-        # Wizards
         'wizard/plm_eco_approve_wizard_views.xml',
         'wizard/plm_comparison_wizard_views.xml',
-        # Menu (last — after all actions are defined)
         'views/plm_menu.xml',
     ],
     'assets': {

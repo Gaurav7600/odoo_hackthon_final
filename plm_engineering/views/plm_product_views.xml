@@ -8,16 +8,12 @@
         <field name="domain">[('res_model', '=', 'plm.product'), ('res_id', '=', active_id)]</field>
     </record>
 
-    <!-- ══════════════════════════════════════════
-         PRODUCT FORM VIEW
-    ══════════════════════════════════════════ -->
     <record id="view_plm_product_form" model="ir.ui.view">
         <field name="name">plm.product.form</field>
         <field name="model">plm.product</field>
         <field name="arch" type="xml">
             <form string="PLM Product">
                 <header>
-                    <!-- Archived banner action -->
                     <button name="action_create_eco" type="object"
                             string="+ Create ECO"
                             class="btn-primary"
@@ -25,16 +21,14 @@
                             groups="plm_engineering.group_plm_user"/>
                 </header>
                 <sheet>
-                    <!-- Archived warning -->
                     <div class="alert alert-danger o_form_sheet_warning" role="alert"
-                         invisible="status != 'archived'">
+                        invisible="status != 'archived'">
                         <i class="fa fa-lock"/> &amp;nbsp;
                         <strong>Archived (PLM):</strong>
                         This product version is <b>read-only</b> and retained for traceability.
                         To make changes, create a <b>Product ECO</b>.
                     </div>
 
-                    <!-- Smart Buttons -->
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_boms" type="object"
                                 class="oe_stat_button" icon="fa-list-ol"
@@ -59,51 +53,47 @@
                         </button>
                     </div>
 
-                    <!-- Title block -->
                     <div class="oe_title">
                         <label for="name" string="Product Name"/>
                         <h1>
                             <field name="name"
-                                   placeholder="Enter product name..."
-                                   readonly="status == 'archived'"/>
+                                placeholder="Enter product name..."
+                                readonly="status == 'archived'"/>
                         </h1>
-                        <!-- Version + Status badges -->
                         <div style="display:flex;gap:12px;align-items:center;margin-top:4px;">
                             <span style="font-size:13px;color:#6c757d;">Version:</span>
                             <field name="version" readonly="1"
-                                   widget="badge" style="font-size:13px;"/>
+                                    widget="badge" style="font-size:13px;"/>
                             <field name="status" widget="badge"
-                                   decoration-success="status == 'active'"
-                                   decoration-danger="status == 'archived'"/>
+                                    decoration-success="status == 'active'"
+                                    decoration-danger="status == 'archived'"/>
                             <field name="priority" widget="priority"/>
                         </div>
                     </div>
 
-                    <!-- Main fields -->
                     <group>
                         <group string="Product Details">
                             <field name="internal_ref"
-                                   readonly="status == 'archived'"/>
+                                    readonly="status == 'archived'"/>
                             <field name="category"
-                                   readonly="status == 'archived'"/>
+                                    readonly="status == 'archived'"/>
                             <field name="uom"
-                                   readonly="status == 'archived'"
-                                   string="Unit of Measure"/>
+                                    readonly="status == 'archived'"
+                                    string="Unit of Measure"/>
                             <field name="currency_id" readonly="1"/>
                         </group>
                         <group string="Pricing">
                             <field name="sale_price"
-                                   widget="monetary"
-                                   options="{'currency_field': 'currency_id'}"
-                                   readonly="status == 'archived'"/>
+                                    widget="monetary"
+                                    options="{'currency_field': 'currency_id'}"
+                                    readonly="status == 'archived'"/>
                             <field name="cost_price"
-                                   widget="monetary"
-                                   options="{'currency_field': 'currency_id'}"
-                                   readonly="status == 'archived'"/>
+                                    widget="monetary"
+                                    options="{'currency_field': 'currency_id'}"
+                                    readonly="status == 'archived'"/>
                         </group>
                     </group>
 
-                    <!-- Versioning info (read-only) -->
                     <group string="PLM Version Info" col="3">
                         <field name="version" readonly="1"/>
                         <field name="version_number" readonly="1"/>
@@ -114,12 +104,12 @@
                     <notebook>
                         <page string="Description" name="desc">
                             <field name="description"
-                                   placeholder="Product description, specifications, notes..."
-                                   readonly="status == 'archived'"/>
+                                    placeholder="Product description, specifications, notes..."
+                                    readonly="status == 'archived'"/>
                         </page>
                         <page string="Attachments" name="attachments">
                             <field name="attachment_ids" widget="many2many_binary"
-                                   readonly="status == 'archived'"/>
+                                    readonly="status == 'archived'"/>
                         </page>
                     </notebook>
                 </sheet>
@@ -128,28 +118,25 @@
         </field>
     </record>
 
-    <!-- ══════════════════════════════════════════
-         PRODUCT LIST VIEW
-    ══════════════════════════════════════════ -->
     <record id="view_plm_product_list" model="ir.ui.view">
         <field name="name">plm.product.list</field>
         <field name="model">plm.product</field>
         <field name="arch" type="xml">
             <list string="PLM Products"
-                  decoration-muted="status == 'archived'"
-                  decoration-success="status == 'active'">
+                decoration-muted="status == 'archived'"
+                decoration-success="status == 'active'">
                 <field name="name" string="Product Name"/>
                 <field name="internal_ref" string="Reference" optional="show"/>
                 <field name="category" optional="show"/>
                 <field name="version" string="Version"/>
                 <field name="sale_price" string="Sale Price" widget="monetary"
-                       options="{'currency_field': 'currency_id'}"/>
+                    options="{'currency_field': 'currency_id'}"/>
                 <field name="cost_price" string="Cost Price" widget="monetary"
-                       options="{'currency_field': 'currency_id'}"/>
+                    options="{'currency_field': 'currency_id'}"/>
                 <field name="uom" string="UoM" optional="show"/>
                 <field name="status" widget="badge"
-                       decoration-success="status == 'active'"
-                       decoration-danger="status == 'archived'"/>
+                    decoration-success="status == 'active'"
+                    decoration-danger="status == 'archived'"/>
                 <field name="bom_count" string="BoMs" optional="show"/>
                 <field name="eco_count" string="ECOs" optional="show"/>
                 <field name="currency_id" column_invisible="True"/>
@@ -157,9 +144,6 @@
         </field>
     </record>
 
-    <!-- ══════════════════════════════════════════
-         PRODUCT KANBAN VIEW
-    ══════════════════════════════════════════ -->
     <record id="view_plm_product_kanban" model="ir.ui.view">
         <field name="name">plm.product.kanban</field>
         <field name="model">plm.product</field>
@@ -192,11 +176,11 @@
                                     </span>
                                     &amp;nbsp;
                                     <field name="status" widget="badge"
-                                           decoration-success="status == 'active'"
-                                           decoration-danger="status == 'archived'"/>
+                                            decoration-success="status == 'active'"
+                                            decoration-danger="status == 'archived'"/>
                                 </div>
                                 <div class="mt-1 text-muted">
-                                    🏷 <field name="category"/>
+                                    <field name="category"/>
                                 </div>
                                 <div class="mt-1">
                                     Sale: <field name="sale_price"/> &amp;nbsp;
@@ -218,9 +202,6 @@
         </field>
     </record>
 
-    <!-- ══════════════════════════════════════════
-         PRODUCT SEARCH VIEW
-    ══════════════════════════════════════════ -->
     <record id="view_plm_product_search" model="ir.ui.view">
         <field name="name">plm.product.search</field>
         <field name="model">plm.product</field>
@@ -250,7 +231,6 @@
         </field>
     </record>
 
-    <!-- Actions -->
     <record id="action_plm_product" model="ir.actions.act_window">
         <field name="name">PLM Products</field>
         <field name="res_model">plm.product</field>

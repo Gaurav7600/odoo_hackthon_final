@@ -23,8 +23,8 @@
         <field name="model">plm.audit.log</field>
         <field name="arch" type="xml">
             <list string="PLM Audit Trail"
-                  create="false" delete="false" edit="false"
-                  default_order="timestamp desc">
+                create="false" delete="false" edit="false"
+                default_order="timestamp desc">
                 <field name="timestamp" string="Date &amp; Time"/>
                 <field name="eco_id" string="ECO"/>
                 <field name="eco_reference" string="Reference" optional="show"/>

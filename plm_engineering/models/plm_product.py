@@ -15,7 +15,6 @@ class PlmProduct(models.Model):
     _order = 'name, version_number desc'
     _rec_name = 'display_name_full'
 
-    # ── Identity ─────────────────────────────────────────────────────
     name = fields.Char(
         string='Product Name',
         required=True,
@@ -37,7 +36,6 @@ class PlmProduct(models.Model):
 
     description = fields.Text(string='Product Description', tracking=True)
 
-    # ── Pricing ──────────────────────────────────────────────────────
     sale_price = fields.Float(
         string='Sale Price',
         digits=(16, 4),
@@ -58,14 +56,12 @@ class PlmProduct(models.Model):
         default=lambda self: self.env.company.currency_id,
     )
 
-    # ── Unit of Measure (custom, no UoM model dependency) ────────────
     uom = fields.Char(
         string='Unit of Measure',
         default='Unit',
         help='e.g. Unit, Kg, Litre, Meter',
     )
 
-    # ── Attachments ──────────────────────────────────────────────────
     attachment_ids = fields.Many2many(
         'ir.attachment',
         'plm_product_attachment_rel',
@@ -78,7 +74,6 @@ class PlmProduct(models.Model):
         string='Attachments',
     )
 
-    # ── Versioning ───────────────────────────────────────────────────
     version = fields.Char(
         string='Version',
         default='v1',
@@ -120,7 +115,6 @@ class PlmProduct(models.Model):
         ondelete='set null',
     )
 
-    # ── Status ───────────────────────────────────────────────────────
     status = fields.Selection([
         ('active', 'Active'),
         ('archived', 'Archived'),
@@ -130,10 +124,9 @@ class PlmProduct(models.Model):
         copy=False,
         tracking=True,
         help='Active: usable in BoMs and ECOs.\n'
-             'Archived: read-only, retained for traceability only.',
+            'Archived: read-only, retained for traceability only.',
     )
 
-    # ── Computed display ─────────────────────────────────────────────
     display_name_full = fields.Char(
         compute='_compute_display_name_full',
         store=True,
@@ -154,10 +147,6 @@ class PlmProduct(models.Model):
         ('2', 'Very Urgent'),
         ('3', 'Critical'),
     ], string='Priority', default='0')
-
-    # ═══════════════════════════════════════════════════
-    #  Compute
-    # ═══════════════════════════════════════════════════
 
     @api.depends('name', 'version', 'status')
     def _compute_display_name_full(self):
@@ -183,10 +172,6 @@ class PlmProduct(models.Model):
         for p in self:
             p.eco_count = self.env['plm.eco'].search_count([('product_id', '=', p.id)])
 
-    # ═══════════════════════════════════════════════════
-    #  Constraints
-    # ═══════════════════════════════════════════════════
-
     @api.constrains('name', 'version')
     def _check_unique_version(self):
         for rec in self:
@@ -198,28 +183,20 @@ class PlmProduct(models.Model):
             if self.search(domain, limit=1):
                 raise ValidationError(
                     _("Product '%s' already has a version '%s'. "
-                      "Each product version must be unique.") % (rec.name, rec.version)
+                    "Each product version must be unique.") % (rec.name, rec.version)
                 )
-
-    # ═══════════════════════════════════════════════════
-    #  ORM Overrides — prevent direct edits to archived
-    # ═══════════════════════════════════════════════════
 
     def write(self, vals):
         protected = {'name', 'sale_price', 'cost_price', 'uom', 'category',
-                     'internal_ref', 'description', 'attachment_ids'}
+                    'internal_ref', 'description', 'attachment_ids'}
         for rec in self:
             if rec.status == 'archived' and any(f in vals for f in protected):
                 raise UserError(
                     _("Product '%s (%s)' is Archived and cannot be edited directly.\n\n"
-                      "Create an Engineering Change Order (ECO) to propose changes.")
+                    "Create an Engineering Change Order (ECO) to propose changes.")
                     % (rec.name, rec.version)
                 )
         return super().write(vals)
-
-    # ═══════════════════════════════════════════════════
-    #  Action Buttons
-    # ═══════════════════════════════════════════════════
 
     def action_view_boms(self):
         self.ensure_one()
