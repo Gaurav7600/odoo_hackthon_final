@@ -8,3 +8,8 @@ from . import plm_eco_lines
 from . import plm_audit_log
 from . import plm_dashboard
 from . import plm_eco_comparison
+# Signup approval models
+from . import res_users_approve
+from . import signup_approval
+from . import document_attachment
+from . import user_approval_window

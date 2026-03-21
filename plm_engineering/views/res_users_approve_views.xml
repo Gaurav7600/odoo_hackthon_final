@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ── List View ── -->
+    <record id="res_users_approve_list_view" model="ir.ui.view">
+        <field name="name">res.users.approve.list</field>
+        <field name="model">res.users.approve</field>
+        <field name="arch" type="xml">
+            <list string="Signup Approval Requests"
+                  decoration-success="for_approval_menu == True"
+                  decoration-warning="for_approval_menu == False and hide_button == False"
+                  decoration-muted="hide_button == True and for_approval_menu == False">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="for_approval_menu" string="Approved"/>
+                <field name="approved_date"/>
+                <field name="hide_button" string="Action Taken" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ── Form View ── -->
+    <record id="res_users_approve_form_view" model="ir.ui.view">
+        <field name="name">res.users.approve.form</field>
+        <field name="model">res.users.approve</field>
+        <field name="arch" type="xml">
+            <form string="Signup Approval Request">
+                <header>
+                    <!-- Approve button: visible only when action not yet taken -->
+                    <button name="action_approve_login"
+                            string="Approve"
+                            type="object"
+                            class="btn-primary"
+                            invisible="hide_button"/>
+                    <!-- Reject button: visible only when action not yet taken -->
+                    <button name="action_reject_login"
+                            string="Reject"
+                            type="object"
+                            class="btn-danger"
+                            invisible="hide_button"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <group>
+                        <group string="Applicant Details">
+                            <field name="name"/>
+                            <field name="email"/>
+                        </group>
+                        <group string="Approval Status">
+                            <field name="for_approval_menu" string="Approved"/>
+                            <field name="approved_date"/>
+                            <field name="hide_button" string="Action Taken"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ── Action ── -->
+    <record id="action_res_users_approve" model="ir.actions.act_window">
+        <field name="name">Signup Requests</field>
+        <field name="res_model">res.users.approve</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{}</field>
+    </record>
+
+    <!-- Menu nested under PLM Settings (Admin only) -->
+    <menuitem id="menu_plm_signup_requests"
+              name="Signup Requests"
+              parent="menu_plm_settings_root"
+              action="action_res_users_approve"
+              sequence="30"
+              groups="plm_engineering.group_plm_manager"/>
+
+</odoo>

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="approval_form_success" name="Hackathon — Registration Pending">
+        <html lang="en">
+            <head>
+                <meta charset="UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <title>Registration Received — Odoo Hackathon Portal</title>
+                <link rel="stylesheet"
+                      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+                      crossorigin="anonymous"/>
+                <link rel="stylesheet" type="text/css"
+                      t-attf-href="/plm_engineering/static/src/css/custom_auth.css"/>
+                <style>*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; } html { height: 100%; }</style>
+            </head>
+            <body class="o_auth_page">
+                <canvas id="do-particle-canvas"/>
+                <div class="do-auth-orb do-auth-orb-1"/>
+                <div class="do-auth-orb do-auth-orb-2"/>
+                <div class="do-auth-orb do-auth-orb-3"/>
+
+                <div class="do-auth-wrapper">
+                    <div class="do-auth-card do-auth-card--wide">
+
+                        <div class="do-auth-brand">
+                            <div class="do-auth-logo-ring">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34"
+                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                                </svg>
+                            </div>
+                            <p class="do-auth-brand-name">Odoo Hackathon</p>
+                            <span class="do-badge do-badge--purple" style="margin-top:4px;">2025</span>
+                        </div>
+
+                        <div class="do-status-icon do-status-icon--warning">
+                            <i class="fa fa-clock" style="font-size:2.2rem;"/>
+                        </div>
+
+                        <h1 class="do-auth-title">Registration Received!</h1>
+                        <p class="do-auth-subtitle">Your request has been submitted and is under review.</p>
+
+                        <div class="do-progress-bar"><div class="do-progress-fill"/></div>
+
+                        <div class="do-auth-alert do-auth-alert-warning" style="text-align:left;">
+                            <div>
+                                <strong style="display:block;margin-bottom:0.75rem;font-size:0.9rem;">
+                                    What happens next?
+                                </strong>
+                                <ul class="do-step-list">
+                                    <li>
+                                        <span class="do-step-dot do-step-dot--success">
+                                            <i class="fa fa-check" style="font-size:9px;"/>
+                                        </span>
+                                        Your registration details have been <strong>saved</strong>.
+                                    </li>
+                                    <li>
+                                        <span class="do-step-dot do-step-dot--warning">2</span>
+                                        An administrator will <strong>review your request</strong> shortly.
+                                    </li>
+                                    <li>
+                                        <span class="do-step-dot do-step-dot--info">3</span>
+                                        You'll receive an <strong>email</strong> once approved.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <p style="text-align:center;font-size:0.82rem;color:rgba(148,163,184,0.7);
+                                  margin:1rem 0 1.5rem;">
+                            A confirmation email has been sent to your address.
+                            Check your inbox and spam folder.
+                        </p>
+
+                        <div style="text-align:center;">
+                            <a href="/web/login" class="do-ghost-btn do-ghost-btn--purple">
+                                <i class="fa fa-arrow-right-to-bracket"/>
+                                Back to Login
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+                <script t-attf-src="/plm_engineering/static/src/js/custom_auth.js"/>
+            </body>
+        </html>
+    </template>
+
+
+    <!-- =========================================================================
+         /wait-approval — "Account Pending Approval"
+         ========================================================================= -->
+    <template id="wait_for_approval_page" name="Hackathon — Wait for Approval">
+        <html lang="en">
+            <head>
+                <meta charset="UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <title>Pending Approval — Odoo Hackathon Portal</title>
+                <link rel="stylesheet"
+                      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+                      crossorigin="anonymous"/>
+                <link rel="stylesheet" type="text/css"
+                      t-attf-href="/plm_engineering/static/src/css/custom_auth.css"/>
+                <style>*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; } html { height: 100%; }</style>
+            </head>
+            <body class="o_auth_page">
+                <canvas id="do-particle-canvas"/>
+                <div class="do-auth-orb do-auth-orb-1"/>
+                <div class="do-auth-orb do-auth-orb-2"/>
+                <div class="do-auth-orb do-auth-orb-3"/>
+
+                <div class="do-auth-wrapper">
+                    <div class="do-auth-card do-auth-card--wide">
+
+                        <div class="do-auth-brand">
+                            <div class="do-auth-logo-ring">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34"
+                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                                </svg>
+                            </div>
+                            <p class="do-auth-brand-name">Odoo Hackathon</p>
+                            <span class="do-badge do-badge--purple" style="margin-top:4px;">2025</span>
+                        </div>
+
+                        <div class="do-status-icon do-status-icon--info">
+                            <i class="fa fa-hourglass-half" style="font-size:2.2rem;"/>
+                        </div>
+
+                        <h1 class="do-auth-title">Account Pending Approval</h1>
+                        <p class="do-auth-subtitle">
+                            Your account exists but is still awaiting administrative review.
+                        </p>
+
+                        <div class="do-progress-bar"><div class="do-progress-fill"/></div>
+
+                        <div class="do-auth-alert do-auth-alert-info" style="text-align:left;">
+                            <div>
+                                <strong style="display:block;margin-bottom:0.75rem;font-size:0.9rem;">
+                                    Current Status
+                                </strong>
+                                <ul class="do-step-list">
+                                    <li>
+                                        <span class="do-step-dot do-step-dot--success">
+                                            <i class="fa fa-check" style="font-size:9px;"/>
+                                        </span>
+                                        Your account <strong>exists</strong> in our system.
+                                    </li>
+                                    <li>
+                                        <span class="do-step-dot do-step-dot--warning">
+                                            <i class="fa fa-exclamation" style="font-size:9px;"/>
+                                        </span>
+                                        Login is <strong>not yet permitted</strong> — approval pending.
+                                    </li>
+                                    <li>
+                                        <span class="do-step-dot do-step-dot--info">
+                                            <i class="fa fa-envelope" style="font-size:9px;"/>
+                                        </span>
+                                        You will receive an <strong>email</strong> once approved.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <p style="text-align:center;font-size:0.82rem;color:rgba(148,163,184,0.7);
+                                  margin:1rem 0 1.5rem;">
+                            Need urgent access? Please contact the hackathon administrators.
+                        </p>
+
+                        <div style="text-align:center;display:flex;justify-content:center;
+                                    gap:0.75rem;flex-wrap:wrap;">
+                            <a href="/web/login" class="do-ghost-btn do-ghost-btn--purple">
+                                <i class="fa fa-arrow-left"/>
+                                Back to Login
+                            </a>
+                            <a href="/web/signup" class="do-ghost-btn do-ghost-btn--cyan">
+                                <i class="fa fa-user-plus"/>
+                                New Registration
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+                <script t-attf-src="/plm_engineering/static/src/js/custom_auth.js"/>
+            </body>
+        </html>
+    </template>
+
+</odoo>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- ══ AUTO-ENABLE signup approval on install — no manual toggle needed ══ -->
+        <record id="param_signup_approval_enabled" model="ir.config_parameter">
+            <field name="key">plm_engineering.auth_signup_approval</field>
+            <field name="value">True</field>
+        </record>
+
+        <function model="ir.config_parameter" name="set_param">
+            <value eval="'auth_signup.invitation_scope'"/>
+            <value eval="'b2c'"/>
+        </function>
+
+        <!-- ══ Email: Waiting for Authorization (sent immediately on registration) ══ -->
+        <record id="mail_template_waiting_approval" model="mail.template">
+            <field name="name">Hackathon Signup: Waiting for Authorization</field>
+            <field name="model_id" ref="plm_engineering.model_res_users_approve"/>
+            <field name="subject">Your Registration is Under Review</field>
+            <field name="email_to">{{ object.email }}</field>
+            <field name="body_html" type="html">
+                <div style="font-family:'Inter',Arial,sans-serif;max-width:600px;margin:0 auto;
+                            background:#f8fafc;border-radius:16px;overflow:hidden;
+                            border:1px solid #e2e8f0;">
+                    <div style="background:linear-gradient(135deg,#7c3aed,#4f46e5);
+                                padding:32px 40px;text-align:center;">
+                        <h1 style="margin:0;font-size:1.5rem;color:#fff;letter-spacing:-0.02em;">
+                            Odoo Hackathon Portal
+                        </h1>
+                        <p style="margin:6px 0 0;color:rgba(255,255,255,0.8);font-size:0.9rem;">
+                            Registration Received ⏳
+                        </p>
+                    </div>
+                    <div style="padding:32px 40px;color:#1e293b;">
+                        <p style="margin:0 0 16px;">
+                            Dear <strong>{{ object.name }}</strong>,
+                        </p>
+                        <p style="margin:0 0 16px;">
+                            Thank you for registering on the Hackathon Portal.
+                            Your account request has been <strong>successfully received</strong>
+                            and is currently pending review by our team.
+                        </p>
+                        <div style="background:#fffbeb;border:1px solid #fbbf24;
+                                    border-radius:10px;padding:16px 20px;margin:20px 0;">
+                            <strong style="color:#92400e;">What happens next?</strong>
+                            <ul style="margin:10px 0 0;padding-left:20px;color:#78350f;">
+                                <li>Your registration was successfully submitted.</li>
+                                <li>Your account is <strong>not yet active</strong>.</li>
+                                <li>Admin approval is required before you can log in.</li>
+                                <li>You will receive another email once approved.</li>
+                            </ul>
+                        </div>
+                        <p style="color:#64748b;font-size:0.85rem;margin:16px 0 0;">
+                            Thank you for your patience.
+                        </p>
+                    </div>
+                    <div style="padding:20px 40px;background:#f1f5f9;
+                                text-align:center;color:#94a3b8;font-size:0.8rem;">
+                        Odoo Hackathon 2025 Team
+                    </div>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- ══ Email: Registration Approved (sent when admin clicks Approve) ══ -->
+        <record id="mail_template_registration_approved" model="mail.template">
+            <field name="name">Hackathon Signup: Registration Approved</field>
+            <field name="model_id" ref="plm_engineering.model_res_users_approve"/>
+            <field name="subject">Your Registration Has Been Approved!</field>
+            <field name="email_to">{{ object.email }}</field>
+            <field name="body_html" type="html">
+                <div style="font-family:'Inter',Arial,sans-serif;max-width:600px;margin:0 auto;
+                            background:#f8fafc;border-radius:16px;overflow:hidden;
+                            border:1px solid #e2e8f0;">
+                    <div style="background:linear-gradient(135deg,#059669,#0284c7);
+                                padding:32px 40px;text-align:center;">
+                        <h1 style="margin:0;font-size:1.5rem;color:#fff;letter-spacing:-0.02em;">
+                            Odoo Hackathon Portal
+                        </h1>
+                        <p style="margin:6px 0 0;color:rgba(255,255,255,0.8);font-size:0.9rem;">
+                            Registration Approved ✓
+                        </p>
+                    </div>
+                    <div style="padding:32px 40px;color:#1e293b;">
+                        <p style="margin:0 0 16px;">
+                            Dear <strong>{{ object.name }}</strong>,
+                        </p>
+                        <p style="margin:0 0 16px;">
+                            Great news! Your account has been
+                            <strong style="color:#059669;">approved</strong>.
+                            You can now log in to the Hackathon Portal using your
+                            registered email and password.
+                        </p>
+                        <div style="text-align:center;margin:28px 0;">
+                            <a href="/web/login"
+                               style="background:linear-gradient(135deg,#7c3aed,#4f46e5);
+                                      color:#fff;padding:14px 36px;text-decoration:none;
+                                      border-radius:10px;font-size:0.95rem;font-weight:600;
+                                      display:inline-block;">
+                                Log In Now →
+                            </a>
+                        </div>
+                        <p style="color:#64748b;font-size:0.85rem;">
+                            If you have any questions, please contact the hackathon team.
+                        </p>
+                    </div>
+                    <div style="padding:20px 40px;background:#f1f5f9;
+                                text-align:center;color:#94a3b8;font-size:0.8rem;">
+                        Odoo Hackathon 2025 Team
+                    </div>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

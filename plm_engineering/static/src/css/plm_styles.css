@@ -73,11 +73,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
-    color: #fff;
+    color: black;
     padding: 20px 28px;
     flex-wrap: wrap;
     gap: 12px;
+    border-bottom: 1px solid #a89d9d;
 }
 .plm-dash-header-left {
     display: flex;
@@ -99,7 +99,7 @@
     font-size: 22px;
     font-weight: 700;
     margin: 0;
-    color: white;
+    color: black;
     letter-spacing: -0.3px;
 }
 .plm-dash-subtitle {
@@ -119,16 +119,14 @@
 }
 .plm-btn-refresh {
     background: rgba(255,255,255,0.15);
-    color: #fff;
-    border: 1px solid rgba(255,255,255,0.3);
+    border: 1px solid black;
+    color: black;
     font-size: 13px;
-}
-.plm-btn-refresh:hover {
-    background: rgba(255,255,255,0.25);
-    color: #fff;
+    border-radius:8px;
 }
 .plm-btn-new-eco {
     background: #e63946;
+    border-radius:8px;
     color: #fff;
     border: none;
     font-size: 13px;
