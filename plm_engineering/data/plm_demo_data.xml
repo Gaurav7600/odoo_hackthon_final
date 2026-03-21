@@ -5,12 +5,13 @@
         <!-- ─────────────────────────────────────────────────────────────
             SECTION 1 — PRODUCTS
         ───────────────────────────────────────────────────────────────── -->
+        
 
         <record id="demo_prod_steel_rod" model="plm.product">
             <field name="name">Steel Rod 10mm</field>
             <field name="internal_ref">RM-001</field>
             <field name="category">raw_material</field>
-            <field name="uom">Kg</field>
+            <field name="product_uom" ref="plm_uom_kg"/>
             <field name="sale_price">12.50</field>
             <field name="cost_price">8.00</field>
             <field name="version">v1</field>
@@ -23,7 +24,7 @@
             <field name="name">Oak Timber Board</field>
             <field name="internal_ref">RM-002</field>
             <field name="category">raw_material</field>
-            <field name="uom">Unit</field>
+            <field name="product_uom" ref="plm_uom_unit"/>
             <field name="sale_price">35.00</field>
             <field name="cost_price">22.00</field>
             <field name="version">v1</field>
@@ -36,7 +37,7 @@
             <field name="name">Polyurethane Varnish</field>
             <field name="internal_ref">RM-003</field>
             <field name="category">consumable</field>
-            <field name="uom">Litre</field>
+            <field name="product_uom" ref="plm_uom_litre"/>
             <field name="sale_price">18.00</field>
             <field name="cost_price">11.50</field>
             <field name="version">v1</field>
@@ -49,7 +50,7 @@
             <field name="name">M6 Wood Screw</field>
             <field name="internal_ref">RM-004</field>
             <field name="category">consumable</field>
-            <field name="uom">Unit</field>
+            <field name="product_uom" ref="plm_uom_unit"/>
             <field name="sale_price">0.25</field>
             <field name="cost_price">0.10</field>
             <field name="version">v1</field>
@@ -62,7 +63,7 @@
             <field name="name">Aluminum Sheet 2mm</field>
             <field name="internal_ref">RM-005</field>
             <field name="category">raw_material</field>
-            <field name="uom">Kg</field>
+            <field name="product_uom" ref="plm_uom_kg"/>
             <field name="sale_price">9.80</field>
             <field name="cost_price">6.20</field>
             <field name="version">v1</field>
@@ -75,7 +76,7 @@
             <field name="name">PCB Control Board</field>
             <field name="internal_ref">RM-006</field>
             <field name="category">semi_finished</field>
-            <field name="uom">Unit</field>
+            <field name="product_uom" ref="plm_uom_unit"/>
             <field name="sale_price">45.00</field>
             <field name="cost_price">28.00</field>
             <field name="version">v1</field>
@@ -88,7 +89,7 @@
             <field name="name">High-Density Foam Padding</field>
             <field name="internal_ref">RM-007</field>
             <field name="category">raw_material</field>
-            <field name="uom">Unit</field>
+            <field name="product_uom" ref="plm_uom_unit"/>
             <field name="sale_price">14.00</field>
             <field name="cost_price">8.50</field>
             <field name="version">v1</field>
@@ -101,7 +102,7 @@
             <field name="name">Premium Water-Based Varnish</field>
             <field name="internal_ref">RM-008</field>
             <field name="category">consumable</field>
-            <field name="uom">Litre</field>
+            <field name="product_uom" ref="plm_uom_litre"/>
             <field name="sale_price">26.00</field>
             <field name="cost_price">17.00</field>
             <field name="version">v1</field>
@@ -118,7 +119,7 @@
             <field name="name">Wooden Table</field>
             <field name="internal_ref">FG-001</field>
             <field name="category">finished_good</field>
-            <field name="uom">Unit</field>
+            <field name="product_uom" ref="plm_uom_unit"/>
             <field name="sale_price">249.00</field>
             <field name="cost_price">112.00</field>
             <field name="version">v1</field>
@@ -131,7 +132,7 @@
             <field name="name">SmartDevice Pro X</field>
             <field name="internal_ref">FG-002</field>
             <field name="category">finished_good</field>
-            <field name="uom">Unit</field>
+            <field name="product_uom" ref="plm_uom_unit"/>
             <field name="sale_price">999.00</field>
             <field name="cost_price">480.00</field>
             <field name="version">v1</field>
@@ -144,7 +145,7 @@
             <field name="name">Industrial Control Unit</field>
             <field name="internal_ref">FG-003</field>
             <field name="category">finished_good</field>
-            <field name="uom">Unit</field>
+            <field name="product_uom" ref="plm_uom_unit"/>
             <field name="sale_price">1850.00</field>
             <field name="cost_price">740.00</field>
             <field name="version">v1</field>
@@ -363,7 +364,7 @@
             <field name="change_type">modified</field>
             <field name="old_qty">12.0</field>
             <field name="new_qty">16.0</field>
-            <field name="uom">Unit</field>
+            <field name="product_uom">Unit</field>
         </record>
 
         <record id="demo_eco_001_bom_change_varnish" model="plm.eco.bom.change">
@@ -372,7 +373,7 @@
             <field name="change_type">unchanged</field>
             <field name="old_qty">0.5</field>
             <field name="new_qty">0.5</field>
-            <field name="uom">Litre</field>
+            <field name="product_uom">Litre</field>
         </record>
 
         <record id="demo_eco_001_op_assembly" model="plm.eco.operation.change">
@@ -412,7 +413,7 @@
             <field name="change_type">modified</field>
             <field name="old_qty">1.0</field>
             <field name="new_qty">2.0</field>
-            <field name="uom">Unit</field>
+            <field name="product_uom">Unit</field>
         </record>
 
         <record id="demo_eco_002_bom_alum" model="plm.eco.bom.change">
@@ -421,7 +422,7 @@
             <field name="change_type">modified</field>
             <field name="old_qty">0.3</field>
             <field name="new_qty">0.4</field>
-            <field name="uom">Kg</field>
+            <field name="product_uom">Kg</field>
         </record>
 
         <record id="demo_eco_002_op_pcb" model="plm.eco.operation.change">
@@ -501,7 +502,7 @@
             <field name="change_type">removed</field>
             <field name="old_qty">0.5</field>
             <field name="new_qty">0.0</field>
-            <field name="uom">Litre</field>
+            <field name="product_uom">Litre</field>
         </record>
 
         <record id="demo_eco_004_bom_premium_varnish" model="plm.eco.bom.change">
@@ -510,7 +511,7 @@
             <field name="change_type">added</field>
             <field name="old_qty">0.0</field>
             <field name="new_qty">0.6</field>
-            <field name="uom">Litre</field>
+            <field name="product_uom">Litre</field>
         </record>
 
         <record id="demo_eco_004_op_paint" model="plm.eco.operation.change">
@@ -585,7 +586,7 @@
             <field name="change_type">modified</field>
             <field name="old_qty">2.5</field>
             <field name="new_qty">3.2</field>
-            <field name="uom">Kg</field>
+            <field name="product_uom">Kg</field>
         </record>
 
         <record id="demo_eco_006_approval" model="plm.eco.approval">
@@ -614,7 +615,7 @@
             <field name="change_type">unchanged</field>
             <field name="old_qty">2.0</field>
             <field name="new_qty">2.0</field>
-            <field name="uom">Unit</field>
+            <field name="product_uom">Unit</field>
         </record>
 
         <record id="demo_eco_008" model="plm.eco">
@@ -637,7 +638,7 @@
             <field name="change_type">added</field>
             <field name="old_qty">0.0</field>
             <field name="new_qty">2.0</field>
-            <field name="uom">Unit</field>
+            <field name="product_uom">Unit</field>
         </record>
 
         <!-- ─────────────────────────────────────────────────────────────

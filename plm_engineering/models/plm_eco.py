@@ -4,13 +4,6 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class PlmEco(models.Model):
-    """
-    Engineering Change Order (ECO) — the central object for managing
-    version-controlled changes to PLM Products and Bills of Materials.
-
-    Lifecycle: Draft → In Review → Approval → Done
-    Changes are stored separately and never touch master data until applied.
-    """
     _name = 'plm.eco'
     _description = 'PLM Engineering Change Order'
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -312,7 +305,7 @@ class PlmEco(models.Model):
                     'change_type': 'unchanged',
                     'old_qty': line.quantity,
                     'new_qty': line.quantity,
-                    'uom': line.uom or '',
+                    'product_uom': line.product_uom or '',
                 }))
             self.bom_change_ids = comp_vals
 
@@ -360,7 +353,6 @@ class PlmEco(models.Model):
             )
 
     def action_start_review(self):
-        """Draft → move to the next stage (In Review / Approval)."""
         self.ensure_one()
         self._validate_mandatory_fields()
         next_stage = self.stage_id._get_next_stage()
@@ -369,17 +361,13 @@ class PlmEco(models.Model):
         old = self.stage_id.name
         self.write({'stage_id': next_stage.id, 'kanban_state': 'normal'})
         self._log('Stage Transition', 'plm.eco.stage', self.reference, old, next_stage.name)
-        self.message_post(body=_(' ECO moved to stage: <b>%s</b>') % next_stage.name)
+        self.message_post(body=_(f' ECO moved to stage: ') % next_stage.name)
 
     def action_request_approval(self):
-        """Formally request approval from Approvers."""
         self.ensure_one()
         self._validate_mandatory_fields()
         if not self.stage_id.is_approval_required:
-            raise UserError(
-                _("The current stage '%s' does not require approval.\n"
-                "Use 'Validate & Apply' instead.") % self.stage_id.name
-            )
+            raise UserError(f"The current stage {self.stage_id.name} does not require approval.\n Use 'Validate & Apply' instead.")
         self.env['plm.eco.approval'].create({
             'eco_id': self.id,
             'requested_by_id': self.env.user.id,
@@ -402,7 +390,6 @@ class PlmEco(models.Model):
                 )
 
     def action_approve(self):
-        """Approver approves this ECO."""
         self.ensure_one()
         if not (self.env.user.has_group('plm_engineering.group_plm_approver')
                 or self.env.user.has_group('plm_engineering.group_plm_manager')):
@@ -425,7 +412,6 @@ class PlmEco(models.Model):
         self._advance_stage()
 
     def action_reject(self):
-        """Approver rejects this ECO."""
         self.ensure_one()
         if not (self.env.user.has_group('plm_engineering.group_plm_approver')
                 or self.env.user.has_group('plm_engineering.group_plm_manager')):
@@ -445,17 +431,12 @@ class PlmEco(models.Model):
         )
 
     def action_validate(self):
-        """Validate & Apply ECO — applies changes and moves to Done stage."""
         self.ensure_one()
         if self.stage_id.is_approval_required and not self.is_approved:
-            raise UserError(
-                _("This stage requires approval before validation.\n"
-                "Please request approval first.")
-            )
+            raise UserError(f"This stage requires approval before validation.\n Please request approval first.")
         return self._apply_eco()
 
     def action_cancel(self):
-        """Cancel the ECO and reset to start stage."""
         self.ensure_one()
         if self.state == 'done':
             raise UserError(_("A completed ECO cannot be cancelled."))
@@ -466,7 +447,6 @@ class PlmEco(models.Model):
         self.message_post(body=_('ECO has been cancelled.'))
 
     def action_reset_to_draft(self):
-        """Reset ECO back to starting stage."""
         self.ensure_one()
         if self.state == 'done':
             raise UserError(_("A completed ECO cannot be reset."))
@@ -479,7 +459,6 @@ class PlmEco(models.Model):
         self.message_post(body=_(' ECO reset to Draft.'))
 
     def action_view_comparison(self):
-        """Open diff-style change comparison wizard."""
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
@@ -580,7 +559,7 @@ class PlmEco(models.Model):
                 'description': vals.get('description', p.description),
                 'internal_ref': p.internal_ref,
                 'category': p.category,
-                'uom': p.uom,
+                'product_uom': p.product_uom,
                 'version': new_ver,
                 'version_number': (p.version_number or 1) + 1,
                 'parent_product_id': p.id,
@@ -692,7 +671,6 @@ class PlmEco(models.Model):
                         str(chg.new_duration) + ' min')
 
     def _advance_stage(self):
-        """Move to the next stage after current."""
         next_s = self.stage_id._get_next_stage()
         if next_s:
             old = self.stage_id.name

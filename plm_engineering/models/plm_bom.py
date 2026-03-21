@@ -4,11 +4,6 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class PlmBom(models.Model):
-    """
-    Custom PLM Bill of Materials.
-    Represents the manufacturing structure of a specific product version.
-    All changes must go through a BoM ECO.
-    """
     _name = 'plm.bom'
     _description = 'PLM Bill of Materials'
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -37,9 +32,9 @@ class PlmBom(models.Model):
         required=True,
         help='The output quantity this BoM produces.',
     )
-    product_uom = fields.Char(
-        string='Unit',
-        related='product_id.uom',
+    product_uom = fields.Many2one(
+        string='Unit of Measure',
+        related='product_id.product_uom',
         readonly=True,
     )
     notes = fields.Text(string='Notes / Instructions')
@@ -146,27 +141,22 @@ class PlmBom(models.Model):
                 ('id', '!=', rec.id),
             ]
             if self.search(domain, limit=1):
-                raise ValidationError(
-                    _("Product '%s' already has a BoM with version '%s'.")
-                    % (rec.product_id.name, rec.version)
-                )
+                raise ValidationError(f"Product {rec.product_id.name} already has a BoM with version {rec.product_id.name, rec.version}")
+
 
     def write(self, vals):
         protected = {'line_ids', 'operation_ids', 'product_id', 'product_qty', 'name'}
         for rec in self:
             if rec.status == 'archived' and any(f in vals for f in protected):
-                raise UserError(
-                    _("BoM '%s' is Archived and cannot be edited directly.\n\n"
-                    "Create a BoM Engineering Change Order (ECO) to propose changes.")
-                    % rec.display_name_full
-                )
+                raise UserError(f"BoM {rec.display_name_full} is Archived and cannot be edited directly.\n\nCreate a BoM Engineering Change Order (ECO) to propose changes.")
+
         return super().write(vals)
 
     def action_view_ecos(self):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('ECO History — %s') % self.display_name_full,
+            'name': f"ECO History {self.display_name_full}",
             'res_model': 'plm.eco',
             'view_mode': 'list,form',
             'domain': [('bom_id', '=', self.id)],
@@ -190,7 +180,7 @@ class PlmBom(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Components — %s') % self.display_name_full,
+            'name': f"Components {self.display_name_full}",
             'res_model': 'plm.bom.line',
             'view_mode': 'list',
             'views': [(self.env.ref('plm_engineering.view_plm_bom_line_list').id, 'list')],
@@ -202,7 +192,7 @@ class PlmBom(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Operations — %s') % self.display_name_full,
+            'name': f"Operations {self.display_name_full}",
             'res_model': 'plm.bom.operation',
             'view_mode': 'list',
             'views': [(self.env.ref('plm_engineering.view_plm_bom_operation_list').id, 'list')],
@@ -212,10 +202,6 @@ class PlmBom(models.Model):
 
 
 class PlmBomLine(models.Model):
-    """
-    Custom Bill of Materials Component Line.
-    Each line represents one component and its quantity.
-    """
     _name = 'plm.bom.line'
     _description = 'PLM BoM Component Line'
     _order = 'sequence, id'
@@ -249,9 +235,10 @@ class PlmBomLine(models.Model):
         digits=(12, 4),
         required=True,
     )
-    uom = fields.Char(
-        string='Unit',
-        related='component_id.uom',
+    product_uom = fields.Many2one(
+        'plm.product.uom',
+        string='Unit of Measure',
+        related='component_id.product_uom',
         readonly=True,
     )
     cost_price = fields.Float(
@@ -284,10 +271,6 @@ class PlmBomLine(models.Model):
 
 
 class PlmBomOperation(models.Model):
-    """
-    Custom Bill of Materials Operation / Routing line.
-    Defines the work steps required to manufacture the product.
-    """
     _name = 'plm.bom.operation'
     _description = 'PLM BoM Operation'
     _order = 'sequence, id'
@@ -319,6 +302,4 @@ class PlmBomOperation(models.Model):
     def _check_duration(self):
         for op in self:
             if op.duration_minutes < 0:
-                raise ValidationError(
-                    _("Duration for operation '%s' cannot be negative.") % op.name
-                )
+                raise ValidationError(f"Duration for operation {op.name} cannot be negative.")

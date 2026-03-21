@@ -38,6 +38,7 @@
         'data/plm_data.xml',
         'data/plm_demo_data.xml',
         'views/plm_dashboard_views.xml',
+        'views/plm_uom_views.xml',
         'views/plm_product_views.xml',  
         'views/plm_bom_views.xml',
         'views/plm_eco_stage_views.xml',

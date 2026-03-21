@@ -4,10 +4,6 @@ from odoo.exceptions import ValidationError
 
 
 class PlmEcoStage(models.Model):
-    """
-    Configurable ECO workflow stage.
-    Admin can create/reorder stages, mark them as start/final, and set approval rules.
-    """
     _name = 'plm.eco.stage'
     _description = 'PLM ECO Stage'
     _order = 'sequence asc, id asc'
@@ -42,7 +38,6 @@ class PlmEcoStage(models.Model):
              'old version is archived.',
     )
 
-    # ── Stats ─────────────────────────────────────────────────────────
     eco_count = fields.Integer(
         compute='_compute_eco_count',
         string='ECOs',
@@ -55,7 +50,6 @@ class PlmEcoStage(models.Model):
                 [('stage_id', '=', stage.id)]
             )
 
-    # ── Helpers ───────────────────────────────────────────────────────
     @api.model
     def _get_start_stage(self):
         start = self.search([('is_start_stage', '=', True)], limit=1)
@@ -76,7 +70,6 @@ class PlmEcoStage(models.Model):
             limit=1,
         )
 
-    # ── Constraints ───────────────────────────────────────────────────
     @api.constrains('is_final_stage')
     def _check_single_final(self):
         for rec in self:
@@ -86,10 +79,7 @@ class PlmEcoStage(models.Model):
                     ('id', '!=', rec.id),
                 ])
                 if others:
-                    raise ValidationError(
-                        _("Only one stage can be the Final Stage. "
-                        "Please unmark '%s' first.") % others[0].name
-                    )
+                    raise ValidationError(f"Only one stage can be the Final Stage. Please unmark {others[0].name}")
 
     @api.constrains('is_start_stage')
     def _check_single_start(self):
@@ -100,7 +90,4 @@ class PlmEcoStage(models.Model):
                     ('id', '!=', rec.id),
                 ])
                 if others:
-                    raise ValidationError(
-                        _("Only one stage can be the Starting Stage. "
-                        "Please unmark '%s' first.") % others[0].name
-                    )
+                    raise ValidationError(f"Only one stage can be the Starting Stage. Please unmark {others[0].name}")

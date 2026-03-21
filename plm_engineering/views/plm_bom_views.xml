@@ -59,7 +59,7 @@
                             <field name="product_qty"
                                 readonly="status == 'archived'"
                                 string="Produces Qty"/>
-                            <field name="product_uom" string="Unit" readonly="1"/>
+                            <field name="product_uom" string="Unit of Mesure" readonly="1"/>
                         </group>
                         <group string="PLM Version Info">
                             <field name="version" readonly="1"/>
@@ -85,7 +85,7 @@
                                         domain="[('status', '=', 'active')]"
                                         options="{'no_create_edit': True}"/>
                                     <field name="quantity"/>
-                                    <field name="uom" readonly="1"/>
+                                    <field name="product_uom" readonly="1"/>
                                     <field name="cost_price" string="Unit Cost" readonly="1"/>
                                     <field name="subtotal_cost" string="Subtotal" readonly="1"/>
                                     <field name="note" optional="show"/>
@@ -138,7 +138,7 @@
                 <field name="name" string="BoM Reference"/>
                 <field name="product_id" string="Product"/>
                 <field name="product_qty" string="Produces Qty"/>
-                <field name="product_uom" string="Unit" optional="show"/>
+                <field name="product_uom" string="Unit of Mesure" optional="show"/>
                 <field name="version" string="Version"/>
                 <field name="status" widget="badge"
                     decoration-success="status == 'active'"
@@ -207,7 +207,7 @@
                 <field name="bom_id" optional="show"/>
                 <field name="component_id"/>
                 <field name="quantity"/>
-                <field name="uom"/>
+                <field name="product_uom"/>
                 <field name="cost_price" string="Unit Cost"/>
                 <field name="subtotal_cost" string="Subtotal"/>
                 <field name="note" optional="show"/>

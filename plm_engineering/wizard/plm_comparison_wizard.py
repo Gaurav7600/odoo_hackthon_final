@@ -131,8 +131,8 @@ class PlmComparisonWizard(models.TransientModel):
             rows += f"""
   <tr style="{bg}">
     <td style="padding:10px 14px;font-weight:600;">{c.component_id.name if c.component_id else '—'}</td>
-    <td style="padding:10px 14px;text-align:center;">{c.old_qty:.4f} <small style="color:#adb5bd;">{c.uom or ''}</small></td>
-    <td style="padding:10px 14px;text-align:center;font-weight:700;">{c.new_qty:.4f} <small style="color:#adb5bd;">{c.uom or ''}</small></td>
+    <td style="padding:10px 14px;text-align:center;">{c.old_qty:.4f} <small style="color:#adb5bd;">{c.product_uom or ''}</small></td>
+    <td style="padding:10px 14px;text-align:center;font-weight:700;">{c.new_qty:.4f} <small style="color:#adb5bd;">{c.product_uom or ''}</small></td>
     <td style="padding:10px 14px;text-align:center;">{diff_html}</td>
     <td style="padding:10px 14px;text-align:center;font-size:16px;">{icon}</td>
   </tr>"""

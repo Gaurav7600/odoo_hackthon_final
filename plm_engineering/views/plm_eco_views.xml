@@ -50,7 +50,7 @@
                             confirm="Are you sure you want to cancel this ECO?"/>
 
                     <button name="action_reset_to_draft"
-                            string="↩ Reset to Draft"
+                            string="Reset to Draft"
                             type="object"
                             invisible="state == 'draft' or state == 'done'"
                             groups="plm_engineering.group_plm_manager"/>
@@ -201,7 +201,7 @@
                                     <field name="qty_diff" string="Diff" readonly="1"
                                         decoration-success="qty_diff &gt; 0"
                                         decoration-danger="qty_diff &lt; 0"/>
-                                    <field name="uom" string="UoM" readonly="1"/>
+                                    <field name="product_uom" string="Unit of Mesure" readonly="1"/>
                                 </list>
                             </field>
                         </page>

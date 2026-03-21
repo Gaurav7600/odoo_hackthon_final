@@ -56,10 +56,9 @@ class PlmProduct(models.Model):
         default=lambda self: self.env.company.currency_id,
     )
 
-    uom = fields.Char(
+    product_uom = fields.Many2one(
+        'plm.product.uom',
         string='Unit of Measure',
-        default='Unit',
-        help='e.g. Unit, Kg, Litre, Meter',
     )
 
     attachment_ids = fields.Many2many(
@@ -187,7 +186,7 @@ class PlmProduct(models.Model):
                 )
 
     def write(self, vals):
-        protected = {'name', 'sale_price', 'cost_price', 'uom', 'category',
+        protected = {'name', 'sale_price', 'cost_price', 'product_uom', 'category',
                     'internal_ref', 'description', 'attachment_ids'}
         for rec in self:
             if rec.status == 'archived' and any(f in vals for f in protected):

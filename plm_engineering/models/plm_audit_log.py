@@ -4,7 +4,6 @@ from odoo.exceptions import UserError
 
 
 class PlmEcoApproval(models.Model):
-    """Records every approval request and decision on an ECO."""
     _name = 'plm.eco.approval'
     _description = 'PLM ECO Approval Record'
     _order = 'create_date desc'
@@ -55,11 +54,6 @@ class PlmEcoApproval(models.Model):
 
 
 class PlmAuditLog(models.Model):
-    """
-    Immutable audit trail for all PLM actions.
-    Every creation, stage transition, approval, field change, and version bump is recorded here.
-    Records can NEVER be deleted.
-    """
     _name = 'plm.audit.log'
     _description = 'PLM Audit Log'
     _order = 'timestamp desc, id desc'
@@ -101,7 +95,4 @@ class PlmAuditLog(models.Model):
                 log.change_summary = log.action
 
     def unlink(self):
-        raise UserError(
-            _("Audit log entries are immutable and cannot be deleted. "
-            "They ensure full PLM traceability.")
-        )
+        raise UserError(f"Audit log entries are immutable and cannot be deleted. They ensure full PLM traceability.")

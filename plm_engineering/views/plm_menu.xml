@@ -140,12 +140,19 @@
 			name="Settings"
 			parent="menu_plm_root"
 			sequence="99"
-			groups="plm_engineering.group_plm_manager"/>
+			groups="plm_engineering.group_plm_manager,base.group_system"/>
 
 	<menuitem id="menu_plm_settings_stages"
 			name="ECO Stages"
 			parent="menu_plm_settings_root"
 			action="action_plm_eco_stage"
 			sequence="10"/>
+
+	<menuitem id="menu_plm_settings_uom"
+			name="Product UoM"
+			parent="menu_plm_settings_root"
+			action="action_plm_product_uom"
+			sequence="20"
+			groups="base.group_system"/>
 
 </odoo>

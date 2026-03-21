@@ -97,9 +97,9 @@ class PlmEcoBomChange(models.Model):
         digits=(12, 4),
         default=0.0,
     )
-    uom = fields.Char(
-        string='Unit',
-        compute='_compute_uom',
+    product_uom = fields.Char(
+        string='Unit of Mesure',
+        compute='_compute_product_uom',
         store=True,
     )
     qty_diff = fields.Float(
@@ -110,9 +110,9 @@ class PlmEcoBomChange(models.Model):
     )
 
     @api.depends('component_id')
-    def _compute_uom(self):
+    def _compute_product_uom(self):
         for r in self:
-            r.uom = r.component_id.uom if r.component_id else ''
+            r.product_uom = r.component_id.product_uom if r.component_id else ''
 
     @api.depends('old_qty', 'new_qty')
     def _compute_diff(self):
@@ -134,14 +134,10 @@ class PlmEcoBomChange(models.Model):
     def _check_qty(self):
         for r in self:
             if r.change_type in ('added', 'modified') and r.new_qty <= 0:
-                raise ValidationError(
-                    _("Proposed quantity must be > 0 for component '%s'.")
-                    % (r.component_id.name or '')
-                )
+                raise ValidationError(f"Proposed quantity must be > 0 for component {r.component_id.name}")
 
 
 class PlmEcoOperationChange(models.Model):
-    """Proposed routing/operation change on a PLM BoM inside an ECO."""
     _name = 'plm.eco.operation.change'
     _description = 'ECO Operation Change'
     _order = 'eco_id, id'
@@ -198,6 +194,4 @@ class PlmEcoOperationChange(models.Model):
     def _check_duration(self):
         for r in self:
             if r.change_type in ('added', 'modified') and r.new_duration < 0:
-                raise ValidationError(
-                    _("Duration cannot be negative for operation '%s'.") % r.operation_name
-                )
+                raise ValidationError(f"Duration cannot be negative for operation {r.operation_name}")

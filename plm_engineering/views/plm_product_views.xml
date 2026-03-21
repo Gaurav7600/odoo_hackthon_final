@@ -77,7 +77,7 @@
                                     readonly="status == 'archived'"/>
                             <field name="category"
                                     readonly="status == 'archived'"/>
-                            <field name="uom"
+                            <field name="product_uom"
                                     readonly="status == 'archived'"
                                     string="Unit of Measure"/>
                             <field name="currency_id" readonly="1"/>
@@ -133,7 +133,7 @@
                     options="{'currency_field': 'currency_id'}"/>
                 <field name="cost_price" string="Cost Price" widget="monetary"
                     options="{'currency_field': 'currency_id'}"/>
-                <field name="uom" string="UoM" optional="show"/>
+                <field name="product_uom" string="Unit of Mesure" optional="show"/>
                 <field name="status" widget="badge"
                     decoration-success="status == 'active'"
                     decoration-danger="status == 'archived'"/>

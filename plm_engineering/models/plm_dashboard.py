@@ -4,21 +4,11 @@ from datetime import datetime, timedelta
 
 
 class PlmDashboard(models.AbstractModel):
-    """
-    PLM Dashboard data provider.
-    Returns aggregated real-time data for the OWL dashboard component.
-    All metrics computed server-side and served via ORM call.
-    """
     _name = 'plm.dashboard'
     _description = 'PLM Dashboard Data'
 
     @api.model
     def get_dashboard_data(self):
-        """
-        Main data endpoint for the OWL dashboard.
-        Returns a dict with all KPI metrics, stage pipeline,
-        recent activity, priority breakdown, and product/BoM stats.
-        """
         EcoModel = self.env['plm.eco']
         ProductModel = self.env['plm.product']
         BomModel = self.env['plm.bom']

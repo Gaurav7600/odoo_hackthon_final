@@ -3,6 +3,10 @@ access_plm_product_manager,plm.product manager,model_plm_product,plm_engineering
 access_plm_product_user,plm.product user,model_plm_product,plm_engineering.group_plm_user,1,1,1,0
 access_plm_product_approver,plm.product approver,model_plm_product,plm_engineering.group_plm_approver,1,1,0,0
 access_plm_product_op,plm.product operations,model_plm_product,plm_engineering.group_plm_operations,1,0,0,0
+access_plm_product_uom_manager,plm.product.uom manager,model_plm_product_uom,plm_engineering.group_plm_manager,1,1,1,1
+access_plm_product_uom_user,plm.product.uom user,model_plm_product_uom,plm_engineering.group_plm_user,1,1,1,0
+access_plm_product_uom_approver,plm.product.uom approver,model_plm_product_uom,plm_engineering.group_plm_approver,1,0,0,0
+access_plm_product_uom_op,plm.product.uom operations,model_plm_product_uom,plm_engineering.group_plm_operations,1,0,0,0
 access_plm_bom_manager,plm.bom manager,model_plm_bom,plm_engineering.group_plm_manager,1,1,1,1
 access_plm_bom_user,plm.bom user,model_plm_bom,plm_engineering.group_plm_user,1,1,1,0
 access_plm_bom_approver,plm.bom approver,model_plm_bom,plm_engineering.group_plm_approver,1,1,0,0
