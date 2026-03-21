@@ -46,10 +46,10 @@ class PlmEcoApproval(models.Model):
     @api.depends('state')
     def _compute_state_display(self):
         icons = {
-            'pending':   '⏳ Pending',
-            'approved':  '✅ Approved',
-            'rejected':  '❌ Rejected',
-            'cancelled': '🚫 Cancelled',
+            'pending':   ' Pending',
+            'approved':  ' Approved',
+            'rejected':  ' Rejected',
+            'cancelled': ' Cancelled',
         }
         for r in self:
             r.state_display = icons.get(r.state, r.state)

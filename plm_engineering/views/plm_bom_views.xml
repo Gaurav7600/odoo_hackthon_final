@@ -81,7 +81,7 @@
                         <page string="Components" name="components">
                             <div class="alert alert-info" role="alert"
                                  invisible="line_ids">
-                                <strong>💡 Tip:</strong>
+                                <strong>Tip:</strong>
                                 Add components (raw materials or sub-assemblies) and their required quantities.
                             </div>
                             <field name="line_ids" nolabel="1"
@@ -109,7 +109,7 @@
                         <page string="Operations / Routing" name="operations">
                             <div class="alert alert-info" role="alert"
                                  invisible="operation_ids">
-                                <strong>💡 Tip:</strong>
+                                <strong>Tip:</strong>
                                 Define the manufacturing steps (operations) with their work centers and duration.
                             </div>
                             <field name="operation_ids" nolabel="1"

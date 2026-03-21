@@ -199,16 +199,16 @@
                                     🏷 <field name="category"/>
                                 </div>
                                 <div class="mt-1">
-                                    💰 Sale: <field name="sale_price"/> &amp;nbsp;
-                                    📦 Cost: <field name="cost_price"/>
+                                    Sale: <field name="sale_price"/> &amp;nbsp;
+                                    Cost: <field name="cost_price"/>
                                 </div>
                             </div>
                             <div class="o_kanban_record_bottom mt-2">
                                 <span class="text-muted" t-if="record.bom_count.value">
-                                    📋 <t t-out="record.bom_count.value"/> BoM(s)
+                                    <t t-out="record.bom_count.value"/> BoM(s)
                                 </span>
                                 <span class="text-muted ms-2" t-if="record.eco_count.value">
-                                    🔄 <t t-out="record.eco_count.value"/> ECO(s)
+                                    <t t-out="record.eco_count.value"/> ECO(s)
                                 </span>
                             </div>
                         </div>

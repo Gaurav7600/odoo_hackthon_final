@@ -38,6 +38,9 @@
         'security/ir.model.access.csv',
         # Sequences & Default Data
         'data/plm_data.xml',
+        'data/plm_demo_data.xml',
+        # Dashboard client action (before menu)
+        'views/plm_dashboard_views.xml',
         # Views
         'views/plm_product_views.xml',  
         'views/plm_bom_views.xml',
@@ -48,12 +51,14 @@
         # Wizards
         'wizard/plm_eco_approve_wizard_views.xml',
         'wizard/plm_comparison_wizard_views.xml',
-        # Menu
+        # Menu (last — after all actions are defined)
         'views/plm_menu.xml',
     ],
     'assets': {
         'web.assets_backend': [
             'plm_engineering/static/src/css/plm_styles.css',
+            'plm_engineering/static/src/xml/plm_dashboard.xml',
+            'plm_engineering/static/src/js/plm_dashboard.js',
         ],
     },
     'installable': True,

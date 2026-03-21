@@ -34,7 +34,7 @@
                        decoration-muted="state == 'draft'"/>
                 <field name="change_count" string="# Changes"/>
                 <button name="action_view_comparison" type="object"
-                        string="📊 View Changes"
+                        string="View Changes"
                         class="btn-sm btn-outline-primary"
                         invisible="change_count == 0"/>
             </list>

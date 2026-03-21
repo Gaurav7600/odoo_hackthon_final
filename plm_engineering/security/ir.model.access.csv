@@ -44,3 +44,7 @@ access_plm_audit_log_user,plm.audit.log user,model_plm_audit_log,plm_engineering
 access_plm_audit_log_op,plm.audit.log op,model_plm_audit_log,plm_engineering.group_plm_operations,1,0,0,0
 access_plm_approve_wizard_all,plm.eco.approve.wizard all,model_plm_eco_approve_wizard,plm_engineering.group_plm_user,1,1,1,1
 access_plm_comparison_wizard_all,plm.comparison.wizard all,model_plm_comparison_wizard,plm_engineering.group_plm_user,1,1,1,1
+access_plm_dashboard_manager,plm.dashboard manager,model_plm_dashboard,plm_engineering.group_plm_manager,1,0,0,0
+access_plm_dashboard_user,plm.dashboard user,model_plm_dashboard,plm_engineering.group_plm_user,1,0,0,0
+access_plm_dashboard_approver,plm.dashboard approver,model_plm_dashboard,plm_engineering.group_plm_approver,1,0,0,0
+access_plm_dashboard_op,plm.dashboard operations,model_plm_dashboard,plm_engineering.group_plm_operations,1,0,0,0

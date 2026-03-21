@@ -193,6 +193,19 @@ class PlmEco(models.Model):
     # ── Notes ─────────────────────────────────────────────────────────
     note = fields.Html(string='Internal Notes')
 
+    # ── Overdue ────────────────────────────────────────────────────────
+    is_overdue = fields.Boolean(
+        string='Overdue',
+        compute='_compute_is_overdue',
+        store=True,
+        help='True when effective date has passed and ECO is not yet Done/Cancelled.',
+    )
+    days_until_effective = fields.Integer(
+        string='Days to Effective',
+        compute='_compute_is_overdue',
+        store=True,
+    )
+
     # ══════════════════════════════════════════════════════════════════
     #  Compute Methods
     # ══════════════════════════════════════════════════════════════════
@@ -254,6 +267,18 @@ class PlmEco(models.Model):
     def _compute_audit_count(self):
         for eco in self:
             eco.audit_count = len(eco.audit_log_ids)
+
+    @api.depends('effective_date', 'state')
+    def _compute_is_overdue(self):
+        today = fields.Date.today()
+        for eco in self:
+            if eco.effective_date and eco.state not in ('done', 'cancelled'):
+                delta = (eco.effective_date - today).days
+                eco.days_until_effective = delta
+                eco.is_overdue = delta < 0
+            else:
+                eco.days_until_effective = 0
+                eco.is_overdue = False
 
     # ══════════════════════════════════════════════════════════════════
     #  onchange helpers
@@ -373,7 +398,7 @@ class PlmEco(models.Model):
         old = self.stage_id.name
         self.write({'stage_id': next_stage.id, 'kanban_state': 'normal'})
         self._log('Stage Transition', 'plm.eco.stage', self.reference, old, next_stage.name)
-        self.message_post(body=_('▶ ECO moved to stage: %s') % next_stage.name)
+        self.message_post(body=_(' ECO moved to stage: <b>%s</b>') % next_stage.name)
 
     def action_request_approval(self):
         """Formally request approval from Approvers."""
@@ -392,7 +417,7 @@ class PlmEco(models.Model):
         })
         self._log('Approval Requested', 'plm.eco', self.reference, 'Draft', 'Pending Approval')
         self.message_post(
-            body=_('🔔 Approval requested by %s. '
+            body=_('Approval requested by %s. '
                    'Awaiting Approver review.') % self.env.user.name
         )
         # Schedule activity for approvers
@@ -426,7 +451,7 @@ class PlmEco(models.Model):
         self.write({'is_approved': True})
         self._log('ECO Approved', 'plm.eco', self.reference, 'Pending', 'Approved')
         self.message_post(
-            body=_('✅ ECO approved by %s.') % self.env.user.name
+            body=_(' ECO approved by %s.') % self.env.user.name
         )
         # Auto-advance to next stage
         self._advance_stage()
@@ -447,7 +472,7 @@ class PlmEco(models.Model):
         self.write({'is_approved': False, 'kanban_state': 'blocked'})
         self._log('ECO Rejected', 'plm.eco', self.reference, 'Pending', 'Rejected')
         self.message_post(
-            body=_('❌ ECO rejected by %s. '
+            body=_(' ECO rejected by %s. '
                    'Please revise and re-submit.') % self.env.user.name
         )
 
@@ -470,7 +495,7 @@ class PlmEco(models.Model):
         self.approval_ids.filtered(lambda a: a.state == 'pending').write({'state': 'cancelled'})
         self.write({'stage_id': start.id, 'kanban_state': 'blocked', 'is_approved': False})
         self._log('ECO Cancelled', 'plm.eco', self.reference, self.state, 'Cancelled')
-        self.message_post(body=_('🚫 ECO has been cancelled.'))
+        self.message_post(body=_('ECO has been cancelled.'))
 
     def action_reset_to_draft(self):
         """Reset ECO back to starting stage."""
@@ -483,7 +508,7 @@ class PlmEco(models.Model):
         )
         self.write({'stage_id': start.id, 'is_approved': False, 'kanban_state': 'normal'})
         self._log('Reset to Draft', 'plm.eco', self.reference, 'Various', 'Draft')
-        self.message_post(body=_('🔄 ECO reset to Draft.'))
+        self.message_post(body=_(' ECO reset to Draft.'))
 
     def action_view_comparison(self):
         """Open diff-style change comparison wizard."""
@@ -541,8 +566,8 @@ class PlmEco(models.Model):
         self._log('ECO Applied', 'plm.eco', self.reference, 'Open', 'Done')
         self.message_post(
             body=_(
-                '🎉 ECO applied successfully.'
-                'Version: %s → %s'
+                '🎉 ECO <b>applied successfully</b>.<br/>'
+                'Version: <b>%s → %s</b>'
             ) % (self.current_version, self.new_version_label)
         )
         return True

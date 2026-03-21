@@ -17,29 +17,29 @@
 
                     <!-- ▶ Start Review (from Draft) -->
                     <button name="action_start_review"
-                            string="▶ Start Review"
+                            string="Start Review"
                             type="object"
                             class="btn-primary"
                             invisible="state != 'draft'"/>
 
-                    <!-- 🔔 Request Approval (when stage requires it) -->
+                    <!--  Request Approval (when stage requires it) -->
                     <button name="action_request_approval"
-                            string="🔔 Request Approval"
+                            string=" Request Approval"
                             type="object"
                             class="btn-warning"
                             invisible="state == 'draft' or state == 'done' or not stage_id"/>
 
-                    <!-- ✅ Approve (Approver role) -->
+                    <!-- Approve (Approver role) -->
                     <button name="action_approve"
-                            string="✅ Approve"
+                            string=" Approve"
                             type="object"
                             class="btn-success"
                             groups="plm_engineering.group_plm_approver"
                             invisible="state != 'in_review'"/>
 
-                    <!-- ❌ Reject (Approver role) -->
+                    <!--  Reject (Approver role) -->
                     <button name="action_reject"
-                            string="❌ Reject"
+                            string=" Reject"
                             type="object"
                             class="btn-danger"
                             groups="plm_engineering.group_plm_approver"
@@ -47,14 +47,14 @@
 
                     <!-- ✔ Validate &amp; Apply -->
                     <button name="action_validate"
-                            string="✔ Validate &amp; Apply"
+                            string="Validate &amp; Apply"
                             type="object"
                             class="btn-success"
                             invisible="state not in ['approved', 'in_review'] or state == 'draft' or state == 'done'"/>
 
-                    <!-- 🚫 Cancel -->
+                    <!--  Cancel -->
                     <button name="action_cancel"
-                            string="🚫 Cancel"
+                            string=" Cancel"
                             type="object"
                             invisible="state == 'done' or state == 'draft'"
                             confirm="Are you sure you want to cancel this ECO?"/>
@@ -89,6 +89,15 @@
                         </button>
                     </div>
 
+                    <!-- Overdue alert banner -->
+                    <div class="alert alert-danger" role="alert"
+                         style="margin-bottom:12px;border-left:5px solid #dc3545;"
+                         invisible="not is_overdue">
+                        <strong>This ECO is OVERDUE.</strong>
+                        The effective date has passed and the ECO has not been applied.
+                        Please review and take action immediately.
+                    </div>
+
                     <!-- Title + Reference -->
                     <div class="oe_title">
                         <label for="name"/>
@@ -104,6 +113,10 @@
                             <field name="priority" widget="priority"/>
                         </div>
                     </div>
+
+                    <!-- Hidden computed fields needed by invisible attrs -->
+                    <field name="is_overdue" invisible="1"/>
+                    <field name="days_until_effective" invisible="1"/>
 
                     <!-- Main Fields -->
                     <group>
@@ -297,6 +310,7 @@
                   decoration-success="state == 'done'"
                   decoration-warning="state == 'in_review'"
                   decoration-info="state == 'approved'"
+                  decoration-danger="is_overdue == True"
                   decoration-muted="state == 'draft'">
                 <field name="priority" widget="priority" optional="show"/>
                 <field name="reference" string="Reference"/>
@@ -309,16 +323,19 @@
                 <field name="current_version" string="Version"/>
                 <field name="user_id" widget="many2one_avatar_user"/>
                 <field name="effective_date"/>
+                <field name="days_until_effective" string="Days Left" optional="show"/>
+                <field name="is_overdue" string="Overdue" optional="show"/>
                 <field name="stage_id"/>
                 <field name="state" widget="badge"
                        decoration-success="state == 'done'"
                        decoration-warning="state == 'in_review'"
                        decoration-info="state == 'approved'"
+                       decoration-danger="state == 'cancelled'"
                        decoration-muted="state == 'draft'"/>
                 <field name="change_count" string="Changes"/>
                 <field name="is_approved" string="Approved" optional="show"/>
                 <button name="action_view_comparison" type="object"
-                        string="📊 Compare" class="btn-sm btn-outline-primary"
+                        string=" Compare" class="btn-sm btn-outline-primary"
                         invisible="change_count == 0"/>
             </list>
         </field>
@@ -346,44 +363,85 @@
                 <field name="current_version"/>
                 <field name="effective_date"/>
                 <field name="is_approved"/>
+                <field name="is_overdue"/>
+                <field name="days_until_effective"/>
+                <field name="approval_count"/>
                 <templates>
                     <t t-name="card" class="oe_kanban_card oe_kanban_global_click">
-                        <!-- Card Top -->
-                        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
-                            <div style="font-weight:700;font-size:13px;line-height:1.3;">
+
+                        <!-- Overdue banner -->
+                        <div t-if="record.is_overdue.raw_value"
+                             style="background:#dc354515;border-left:3px solid #dc3545;
+                                    padding:4px 10px;margin:-12px -12px 10px;
+                                    font-size:11px;font-weight:700;color:#dc3545;">
+                            OVERDUE
+                        </div>
+
+                        <!-- Card Top: Title + Priority -->
+                        <div style="display:flex;justify-content:space-between;
+                                    align-items:flex-start;margin-bottom:6px;">
+                            <div style="font-weight:700;font-size:13px;
+                                        line-height:1.3;flex:1;padding-right:6px;">
                                 <field name="name"/>
                             </div>
                             <field name="priority" widget="priority"/>
                         </div>
+
                         <!-- Reference + Kanban State -->
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                            <span style="font-size:11px;color:#6c757d;">
+                        <div style="display:flex;justify-content:space-between;
+                                    align-items:center;margin-bottom:8px;">
+                            <span style="font-size:11px;font-weight:700;
+                                         background:#1a1a2e;color:#fff;
+                                         padding:2px 8px;border-radius:4px;">
                                 <field name="reference"/>
                             </span>
                             <field name="kanban_state" widget="state_selection"/>
                         </div>
-                        <!-- Badges -->
-                        <div style="margin-bottom:8px;">
+
+                        <!-- ECO Type + Version badges -->
+                        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
                             <field name="eco_type" widget="badge"/>
-                            &amp;nbsp;
                             <span style="font-size:11px;background:#e9ecef;
                                          color:#495057;padding:2px 8px;border-radius:10px;">
-                                v: <field name="current_version"/>
+                                <field name="current_version"/>
+                            </span>
+                            <span t-if="record.is_approved.raw_value"
+                                  style="font-size:11px;background:#d1e7dd;
+                                         color:#0a3622;padding:2px 8px;border-radius:10px;">
+                                Approved
                             </span>
                         </div>
+
                         <!-- Product -->
-                        <div style="font-size:12px;color:#495057;margin-bottom:4px;">
-                            📦 <field name="product_id"/>
+                        <div style="font-size:12px;color:#495057;margin-bottom:4px;
+                                    display:flex;align-items:center;gap:4px;">
+                            <span></span>
+                            <field name="product_id"/>
                         </div>
-                        <!-- Changes count -->
-                        <div style="font-size:12px;color:#6c757d;" t-if="record.change_count.value">
-                            🔄 <t t-out="record.change_count.value"/> change(s)
+
+                        <!-- Changes + Approvals row -->
+                        <div style="display:flex;gap:12px;font-size:11px;
+                                    color:#6c757d;margin-bottom:4px;">
+                            <span t-if="record.change_count.value">
+                                <t t-out="record.change_count.value"/> change(s)
+                            </span>
+                            <span t-if="record.approval_count.value">
+                                ✔ <t t-out="record.approval_count.value"/> approval(s)
+                            </span>
                         </div>
-                        <!-- Effective date -->
-                        <div style="font-size:12px;color:#6c757d;" t-if="record.effective_date.value">
-                            📅 <field name="effective_date"/>
+
+                        <!-- Effective date + days remaining -->
+                        <div t-if="record.effective_date.value"
+                             t-att-style="record.is_overdue.raw_value ?
+                                 'font-size:11px;color:#dc3545;font-weight:600;' :
+                                 'font-size:11px;color:#6c757d;'">
+                            <field name="effective_date"/>
+                            <t t-if="!record.is_overdue.raw_value and record.days_until_effective.value > 0">
+                                (<t t-out="record.days_until_effective.value"/> days left)
+                            </t>
                         </div>
-                        <!-- Footer -->
+
+                        <!-- Footer: State + Avatar -->
                         <div style="display:flex;justify-content:space-between;
                                     align-items:center;margin-top:10px;
                                     padding-top:8px;border-top:1px solid #dee2e6;">
@@ -391,6 +449,7 @@
                                    decoration-success="state == 'done'"
                                    decoration-warning="state == 'in_review'"
                                    decoration-info="state == 'approved'"
+                                   decoration-danger="state == 'cancelled'"
                                    decoration-muted="state == 'draft'"/>
                             <field name="user_id" widget="many2one_avatar_user"
                                    options="{'size': 24}"/>
@@ -428,6 +487,11 @@
                 <separator/>
                 <filter string="Urgent / Critical" name="urgent"
                         domain="[('priority', 'in', ['2', '3'])]"/>
+                <filter string="Overdue" name="overdue"
+                        domain="[('is_overdue', '=', True)]"/>
+                <separator/>
+                <filter string="Pending Approval" name="pending_approval"
+                        domain="[('state', '=', 'in_review')]"/>
                 <!-- Group By -->
                 <group expand="0" string="Group By">
                     <filter string="Stage" name="grp_stage" context="{'group_by': 'stage_id'}"/>
@@ -472,6 +536,14 @@
         <field name="res_model">plm.eco</field>
         <field name="view_mode">list,form</field>
         <field name="domain">[('state', '=', 'in_review')]</field>
+        <field name="search_view_id" ref="view_plm_eco_search"/>
+    </record>
+
+    <record id="action_plm_eco_overdue" model="ir.actions.act_window">
+        <field name="name">Overdue ECOs</field>
+        <field name="res_model">plm.eco</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('is_overdue', '=', True)]</field>
         <field name="search_view_id" ref="view_plm_eco_search"/>
     </record>
 

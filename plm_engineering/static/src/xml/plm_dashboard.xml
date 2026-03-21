@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="plm_engineering.PlmDashboard">
+    <div class="plm-dashboard">
+
+        <!-- ══ LOADING STATE ════════════════════════════════════════════ -->
+        <t t-if="state.loading">
+            <div class="plm-dash-loading">
+                <div class="plm-spinner">
+                    <i class="fa fa-cog fa-spin fa-3x"/>
+                </div>
+                <p>Loading PLM Dashboard…</p>
+            </div>
+        </t>
+
+        <!-- ══ ERROR STATE ══════════════════════════════════════════════ -->
+        <t t-elif="state.error">
+            <div class="plm-dash-error alert alert-danger">
+                <i class="fa fa-exclamation-triangle me-2"/>
+                Failed to load dashboard data.
+                <button class="btn btn-sm btn-outline-danger ms-3" t-on-click="onRefresh">
+                    <i class="fa fa-refresh"/> Retry
+                </button>
+            </div>
+        </t>
+
+        <!-- ══ MAIN DASHBOARD ════════════════════════════════════════════ -->
+        <t t-elif="state.data">
+            <t t-set="d" t-value="state.data"/>
+
+            <!-- ── Header ──────────────────────────────────────────────── -->
+            <div class="plm-dash-header">
+                <div class="plm-dash-header-left">
+                    <div class="plm-dash-logo">
+                        <i class="fa fa-industry"/>
+                    </div>
+                    <div>
+                        <h1 class="plm-dash-title">PLM Engineering Dashboard</h1>
+                        <p class="plm-dash-subtitle">
+                            Welcome, <strong t-esc="d.user_name"/>
+                            <t t-if="d.is_manager"> · <span class="plm-badge plm-badge-admin">Admin</span></t>
+                            <t t-elif="d.is_approver"> · <span class="plm-badge plm-badge-approver">Approver</span></t>
+                            <t t-elif="d.is_engineer"> · <span class="plm-badge plm-badge-engineer">Engineer</span></t>
+                        </p>
+                    </div>
+                </div>
+                <div class="plm-dash-header-right">
+                    <span class="plm-refresh-time">
+                        <i class="fa fa-clock-o me-1"/>
+                        Last updated: <t t-esc="lastRefreshLabel"/>
+                    </span>
+                    <button class="btn btn-sm plm-btn-refresh" t-on-click="onRefresh"
+                            t-att-disabled="state.refreshing">
+                        <i t-att-class="state.refreshing ? 'fa fa-spinner fa-spin' : 'fa fa-refresh'"/>
+                        <t t-if="!state.refreshing"> Refresh</t>
+                    </button>
+                    <button class="btn btn-sm plm-btn-new-eco" t-on-click="createNewEco">
+                        <i class="fa fa-plus"/> New ECO
+                    </button>
+                </div>
+            </div>
+
+            <!-- ── KPI Row ─────────────────────────────────────────────── -->
+            <div class="plm-kpi-row">
+
+                <!-- Total ECOs -->
+                <div class="plm-kpi-card plm-kpi-primary" t-on-click="openEcoList">
+                    <div class="plm-kpi-icon"><i class="fa fa-file-text-o"/></div>
+                    <div class="plm-kpi-body">
+                        <div class="plm-kpi-value" t-esc="d.total_ecos"/>
+                        <div class="plm-kpi-label">Total ECOs</div>
+                    </div>
+                    <div class="plm-kpi-trend">
+                        <span class="plm-kpi-sub"><t t-esc="d.state_counts.draft"/> draft</span>
+                    </div>
+                </div>
+
+                <!-- Pending Approval -->
+                <div class="plm-kpi-card plm-kpi-warning" t-on-click="openPendingApprovals">
+                    <div class="plm-kpi-icon"><i class="fa fa-hourglass-half"/></div>
+                    <div class="plm-kpi-body">
+                        <div class="plm-kpi-value" t-esc="d.pending_approval"/>
+                        <div class="plm-kpi-label">Pending Approval</div>
+                    </div>
+                    <div class="plm-kpi-trend">
+                        <span t-att-class="d.pending_approval > 0 ? 'plm-kpi-sub plm-pulse' : 'plm-kpi-sub'">
+                            <t t-if="d.pending_approval > 0">Needs action</t>
+                            <t t-else="">All clear</t>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Applied Today -->
+                <div class="plm-kpi-card plm-kpi-success" t-on-click="openDoneEcos">
+                    <div class="plm-kpi-icon"><i class="fa fa-check-circle"/></div>
+                    <div class="plm-kpi-body">
+                        <div class="plm-kpi-value" t-esc="d.applied_today"/>
+                        <div class="plm-kpi-label">Applied Today</div>
+                    </div>
+                    <div class="plm-kpi-trend">
+                        <span class="plm-kpi-sub"><t t-esc="d.applied_this_week"/> this week</span>
+                    </div>
+                </div>
+
+                <!-- Active Products -->
+                <div class="plm-kpi-card plm-kpi-purple" t-on-click="openProducts">
+                    <div class="plm-kpi-icon"><i class="fa fa-cube"/></div>
+                    <div class="plm-kpi-body">
+                        <div class="plm-kpi-value" t-esc="d.active_products"/>
+                        <div class="plm-kpi-label">Active Products</div>
+                    </div>
+                    <div class="plm-kpi-trend">
+                        <span class="plm-kpi-sub"><t t-esc="d.archived_products"/> archived</span>
+                    </div>
+                </div>
+
+                <!-- Active BoMs -->
+                <div class="plm-kpi-card plm-kpi-teal" t-on-click="openBoms">
+                    <div class="plm-kpi-icon"><i class="fa fa-sitemap"/></div>
+                    <div class="plm-kpi-body">
+                        <div class="plm-kpi-value" t-esc="d.active_boms"/>
+                        <div class="plm-kpi-label">Active BoMs</div>
+                    </div>
+                    <div class="plm-kpi-trend">
+                        <span class="plm-kpi-sub"><t t-esc="d.archived_boms"/> archived</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ── Main Grid ───────────────────────────────────────────── -->
+            <div class="plm-main-grid">
+
+                <!-- LEFT COLUMN -->
+                <div class="plm-col-left">
+
+                    <!-- ECO Stage Pipeline -->
+                    <div class="plm-panel">
+                        <div class="plm-panel-header">
+                            <i class="fa fa-random me-2"/>ECO Stage Pipeline
+                            <span class="plm-panel-count"><t t-esc="d.total_ecos"/> total</span>
+                        </div>
+                        <div class="plm-pipeline">
+                            <t t-foreach="d.stage_pipeline" t-as="stage" t-key="stage.id">
+                                <div class="plm-pipeline-stage"
+                                    t-on-click="() => this.openStageEcos(stage.id, stage.name)">
+                                    <div class="plm-pipeline-header">
+                                        <span class="plm-stage-dot"
+                                              t-att-style="'background:' + getStageColor(stage)"/>
+                                        <span class="plm-stage-name" t-esc="stage.name"/>
+                                        <span class="plm-stage-count" t-esc="stage.count"/>
+                                    </div>
+                                    <div class="plm-pipeline-bar-track">
+                                        <div class="plm-pipeline-bar-fill"
+                                             t-att-style="'width:' + barWidth(stage.count, stageMax) + ';background:' + getStageColor(stage)"/>
+                                    </div>
+                                    <div class="plm-stage-badges">
+                                        <t t-if="stage.is_start">
+                                            <span class="plm-stage-tag plm-tag-start">Start</span>
+                                        </t>
+                                        <t t-if="stage.is_approval">
+                                            <span class="plm-stage-tag plm-tag-approval">Approval Required</span>
+                                        </t>
+                                        <t t-if="stage.is_final">
+                                            <span class="plm-stage-tag plm-tag-final">Final</span>
+                                        </t>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+
+                    <!-- ECO State Donut + Type Split -->
+                    <div class="plm-panel plm-panel-stats">
+                        <div class="plm-panel-header">
+                            <i class="fa fa-pie-chart me-2"/>ECO Status Breakdown
+                        </div>
+                        <div class="plm-state-grid">
+                            <t t-foreach="Object.entries(d.state_counts)" t-as="entry" t-key="entry[0]">
+                                <div class="plm-state-item"
+                                     t-att-style="'border-left:4px solid ' + getStateColor(entry[0])">
+                                    <span class="plm-state-count" t-esc="entry[1]"/>
+                                    <span class="plm-state-label" t-esc="getStateLabel(entry[0])"/>
+                                </div>
+                            </t>
+                        </div>
+
+                        <div class="plm-panel-divider"/>
+
+                        <div class="plm-panel-header" style="padding-top:0">
+                            <i class="fa fa-exchange me-2"/>ECO Type Split
+                        </div>
+                        <div class="plm-type-split">
+                            <div class="plm-type-bar-wrap">
+                                <div class="plm-type-label">
+                                    <span>Product ECOs</span>
+                                    <strong t-esc="d.product_ecos"/>
+                                </div>
+                                <div class="plm-type-track">
+                                    <div class="plm-type-fill plm-fill-product"
+                                         t-att-style="'width:' + barWidth(d.product_ecos, d.total_ecos || 1)"/>
+                                </div>
+                            </div>
+                            <div class="plm-type-bar-wrap">
+                                <div class="plm-type-label">
+                                    <span>BoM ECOs</span>
+                                    <strong t-esc="d.bom_ecos"/>
+                                </div>
+                                <div class="plm-type-track">
+                                    <div class="plm-type-fill plm-fill-bom"
+                                         t-att-style="'width:' + barWidth(d.bom_ecos, d.total_ecos || 1)"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Priority Breakdown -->
+                    <div class="plm-panel">
+                        <div class="plm-panel-header">
+                            <i class="fa fa-exclamation me-2"/>Priority Breakdown (Open ECOs)
+                        </div>
+                        <div class="plm-priority-list">
+                            <t t-foreach="[['3','Critical'],['2','Very Urgent'],['1','Important'],['0','Normal']]"
+                               t-as="prio" t-key="prio[0]">
+                                <div class="plm-priority-row">
+                                    <span class="plm-prio-dot"
+                                          t-att-style="'background:' + getPriorityColor(prio[0])"/>
+                                    <span class="plm-prio-label" t-esc="prio[1]"/>
+                                    <div class="plm-prio-track">
+                                        <div class="plm-prio-fill"
+                                             t-att-style="'width:' + barWidth(d.priority_counts[prio[0]] || 0, Math.max(...Object.values(d.priority_counts), 1)) + ';background:' + getPriorityColor(prio[0])"/>
+                                    </div>
+                                    <span class="plm-prio-count" t-esc="d.priority_counts[prio[0]] || 0"/>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+
+                    <div class="plm-panel">
+                        <div class="plm-panel-header">
+                            <i class="fa fa-line-chart me-2"/>ECO Creation — Last 7 Days
+                        </div>
+                        <div class="plm-trend-chart">
+                            <t t-foreach="d.weekly_trend" t-as="day" t-key="day.date">
+                                <div class="plm-trend-col">
+                                    <div class="plm-trend-bar-wrap">
+                                        <span class="plm-trend-count" t-esc="day.count"/>
+                                        <div class="plm-trend-bar"
+                                            t-att-style="'height:' + barWidth(day.count, weeklyMax)"/>
+                                    </div>
+                                    <span class="plm-trend-day" t-esc="day.day"/>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- RIGHT COLUMN -->
+                <div class="plm-col-right">
+
+                    <!-- Pending Approvals (shown to approvers/managers) -->
+                    <t t-if="d.is_approver or d.is_manager">
+                        <div class="plm-panel plm-panel-urgent">
+                            <div class="plm-panel-header">
+                                <i class="fa fa-bell me-2"/>
+                                Pending Approval
+                                <t t-if="d.pending_approval > 0">
+                                    <span class="plm-badge-urgent" t-esc="d.pending_approval"/>
+                                </t>
+                            </div>
+                            <t t-if="d.pending_list.length === 0">
+                                <div class="plm-empty-state">
+                                    <i class="fa fa-check-circle fa-2x text-success"/>
+                                    <p>No ECOs pending approval</p>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="plm-approval-list">
+                                    <t t-foreach="d.pending_list" t-as="eco" t-key="eco.id">
+                                        <div class="plm-approval-item"
+                                             t-on-click="() => openEcoById(eco.id)">
+                                            <div class="plm-approval-ref">
+                                                <span class="plm-ref-badge" t-esc="eco.reference"/>
+                                                <span t-att-class="'plm-prio-tag plm-prio-' + eco.priority"
+                                                      t-esc="getPriorityLabel(eco.priority)"/>
+                                            </div>
+                                            <div class="plm-approval-name" t-esc="eco.name"/>
+                                            <div class="plm-approval-meta">
+                                                <span><i class="fa fa-cube me-1"/><t t-esc="eco.product"/></span>
+                                                <span><i class="fa fa-user me-1"/><t t-esc="eco.user"/></span>
+                                                <t t-if="eco.effective_date">
+                                                    <span><i class="fa fa-calendar me-1"/><t t-esc="formatDate(eco.effective_date)"/></span>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </t>
+                                    <div class="plm-view-all" t-on-click="openPendingApprovals">
+                                        View all pending <i class="fa fa-arrow-right ms-1"/>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+
+                    <!-- Recent ECOs -->
+                    <div class="plm-panel">
+                        <div class="plm-panel-header">
+                            <i class="fa fa-history me-2"/>Recent Engineering Change Orders
+                        </div>
+                        <t t-if="d.recent_ecos.length === 0">
+                            <div class="plm-empty-state">
+                                <i class="fa fa-file-o fa-2x text-muted"/>
+                                <p>No ECOs found. <span class="plm-link" t-on-click="createNewEco">Create one now</span></p>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div class="plm-eco-table">
+                                <div class="plm-eco-table-header">
+                                    <span>Reference</span>
+                                    <span>Title</span>
+                                    <span>Type</span>
+                                    <span>Stage</span>
+                                    <span>Status</span>
+                                </div>
+                                <t t-foreach="d.recent_ecos" t-as="eco" t-key="eco.id">
+                                    <div class="plm-eco-row" t-on-click="() => openEcoById(eco.id)">
+                                        <span class="plm-ref-sm" t-esc="eco.reference"/>
+                                        <span class="plm-eco-name" t-esc="eco.name"/>
+                                        <span>
+                                            <span t-att-class="eco.eco_type === 'bom' ? 'plm-type-tag plm-type-bom' : 'plm-type-tag plm-type-product'"
+                                                  t-esc="getEcoTypeLabel(eco.eco_type)"/>
+                                        </span>
+                                        <span class="plm-stage-text" t-esc="eco.stage"/>
+                                        <span>
+                                            <span class="plm-state-pill"
+                                                  t-att-style="'background:' + getStateColor(eco.state) + '22;color:' + getStateColor(eco.state)"
+                                                  t-esc="getStateLabel(eco.state)"/>
+                                        </span>
+                                    </div>
+                                </t>
+                            </div>
+                            <div class="plm-view-all" t-on-click="openEcoList">
+                                View all ECOs <i class="fa fa-arrow-right ms-1"/>
+                            </div>
+                        </t>
+                    </div>
+
+                    <!-- Recent Audit Activity -->
+                    <div class="plm-panel">
+                        <div class="plm-panel-header">
+                            <i class="fa fa-shield me-2"/>Recent Audit Activity
+                        </div>
+                        <t t-if="d.audit_list.length === 0">
+                            <div class="plm-empty-state">
+                                <i class="fa fa-shield fa-2x text-muted"/>
+                                <p>No audit events yet.</p>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div class="plm-audit-feed">
+                                <t t-foreach="d.audit_list" t-as="log" t-key="log_index">
+                                    <div class="plm-audit-item">
+                                        <div class="plm-audit-dot"/>
+                                        <div class="plm-audit-content">
+                                            <div class="plm-audit-action">
+                                                <strong t-esc="log.action"/>
+                                                <t t-if="log.record"> — <span class="text-muted" t-esc="log.record"/></t>
+                                            </div>
+                                            <t t-if="log.old_value and log.new_value">
+                                                <div class="plm-audit-diff">
+                                                    <span class="plm-diff-old" t-esc="log.old_value"/>
+                                                    <i class="fa fa-long-arrow-right mx-1"/>
+                                                    <span class="plm-diff-new" t-esc="log.new_value"/>
+                                                </div>
+                                            </t>
+                                            <div class="plm-audit-meta">
+                                                <i class="fa fa-user me-1"/><t t-esc="log.user"/>
+                                                <i class="fa fa-clock-o ms-2 me-1"/><t t-esc="formatDatetime(log.timestamp)"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </t>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ── Footer ──────────────────────────────────────────────── -->
+            <div class="plm-dash-footer">
+                <span><i class="fa fa-sync me-1"/>Auto-refreshes every 30 seconds</span>
+                <span>PLM Engineering Change Control</span>
+            </div>
+
+        </t>
+    </div>
+</t>
+
+</templates>

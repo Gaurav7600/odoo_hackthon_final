@@ -2,160 +2,168 @@
 <odoo>
 
     <!-- ═══════════════════════════════════════════════════
-         ROOT MENU — PLM Engineering
+	    ROOT MENU — PLM Engineering
     ═══════════════════════════════════════════════════ -->
     <menuitem id="menu_plm_root"
-              name="PLM Engineering"
-              sequence="72"
-              groups="plm_engineering.group_plm_operations"/>
+			name="PLM Engineering"
+			sequence="72"
+			groups="plm_engineering.group_plm_operations"
+			web_icon="plm_engineering,static/description/icon.png"/>
 
-    <!-- ─── ECO Dashboard shortcut ─── -->
+    <!-- ─── Real-Time OWL Dashboard ─── -->
     <menuitem id="menu_plm_dashboard"
-              name="Dashboard"
-              parent="menu_plm_root"
-              action="action_plm_eco"
-              sequence="5"
-              groups="plm_engineering.group_plm_operations"/>
+			name="Dashboard"
+			parent="menu_plm_root"
+			action="action_plm_dashboard"
+			sequence="5"
+			groups="plm_engineering.group_plm_operations"/>
 
     <!-- ═══════════════════════════════════════════════════
-         PRODUCTS
+	    PRODUCTS
     ═══════════════════════════════════════════════════ -->
     <menuitem id="menu_plm_products_root"
-              name="Products"
-              parent="menu_plm_root"
-              sequence="10"
-              groups="plm_engineering.group_plm_operations"/>
+		    name="Products"
+		    parent="menu_plm_root"
+		    sequence="10"
+		    groups="plm_engineering.group_plm_operations"/>
 
     <menuitem id="menu_plm_products_active"
-              name="Active Products"
-              parent="menu_plm_products_root"
-              action="action_plm_product"
-              sequence="10"/>
+		    name="Active Products"
+		    parent="menu_plm_products_root"
+		    action="action_plm_product"
+		    sequence="10"/>
 
     <menuitem id="menu_plm_products_all"
-              name="All Versions"
-              parent="menu_plm_products_root"
-              action="action_plm_product_all"
-              sequence="20"
-              groups="plm_engineering.group_plm_user"/>
+		    name="All Versions"
+		    parent="menu_plm_products_root"
+		    action="action_plm_product_all"
+		    sequence="20"
+		    groups="plm_engineering.group_plm_user"/>
 
     <menuitem id="menu_plm_products_archived"
-              name="Archived Products"
-              parent="menu_plm_products_root"
-              action="action_plm_product_archived"
-              sequence="30"
-              groups="plm_engineering.group_plm_user"/>
+		    name="Archived Products"
+		    parent="menu_plm_products_root"
+		    action="action_plm_product_archived"
+		    sequence="30"
+		    groups="plm_engineering.group_plm_user"/>
 
     <!-- ═══════════════════════════════════════════════════
-         BILLS OF MATERIALS
+	    BILLS OF MATERIALS
     ═══════════════════════════════════════════════════ -->
     <menuitem id="menu_plm_bom_root"
-              name="Bills of Materials"
-              parent="menu_plm_root"
-              sequence="20"
-              groups="plm_engineering.group_plm_operations"/>
+		    name="Bills of Materials"
+		    parent="menu_plm_root"
+		    sequence="20"
+		    groups="plm_engineering.group_plm_operations"/>
 
     <menuitem id="menu_plm_bom_active"
-              name="Active BoMs"
-              parent="menu_plm_bom_root"
-              action="action_plm_bom"
-              sequence="10"/>
+		    name="Active BoMs"
+		    parent="menu_plm_bom_root"
+		    action="action_plm_bom"
+		    sequence="10"/>
 
     <menuitem id="menu_plm_bom_all"
-              name="All Versions"
-              parent="menu_plm_bom_root"
-              action="action_plm_bom_all"
-              sequence="20"
-              groups="plm_engineering.group_plm_user"/>
+		    name="All Versions"
+		    parent="menu_plm_bom_root"
+		    action="action_plm_bom_all"
+		    sequence="20"
+		    groups="plm_engineering.group_plm_user"/>
 
     <menuitem id="menu_plm_bom_archived"
-              name="Archived BoMs"
-              parent="menu_plm_bom_root"
-              action="action_plm_bom_archived"
-              sequence="30"
-              groups="plm_engineering.group_plm_user"/>
+		    name="Archived BoMs"
+		    parent="menu_plm_bom_root"
+		    action="action_plm_bom_archived"
+		    sequence="30"
+		    groups="plm_engineering.group_plm_user"/>
 
     <!-- ═══════════════════════════════════════════════════
-         ENGINEERING CHANGE ORDERS
+	    ENGINEERING CHANGE ORDERS
     ═══════════════════════════════════════════════════ -->
     <menuitem id="menu_plm_eco_root"
-              name="Change Orders"
-              parent="menu_plm_root"
-              sequence="30"
-              groups="plm_engineering.group_plm_user"/>
+		    name="Change Orders"
+		    parent="menu_plm_root"
+		    sequence="30"
+		    groups="plm_engineering.group_plm_user"/>
 
     <menuitem id="menu_plm_eco_all"
-              name="All ECOs"
-              parent="menu_plm_eco_root"
-              action="action_plm_eco"
-              sequence="10"/>
+		    name="All ECOs"
+		    parent="menu_plm_eco_root"
+		    action="action_plm_eco"
+		    sequence="10"/>
 
     <menuitem id="menu_plm_eco_my"
-              name="My ECOs"
-              parent="menu_plm_eco_root"
-              action="action_plm_eco_my"
-              sequence="20"/>
+		    name="My ECOs"
+		    parent="menu_plm_eco_root"
+		    action="action_plm_eco_my"
+		    sequence="20"/>
 
     <menuitem id="menu_plm_eco_pending"
-              name="Pending Approval"
-              parent="menu_plm_eco_root"
-              action="action_plm_eco_pending"
-              sequence="30"
-              groups="plm_engineering.group_plm_approver"/>
+		    name="Pending Approval"
+		    parent="menu_plm_eco_root"
+		    action="action_plm_eco_pending"
+		    sequence="30"
+		    groups="plm_engineering.group_plm_approver"/>
+
+    <menuitem id="menu_plm_eco_overdue"
+		    name="Overdue ECOs"
+		    parent="menu_plm_eco_root"
+		    action="action_plm_eco_overdue"
+		    sequence="40"
+		    groups="plm_engineering.group_plm_user"/>
 
     <!-- ═══════════════════════════════════════════════════
-         REPORTS
+	    REPORTS
     ═══════════════════════════════════════════════════ -->
     <menuitem id="menu_plm_reports_root"
-              name="Reports"
-              parent="menu_plm_root"
-              sequence="40"
-              groups="plm_engineering.group_plm_user"/>
+		    name="Reports"
+		    parent="menu_plm_root"
+		    sequence="40"
+		    groups="plm_engineering.group_plm_user"/>
 
     <menuitem id="menu_plm_report_ecos"
-              name="ECO Report"
-              parent="menu_plm_reports_root"
-              action="action_plm_eco_report"
-              sequence="10"/>
+		    name="ECO Report"
+		    parent="menu_plm_reports_root"
+		    action="action_plm_eco_report"
+		    sequence="10"/>
 
     <menuitem id="menu_plm_report_product_versions"
-              name="Product Version History"
-              parent="menu_plm_reports_root"
-              action="action_plm_product_version_history"
-              sequence="20"/>
+		    name="Product Version History"
+		    parent="menu_plm_reports_root"
+		    action="action_plm_product_version_history"
+		    sequence="20"/>
 
     <menuitem id="menu_plm_report_bom_history"
-              name="BoM Change History"
-              parent="menu_plm_reports_root"
-              action="action_plm_bom_change_history"
-              sequence="30"/>
+		    name="BoM Change History"
+		    parent="menu_plm_reports_root"
+		    action="action_plm_bom_change_history"
+		    sequence="30"/>
 
     <menuitem id="menu_plm_report_matrix"
-              name="Active Product–BoM Matrix"
-              parent="menu_plm_reports_root"
-              action="action_plm_active_product_bom_matrix"
-              sequence="40"/>
+		    name="Active Product–BoM Matrix"
+		    parent="menu_plm_reports_root"
+		    action="action_plm_active_product_bom_matrix"
+		    sequence="40"/>
 
     <menuitem id="menu_plm_report_audit"
-              name="Audit Trail"
-              parent="menu_plm_reports_root"
-              action="action_plm_audit_log"
-              sequence="50"
-              groups="plm_engineering.group_plm_approver"/>
+		    name="Audit Trail"
+		    parent="menu_plm_reports_root"
+		    action="action_plm_audit_log"
+		    sequence="50"
+		    groups="plm_engineering.group_plm_approver"/>
 
     <!-- ═══════════════════════════════════════════════════
-         SETTINGS (Admin Only)
+	    SETTINGS (Admin Only)
     ═══════════════════════════════════════════════════ -->
     <menuitem id="menu_plm_settings_root"
-              name="Settings"
-              parent="menu_plm_root"
-              sequence="99"
-              groups="plm_engineering.group_plm_manager"/>
+		    name="Settings"
+		    parent="menu_plm_root"
+		    sequence="99"
+		    groups="plm_engineering.group_plm_manager"/>
 
     <menuitem id="menu_plm_settings_stages"
-              name="ECO Stages"
-              parent="menu_plm_settings_root"
-              action="action_plm_eco_stage"
-              sequence="10"/>
+		    name="ECO Stages"
+		    parent="menu_plm_settings_root"
+		    action="action_plm_eco_stage"
+		    sequence="10"/>
 
 </odoo>

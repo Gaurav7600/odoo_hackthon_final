@@ -1,0 +1,760 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PLM DEMO DATA — Hackathon Showcase
+     Loads a complete, realistic PLM scenario on first install.
+     Products → BoMs → ECOs across all pipeline stages.
+═══════════════════════════════════════════════════════════════ -->
+
+<!-- ─────────────────────────────────────────────────────────────
+     SECTION 1 — RAW MATERIAL COMPONENTS
+───────────────────────────────────────────────────────────────── -->
+
+<record id="demo_prod_steel_rod" model="plm.product">
+    <field name="name">Steel Rod 10mm</field>
+    <field name="internal_ref">RM-001</field>
+    <field name="category">raw_material</field>
+    <field name="uom">Kg</field>
+    <field name="sale_price">12.50</field>
+    <field name="cost_price">8.00</field>
+    <field name="version">v1</field>
+    <field name="version_number">1</field>
+    <field name="status">active</field>
+    <field name="description">High-grade carbon steel rod, 10mm diameter, used in structural components.</field>
+</record>
+
+<record id="demo_prod_oak_timber" model="plm.product">
+    <field name="name">Oak Timber Board</field>
+    <field name="internal_ref">RM-002</field>
+    <field name="category">raw_material</field>
+    <field name="uom">Unit</field>
+    <field name="sale_price">35.00</field>
+    <field name="cost_price">22.00</field>
+    <field name="version">v1</field>
+    <field name="version_number">1</field>
+    <field name="status">active</field>
+    <field name="description">Solid oak timber, 200x50x2000mm, kiln dried, FSC certified.</field>
+</record>
+
+<record id="demo_prod_varnish" model="plm.product">
+    <field name="name">Polyurethane Varnish</field>
+    <field name="internal_ref">RM-003</field>
+    <field name="category">consumable</field>
+    <field name="uom">Litre</field>
+    <field name="sale_price">18.00</field>
+    <field name="cost_price">11.50</field>
+    <field name="version">v1</field>
+    <field name="version_number">1</field>
+    <field name="status">active</field>
+    <field name="description">Premium polyurethane wood varnish, satin finish, 1L tin.</field>
+</record>
+
+<record id="demo_prod_screws_m6" model="plm.product">
+    <field name="name">M6 Wood Screw</field>
+    <field name="internal_ref">RM-004</field>
+    <field name="category">consumable</field>
+    <field name="uom">Unit</field>
+    <field name="sale_price">0.25</field>
+    <field name="cost_price">0.10</field>
+    <field name="version">v1</field>
+    <field name="version_number">1</field>
+    <field name="status">active</field>
+    <field name="description">Stainless steel M6 x 50mm wood screw, cross-head.</field>
+</record>
+
+<record id="demo_prod_aluminum_sheet" model="plm.product">
+    <field name="name">Aluminum Sheet 2mm</field>
+    <field name="internal_ref">RM-005</field>
+    <field name="category">raw_material</field>
+    <field name="uom">Kg</field>
+    <field name="sale_price">9.80</field>
+    <field name="cost_price">6.20</field>
+    <field name="version">v1</field>
+    <field name="version_number">1</field>
+    <field name="status">active</field>
+    <field name="description">6061-T6 aluminum sheet, 2mm thickness, precision cut.</field>
+</record>
+
+<record id="demo_prod_circuit_board" model="plm.product">
+    <field name="name">PCB Control Board</field>
+    <field name="internal_ref">RM-006</field>
+    <field name="category">semi_finished</field>
+    <field name="uom">Unit</field>
+    <field name="sale_price">45.00</field>
+    <field name="cost_price">28.00</field>
+    <field name="version">v1</field>
+    <field name="version_number">1</field>
+    <field name="status">active</field>
+    <field name="description">4-layer PCB control board with ARM Cortex-M4 processor.</field>
+</record>
+
+<record id="demo_prod_foam_padding" model="plm.product">
+    <field name="name">High-Density Foam Padding</field>
+    <field name="internal_ref">RM-007</field>
+    <field name="category">raw_material</field>
+    <field name="uom">Unit</field>
+    <field name="sale_price">14.00</field>
+    <field name="cost_price">8.50</field>
+    <field name="version">v1</field>
+    <field name="version_number">1</field>
+    <field name="status">active</field>
+    <field name="description">50mm high-density polyurethane foam, 600x600mm panel.</field>
+</record>
+
+<record id="demo_prod_premium_varnish" model="plm.product">
+    <field name="name">Premium Water-Based Varnish</field>
+    <field name="internal_ref">RM-008</field>
+    <field name="category">consumable</field>
+    <field name="uom">Litre</field>
+    <field name="sale_price">26.00</field>
+    <field name="cost_price">17.00</field>
+    <field name="version">v1</field>
+    <field name="version_number">1</field>
+    <field name="status">active</field>
+    <field name="description">Low-VOC premium water-based varnish for environmentally compliant finishing.</field>
+</record>
+
+<!-- ─────────────────────────────────────────────────────────────
+     SECTION 2 — FINISHED GOOD PRODUCTS (v1 — active)
+───────────────────────────────────────────────────────────────── -->
+
+<record id="demo_prod_wooden_table" model="plm.product">
+    <field name="name">Wooden Table</field>
+    <field name="internal_ref">FG-001</field>
+    <field name="category">finished_good</field>
+    <field name="uom">Unit</field>
+    <field name="sale_price">249.00</field>
+    <field name="cost_price">112.00</field>
+    <field name="version">v1</field>
+    <field name="version_number">1</field>
+    <field name="status">active</field>
+    <field name="description">Classic solid oak dining table. 4-legged design, seats 4 comfortably.</field>
+</record>
+
+<record id="demo_prod_iphone17" model="plm.product">
+    <field name="name">SmartDevice Pro X</field>
+    <field name="internal_ref">FG-002</field>
+    <field name="category">finished_good</field>
+    <field name="uom">Unit</field>
+    <field name="sale_price">999.00</field>
+    <field name="cost_price">480.00</field>
+    <field name="version">v1</field>
+    <field name="version_number">1</field>
+    <field name="status">active</field>
+    <field name="description">Next-generation smart consumer device with advanced control board and premium housing.</field>
+</record>
+
+<record id="demo_prod_control_unit" model="plm.product">
+    <field name="name">Industrial Control Unit</field>
+    <field name="internal_ref">FG-003</field>
+    <field name="category">finished_good</field>
+    <field name="uom">Unit</field>
+    <field name="sale_price">1850.00</field>
+    <field name="cost_price">740.00</field>
+    <field name="version">v1</field>
+    <field name="version_number">1</field>
+    <field name="status">active</field>
+    <field name="description">Heavy-duty industrial automation control unit with steel housing and PCB control board.</field>
+</record>
+
+<!-- ─────────────────────────────────────────────────────────────
+     SECTION 3 — BILLS OF MATERIALS (v1 — active)
+───────────────────────────────────────────────────────────────── -->
+
+<!-- BoM: Wooden Table v1 -->
+<record id="demo_bom_wooden_table_v1" model="plm.bom">
+    <field name="name">Wooden Table Standard Assembly</field>
+    <field name="product_id" ref="demo_prod_wooden_table"/>
+    <field name="product_qty">1.0</field>
+    <field name="version">v1</field>
+    <field name="version_number">1</field>
+    <field name="status">active</field>
+    <field name="notes">Standard 4-legged wooden table. Varnish applied at Painting station.</field>
+</record>
+
+<record id="demo_bom_line_oak_legs" model="plm.bom.line">
+    <field name="bom_id" ref="demo_bom_wooden_table_v1"/>
+    <field name="component_id" ref="demo_prod_oak_timber"/>
+    <field name="quantity">4.0</field>
+    <field name="sequence">10</field>
+    <field name="note">Table legs — cut to 750mm</field>
+</record>
+
+<record id="demo_bom_line_oak_top" model="plm.bom.line">
+    <field name="bom_id" ref="demo_bom_wooden_table_v1"/>
+    <field name="component_id" ref="demo_prod_oak_timber"/>
+    <field name="quantity">1.0</field>
+    <field name="sequence">20</field>
+    <field name="note">Table top — full board width</field>
+</record>
+
+<record id="demo_bom_line_screws_table" model="plm.bom.line">
+    <field name="bom_id" ref="demo_bom_wooden_table_v1"/>
+    <field name="component_id" ref="demo_prod_screws_m6"/>
+    <field name="quantity">12.0</field>
+    <field name="sequence">30</field>
+    <field name="note">Leg attachment screws</field>
+</record>
+
+<record id="demo_bom_line_varnish_table" model="plm.bom.line">
+    <field name="bom_id" ref="demo_bom_wooden_table_v1"/>
+    <field name="component_id" ref="demo_prod_varnish"/>
+    <field name="quantity">0.5</field>
+    <field name="sequence">40</field>
+    <field name="note">Single coat polyurethane varnish</field>
+</record>
+
+<!-- BoM Operations: Wooden Table v1 -->
+<record id="demo_bom_op_table_assembly" model="plm.bom.operation">
+    <field name="bom_id" ref="demo_bom_wooden_table_v1"/>
+    <field name="name">Assembly</field>
+    <field name="work_center">Assembly Line A</field>
+    <field name="duration_minutes">60.0</field>
+    <field name="sequence">10</field>
+</record>
+
+<record id="demo_bom_op_table_painting" model="plm.bom.operation">
+    <field name="bom_id" ref="demo_bom_wooden_table_v1"/>
+    <field name="name">Painting &amp; Varnish</field>
+    <field name="work_center">Paint Floor</field>
+    <field name="duration_minutes">30.0</field>
+    <field name="sequence">20</field>
+</record>
+
+<record id="demo_bom_op_table_packing" model="plm.bom.operation">
+    <field name="bom_id" ref="demo_bom_wooden_table_v1"/>
+    <field name="name">Packing</field>
+    <field name="work_center">Packaging Line</field>
+    <field name="duration_minutes">20.0</field>
+    <field name="sequence">30</field>
+</record>
+
+<!-- BoM: SmartDevice Pro X v1 -->
+<record id="demo_bom_smartdevice_v1" model="plm.bom">
+    <field name="name">SmartDevice Pro X — Full Assembly</field>
+    <field name="product_id" ref="demo_prod_iphone17"/>
+    <field name="product_qty">1.0</field>
+    <field name="version">v1</field>
+    <field name="version_number">1</field>
+    <field name="status">active</field>
+    <field name="notes">Consumer smart device assembly. PCB sourced externally; housing fabricated in-house.</field>
+</record>
+
+<record id="demo_bom_line_pcb" model="plm.bom.line">
+    <field name="bom_id" ref="demo_bom_smartdevice_v1"/>
+    <field name="component_id" ref="demo_prod_circuit_board"/>
+    <field name="quantity">1.0</field>
+    <field name="sequence">10</field>
+    <field name="note">Main control PCB</field>
+</record>
+
+<record id="demo_bom_line_alum_housing" model="plm.bom.line">
+    <field name="bom_id" ref="demo_bom_smartdevice_v1"/>
+    <field name="component_id" ref="demo_prod_aluminum_sheet"/>
+    <field name="quantity">0.3</field>
+    <field name="sequence">20</field>
+    <field name="note">Aluminium housing panels</field>
+</record>
+
+<record id="demo_bom_line_foam_device" model="plm.bom.line">
+    <field name="bom_id" ref="demo_bom_smartdevice_v1"/>
+    <field name="component_id" ref="demo_prod_foam_padding"/>
+    <field name="quantity">1.0</field>
+    <field name="sequence">30</field>
+    <field name="note">Protective inner foam tray</field>
+</record>
+
+<!-- BoM Operations: SmartDevice v1 -->
+<record id="demo_bom_op_device_pcb" model="plm.bom.operation">
+    <field name="bom_id" ref="demo_bom_smartdevice_v1"/>
+    <field name="name">PCB Integration</field>
+    <field name="work_center">Electronics Bay</field>
+    <field name="duration_minutes">45.0</field>
+    <field name="sequence">10</field>
+</record>
+
+<record id="demo_bom_op_device_housing" model="plm.bom.operation">
+    <field name="bom_id" ref="demo_bom_smartdevice_v1"/>
+    <field name="name">Housing Assembly</field>
+    <field name="work_center">Assembly Line B</field>
+    <field name="duration_minutes">30.0</field>
+    <field name="sequence">20</field>
+</record>
+
+<record id="demo_bom_op_device_qa" model="plm.bom.operation">
+    <field name="bom_id" ref="demo_bom_smartdevice_v1"/>
+    <field name="name">Quality Assurance Test</field>
+    <field name="work_center">QA Station</field>
+    <field name="duration_minutes">20.0</field>
+    <field name="sequence">30</field>
+</record>
+
+<!-- BoM: Industrial Control Unit v1 -->
+<record id="demo_bom_control_unit_v1" model="plm.bom">
+    <field name="name">Industrial Control Unit — Assembly</field>
+    <field name="product_id" ref="demo_prod_control_unit"/>
+    <field name="product_qty">1.0</field>
+    <field name="version">v1</field>
+    <field name="version_number">1</field>
+    <field name="status">active</field>
+    <field name="notes">Heavy-duty unit. Steel housing welded externally then internally fitted with PCB and wiring.</field>
+</record>
+
+<record id="demo_bom_line_steel_housing" model="plm.bom.line">
+    <field name="bom_id" ref="demo_bom_control_unit_v1"/>
+    <field name="component_id" ref="demo_prod_steel_rod"/>
+    <field name="quantity">2.5</field>
+    <field name="sequence">10</field>
+    <field name="note">Frame structural steel</field>
+</record>
+
+<record id="demo_bom_line_alum_panel" model="plm.bom.line">
+    <field name="bom_id" ref="demo_bom_control_unit_v1"/>
+    <field name="component_id" ref="demo_prod_aluminum_sheet"/>
+    <field name="quantity">1.2</field>
+    <field name="sequence">20</field>
+    <field name="note">Front and side panels</field>
+</record>
+
+<record id="demo_bom_line_pcb_icu" model="plm.bom.line">
+    <field name="bom_id" ref="demo_bom_control_unit_v1"/>
+    <field name="component_id" ref="demo_prod_circuit_board"/>
+    <field name="quantity">2.0</field>
+    <field name="sequence">30</field>
+    <field name="note">Dual redundant control boards</field>
+</record>
+
+<!-- BoM Operations: Industrial Control Unit v1 -->
+<record id="demo_bom_op_icu_fab" model="plm.bom.operation">
+    <field name="bom_id" ref="demo_bom_control_unit_v1"/>
+    <field name="name">Steel Fabrication</field>
+    <field name="work_center">Fabrication Bay</field>
+    <field name="duration_minutes">120.0</field>
+    <field name="sequence">10</field>
+</record>
+
+<record id="demo_bom_op_icu_pcb" model="plm.bom.operation">
+    <field name="bom_id" ref="demo_bom_control_unit_v1"/>
+    <field name="name">PCB Installation</field>
+    <field name="work_center">Electronics Bay</field>
+    <field name="duration_minutes">60.0</field>
+    <field name="sequence">20</field>
+</record>
+
+<record id="demo_bom_op_icu_test" model="plm.bom.operation">
+    <field name="bom_id" ref="demo_bom_control_unit_v1"/>
+    <field name="name">Factory Acceptance Test</field>
+    <field name="work_center">Test Lab</field>
+    <field name="duration_minutes">90.0</field>
+    <field name="sequence">30</field>
+</record>
+
+<!-- ─────────────────────────────────────────────────────────────
+     SECTION 4 — ENGINEERING CHANGE ORDERS
+     One ECO per stage to populate the full pipeline.
+───────────────────────────────────────────────────────────────── -->
+
+<!-- ECO 1 — Draft stage (New) -->
+<record id="demo_eco_001" model="plm.eco">
+    <field name="name">Switch screws from M6 to M8 for higher load capacity</field>
+    <field name="reference">ECO/DEMO/0001</field>
+    <field name="eco_type">bom</field>
+    <field name="product_id" ref="demo_prod_wooden_table"/>
+    <field name="bom_id" ref="demo_bom_wooden_table_v1"/>
+    <field name="stage_id" ref="plm_stage_new"/>
+    <field name="priority">1</field>
+    <field name="version_update">True</field>
+    <field name="effective_date" eval="(DateTime.now() + timedelta(days=14)).strftime('%Y-%m-%d')"/>
+    <field name="note">&lt;p&gt;Engineering team identified that M6 screws are insufficient under heavy load. M8 screws will provide 30% more torque resistance. Propose increasing count from 12 to 16 screws.&lt;/p&gt;</field>
+</record>
+
+<!-- ECO 1 BoM change lines -->
+<record id="demo_eco_001_bom_change_screws" model="plm.eco.bom.change">
+    <field name="eco_id" ref="demo_eco_001"/>
+    <field name="component_id" ref="demo_prod_screws_m6"/>
+    <field name="change_type">modified</field>
+    <field name="old_qty">12.0</field>
+    <field name="new_qty">16.0</field>
+    <field name="uom">Unit</field>
+</record>
+
+<record id="demo_eco_001_bom_change_varnish" model="plm.eco.bom.change">
+    <field name="eco_id" ref="demo_eco_001"/>
+    <field name="component_id" ref="demo_prod_varnish"/>
+    <field name="change_type">unchanged</field>
+    <field name="old_qty">0.5</field>
+    <field name="new_qty">0.5</field>
+    <field name="uom">Litre</field>
+</record>
+
+<!-- ECO 1 operation changes: add QC step -->
+<record id="demo_eco_001_op_assembly" model="plm.eco.operation.change">
+    <field name="eco_id" ref="demo_eco_001"/>
+    <field name="operation_name">Assembly</field>
+    <field name="work_center">Assembly Line A</field>
+    <field name="change_type">modified</field>
+    <field name="old_duration">60.0</field>
+    <field name="new_duration">75.0</field>
+</record>
+
+<record id="demo_eco_001_op_qc" model="plm.eco.operation.change">
+    <field name="eco_id" ref="demo_eco_001"/>
+    <field name="operation_name">Quality Inspection</field>
+    <field name="work_center">QA Station</field>
+    <field name="change_type">added</field>
+    <field name="old_duration">0.0</field>
+    <field name="new_duration">10.0</field>
+</record>
+
+<!-- ECO 2 — In Progress -->
+<record id="demo_eco_002" model="plm.eco">
+    <field name="name">Upgrade PCB to dual-redundant configuration</field>
+    <field name="reference">ECO/DEMO/0002</field>
+    <field name="eco_type">bom</field>
+    <field name="product_id" ref="demo_prod_iphone17"/>
+    <field name="bom_id" ref="demo_bom_smartdevice_v1"/>
+    <field name="stage_id" ref="plm_stage_in_progress"/>
+    <field name="priority">2</field>
+    <field name="version_update">True</field>
+    <field name="effective_date" eval="(DateTime.now() + timedelta(days=7)).strftime('%Y-%m-%d')"/>
+    <field name="note">&lt;p&gt;Reliability analysis shows single-board design has MTBF of 18 months. Dual-redundant PCB increases MTBF to 54 months. Required for medical-grade deployment certification.&lt;/p&gt;</field>
+</record>
+
+<record id="demo_eco_002_bom_pcb" model="plm.eco.bom.change">
+    <field name="eco_id" ref="demo_eco_002"/>
+    <field name="component_id" ref="demo_prod_circuit_board"/>
+    <field name="change_type">modified</field>
+    <field name="old_qty">1.0</field>
+    <field name="new_qty">2.0</field>
+    <field name="uom">Unit</field>
+</record>
+
+<record id="demo_eco_002_bom_alum" model="plm.eco.bom.change">
+    <field name="eco_id" ref="demo_eco_002"/>
+    <field name="component_id" ref="demo_prod_aluminum_sheet"/>
+    <field name="change_type">modified</field>
+    <field name="old_qty">0.3</field>
+    <field name="new_qty">0.4</field>
+    <field name="uom">Kg</field>
+</record>
+
+<record id="demo_eco_002_op_pcb" model="plm.eco.operation.change">
+    <field name="eco_id" ref="demo_eco_002"/>
+    <field name="operation_name">PCB Integration</field>
+    <field name="work_center">Electronics Bay</field>
+    <field name="change_type">modified</field>
+    <field name="old_duration">45.0</field>
+    <field name="new_duration">80.0</field>
+</record>
+
+<!-- ECO 3 — Approval stage (In Review) -->
+<record id="demo_eco_003" model="plm.eco">
+    <field name="name">Update sale price — Premium Finish line</field>
+    <field name="reference">ECO/DEMO/0003</field>
+    <field name="eco_type">product</field>
+    <field name="product_id" ref="demo_prod_wooden_table"/>
+    <field name="stage_id" ref="plm_stage_approval"/>
+    <field name="priority">1</field>
+    <field name="version_update">True</field>
+    <field name="effective_date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
+    <field name="note">&lt;p&gt;Premium Finish variant launched. Cost price has risen 12% due to varnish upgrade. Sale price must reflect margin target of 55%.&lt;/p&gt;</field>
+</record>
+
+<record id="demo_eco_003_prod_name" model="plm.eco.product.change">
+    <field name="eco_id" ref="demo_eco_003"/>
+    <field name="field_name">name</field>
+    <field name="field_label">Product Name</field>
+    <field name="old_value">Wooden Table</field>
+    <field name="new_value">Wooden Table — Premium Finish</field>
+</record>
+
+<record id="demo_eco_003_prod_cost" model="plm.eco.product.change">
+    <field name="eco_id" ref="demo_eco_003"/>
+    <field name="field_name">cost_price</field>
+    <field name="field_label">Cost Price</field>
+    <field name="old_value">112.0</field>
+    <field name="new_value">125.0</field>
+</record>
+
+<record id="demo_eco_003_prod_sale" model="plm.eco.product.change">
+    <field name="eco_id" ref="demo_eco_003"/>
+    <field name="field_name">sale_price</field>
+    <field name="field_label">Sale Price</field>
+    <field name="old_value">249.0</field>
+    <field name="new_value">279.00</field>
+</record>
+
+<record id="demo_eco_003_prod_desc" model="plm.eco.product.change">
+    <field name="eco_id" ref="demo_eco_003"/>
+    <field name="field_name">description</field>
+    <field name="field_label">Description</field>
+    <field name="old_value">Classic solid oak dining table. 4-legged design, seats 4 comfortably.</field>
+    <field name="new_value">Classic solid oak dining table with premium water-based varnish finish. 4-legged design, seats 4. FSC certified timber.</field>
+</record>
+
+<!-- Approval record for ECO 3 (pending) -->
+<record id="demo_eco_003_approval" model="plm.eco.approval">
+    <field name="eco_id" ref="demo_eco_003"/>
+    <field name="state">pending</field>
+</record>
+
+<!-- ECO 4 — Overdue (past effective date, still in review) -->
+<record id="demo_eco_004" model="plm.eco">
+    <field name="name">Replace polyurethane varnish with eco water-based varnish</field>
+    <field name="reference">ECO/DEMO/0004</field>
+    <field name="eco_type">bom</field>
+    <field name="product_id" ref="demo_prod_wooden_table"/>
+    <field name="bom_id" ref="demo_bom_wooden_table_v1"/>
+    <field name="stage_id" ref="plm_stage_approval"/>
+    <field name="priority">3</field>
+    <field name="version_update">True</field>
+    <field name="effective_date" eval="(DateTime.now() - timedelta(days=5)).strftime('%Y-%m-%d')"/>
+    <field name="note">&lt;p&gt;EU VOC regulation 2024/1234 mandates switch to water-based varnish by end of quarter. CRITICAL — compliance deadline already passed. Requires immediate approval.&lt;/p&gt;</field>
+</record>
+
+<record id="demo_eco_004_bom_varnish" model="plm.eco.bom.change">
+    <field name="eco_id" ref="demo_eco_004"/>
+    <field name="component_id" ref="demo_prod_varnish"/>
+    <field name="change_type">removed</field>
+    <field name="old_qty">0.5</field>
+    <field name="new_qty">0.0</field>
+    <field name="uom">Litre</field>
+</record>
+
+<record id="demo_eco_004_bom_premium_varnish" model="plm.eco.bom.change">
+    <field name="eco_id" ref="demo_eco_004"/>
+    <field name="component_id" ref="demo_prod_premium_varnish"/>
+    <field name="change_type">added</field>
+    <field name="old_qty">0.0</field>
+    <field name="new_qty">0.6</field>
+    <field name="uom">Litre</field>
+</record>
+
+<record id="demo_eco_004_op_paint" model="plm.eco.operation.change">
+    <field name="eco_id" ref="demo_eco_004"/>
+    <field name="operation_name">Painting &amp; Varnish</field>
+    <field name="work_center">Paint Floor</field>
+    <field name="change_type">modified</field>
+    <field name="old_duration">30.0</field>
+    <field name="new_duration">45.0</field>
+</record>
+
+<record id="demo_eco_004_approval" model="plm.eco.approval">
+    <field name="eco_id" ref="demo_eco_004"/>
+    <field name="state">pending</field>
+</record>
+
+<!-- ECO 5 — Done/Applied (price update on SmartDevice) -->
+<record id="demo_eco_005" model="plm.eco">
+    <field name="name">Initial pricing correction — SmartDevice Pro X</field>
+    <field name="reference">ECO/DEMO/0005</field>
+    <field name="eco_type">product</field>
+    <field name="product_id" ref="demo_prod_iphone17"/>
+    <field name="stage_id" ref="plm_stage_done"/>
+    <field name="priority">0</field>
+    <field name="version_update">False</field>
+    <field name="effective_date" eval="(DateTime.now() - timedelta(days=10)).strftime('%Y-%m-%d')"/>
+    <field name="is_approved">True</field>
+    <field name="applied_date" eval="DateTime.now() - timedelta(days=10)"/>
+    <field name="note">&lt;p&gt;Post-launch pricing correction applied. Initial price was set incorrectly at launch. This ECO corrects cost and sale price to reflect BOM actuals.&lt;/p&gt;</field>
+</record>
+
+<record id="demo_eco_005_prod_cost" model="plm.eco.product.change">
+    <field name="eco_id" ref="demo_eco_005"/>
+    <field name="field_name">cost_price</field>
+    <field name="field_label">Cost Price</field>
+    <field name="old_value">520.0</field>
+    <field name="new_value">480.0</field>
+</record>
+
+<record id="demo_eco_005_prod_sale" model="plm.eco.product.change">
+    <field name="eco_id" ref="demo_eco_005"/>
+    <field name="field_name">sale_price</field>
+    <field name="field_label">Sale Price</field>
+    <field name="old_value">1099.0</field>
+    <field name="new_value">999.0</field>
+</record>
+
+<record id="demo_eco_005_approval" model="plm.eco.approval">
+    <field name="eco_id" ref="demo_eco_005"/>
+    <field name="state">approved</field>
+    <field name="review_date" eval="DateTime.now() - timedelta(days=10)"/>
+    <field name="note">Approved. Price correction verified against BOM cost actuals. Applied immediately.</field>
+</record>
+
+<!-- ECO 6 — Done/Applied (Industrial Control Unit BoM) -->
+<record id="demo_eco_006" model="plm.eco">
+    <field name="name">Increase steel frame material for stress compliance</field>
+    <field name="reference">ECO/DEMO/0006</field>
+    <field name="eco_type">bom</field>
+    <field name="product_id" ref="demo_prod_control_unit"/>
+    <field name="bom_id" ref="demo_bom_control_unit_v1"/>
+    <field name="stage_id" ref="plm_stage_done"/>
+    <field name="priority">2</field>
+    <field name="version_update">False</field>
+    <field name="effective_date" eval="(DateTime.now() - timedelta(days=20)).strftime('%Y-%m-%d')"/>
+    <field name="is_approved">True</field>
+    <field name="applied_date" eval="DateTime.now() - timedelta(days=20)"/>
+    <field name="note">&lt;p&gt;FEA simulation identified stress concentration in frame under max load. Steel rod qty increased from 2.5Kg to 3.2Kg per unit.&lt;/p&gt;</field>
+</record>
+
+<record id="demo_eco_006_bom_steel" model="plm.eco.bom.change">
+    <field name="eco_id" ref="demo_eco_006"/>
+    <field name="component_id" ref="demo_prod_steel_rod"/>
+    <field name="change_type">modified</field>
+    <field name="old_qty">2.5</field>
+    <field name="new_qty">3.2</field>
+    <field name="uom">Kg</field>
+</record>
+
+<record id="demo_eco_006_approval" model="plm.eco.approval">
+    <field name="eco_id" ref="demo_eco_006"/>
+    <field name="state">approved</field>
+    <field name="review_date" eval="DateTime.now() - timedelta(days=20)"/>
+    <field name="note">FEA report reviewed. Steel increase approved. Applied to current version.</field>
+</record>
+
+<!-- ECO 7 — New stage, critical priority (for dashboard urgency) -->
+<record id="demo_eco_007" model="plm.eco">
+    <field name="name">Emergency PCB supplier change — QA lot failure</field>
+    <field name="reference">ECO/DEMO/0007</field>
+    <field name="eco_type">bom</field>
+    <field name="product_id" ref="demo_prod_control_unit"/>
+    <field name="bom_id" ref="demo_bom_control_unit_v1"/>
+    <field name="stage_id" ref="plm_stage_new"/>
+    <field name="priority">3</field>
+    <field name="version_update">True</field>
+    <field name="effective_date" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d')"/>
+    <field name="note">&lt;p&gt;LOT-2024-Q4 PCB batch failed environmental stress screening (ESS). 100% reject rate. New approved supplier required. ECO proposes interim component substitution.&lt;/p&gt;</field>
+</record>
+
+<record id="demo_eco_007_bom_pcb" model="plm.eco.bom.change">
+    <field name="eco_id" ref="demo_eco_007"/>
+    <field name="component_id" ref="demo_prod_circuit_board"/>
+    <field name="change_type">unchanged</field>
+    <field name="old_qty">2.0</field>
+    <field name="new_qty">2.0</field>
+    <field name="uom">Unit</field>
+</record>
+
+<!-- ECO 8 — Cancelled -->
+<record id="demo_eco_008" model="plm.eco">
+    <field name="name">Add foam padding to SmartDevice packaging</field>
+    <field name="reference">ECO/DEMO/0008</field>
+    <field name="eco_type">bom</field>
+    <field name="product_id" ref="demo_prod_iphone17"/>
+    <field name="bom_id" ref="demo_bom_smartdevice_v1"/>
+    <field name="stage_id" ref="plm_stage_new"/>
+    <field name="priority">0</field>
+    <field name="version_update">False</field>
+    <field name="effective_date" eval="(DateTime.now() - timedelta(days=30)).strftime('%Y-%m-%d')"/>
+    <field name="kanban_state">blocked</field>
+    <field name="note">&lt;p&gt;Cancelled — superseded by ECO/DEMO/0002 which already covers protective foam tray requirements as part of the dual-PCB housing redesign.&lt;/p&gt;</field>
+</record>
+
+<record id="demo_eco_008_bom_foam" model="plm.eco.bom.change">
+    <field name="eco_id" ref="demo_eco_008"/>
+    <field name="component_id" ref="demo_prod_foam_padding"/>
+    <field name="change_type">added</field>
+    <field name="old_qty">0.0</field>
+    <field name="new_qty">2.0</field>
+    <field name="uom">Unit</field>
+</record>
+
+<!-- ─────────────────────────────────────────────────────────────
+     SECTION 5 — AUDIT LOG ENTRIES
+     Pre-populate audit trail so Reports &amp; Dashboard show activity.
+───────────────────────────────────────────────────────────────── -->
+
+<record id="demo_audit_001" model="plm.audit.log">
+    <field name="eco_id" ref="demo_eco_001"/>
+    <field name="action">ECO Created</field>
+    <field name="model_name">plm.eco</field>
+    <field name="record_name">ECO/DEMO/0001</field>
+    <field name="old_value"></field>
+    <field name="new_value">Switch screws from M6 to M8 for higher load capacity</field>
+    <field name="user_id" ref="base.user_admin"/>
+    <field name="timestamp" eval="DateTime.now() - timedelta(days=3)"/>
+</record>
+
+<record id="demo_audit_002" model="plm.audit.log">
+    <field name="eco_id" ref="demo_eco_003"/>
+    <field name="action">Stage Transition</field>
+    <field name="model_name">plm.eco.stage</field>
+    <field name="record_name">ECO/DEMO/0003</field>
+    <field name="old_value">In Progress</field>
+    <field name="new_value">Approval</field>
+    <field name="user_id" ref="base.user_admin"/>
+    <field name="timestamp" eval="DateTime.now() - timedelta(days=2)"/>
+</record>
+
+<record id="demo_audit_003" model="plm.audit.log">
+    <field name="eco_id" ref="demo_eco_005"/>
+    <field name="action">ECO Applied</field>
+    <field name="model_name">plm.eco</field>
+    <field name="record_name">ECO/DEMO/0005</field>
+    <field name="old_value">Open</field>
+    <field name="new_value">Done</field>
+    <field name="user_id" ref="base.user_admin"/>
+    <field name="timestamp" eval="DateTime.now() - timedelta(days=10)"/>
+</record>
+
+<record id="demo_audit_004" model="plm.audit.log">
+    <field name="eco_id" ref="demo_eco_005"/>
+    <field name="action">Field Changed</field>
+    <field name="model_name">plm.product</field>
+    <field name="record_name">Sale Price</field>
+    <field name="old_value">1099.0</field>
+    <field name="new_value">999.0</field>
+    <field name="user_id" ref="base.user_admin"/>
+    <field name="timestamp" eval="DateTime.now() - timedelta(days=10)"/>
+</record>
+
+<record id="demo_audit_005" model="plm.audit.log">
+    <field name="eco_id" ref="demo_eco_006"/>
+    <field name="action">ECO Approved</field>
+    <field name="model_name">plm.eco</field>
+    <field name="record_name">ECO/DEMO/0006</field>
+    <field name="old_value">Pending</field>
+    <field name="new_value">Approved</field>
+    <field name="user_id" ref="base.user_admin"/>
+    <field name="timestamp" eval="DateTime.now() - timedelta(days=20)"/>
+</record>
+
+<record id="demo_audit_006" model="plm.audit.log">
+    <field name="eco_id" ref="demo_eco_006"/>
+    <field name="action">Component Modified</field>
+    <field name="model_name">plm.bom.line</field>
+    <field name="record_name">Steel Rod 10mm</field>
+    <field name="old_value">2.5 Kg</field>
+    <field name="new_value">3.2 Kg</field>
+    <field name="user_id" ref="base.user_admin"/>
+    <field name="timestamp" eval="DateTime.now() - timedelta(days=20)"/>
+</record>
+
+<record id="demo_audit_007" model="plm.audit.log">
+    <field name="eco_id" ref="demo_eco_004"/>
+    <field name="action">Approval Requested</field>
+    <field name="model_name">plm.eco</field>
+    <field name="record_name">ECO/DEMO/0004</field>
+    <field name="old_value">Draft</field>
+    <field name="new_value">Pending Approval</field>
+    <field name="user_id" ref="base.user_admin"/>
+    <field name="timestamp" eval="DateTime.now() - timedelta(days=7)"/>
+</record>
+
+<record id="demo_audit_008" model="plm.audit.log">
+    <field name="eco_id" ref="demo_eco_002"/>
+    <field name="action">Stage Transition</field>
+    <field name="model_name">plm.eco.stage</field>
+    <field name="record_name">ECO/DEMO/0002</field>
+    <field name="old_value">New</field>
+    <field name="new_value">In Progress</field>
+    <field name="user_id" ref="base.user_admin"/>
+    <field name="timestamp" eval="DateTime.now() - timedelta(days=1)"/>
+</record>
+
+</data>
+</odoo>

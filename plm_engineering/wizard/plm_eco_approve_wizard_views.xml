@@ -47,7 +47,7 @@
                 </sheet>
                 <footer>
                     <button name="action_confirm" type="object"
-                            string="✔ Confirm &amp; Apply ECO"
+                            string="Confirm &amp; Apply ECO"
                             class="btn-success btn-lg"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>

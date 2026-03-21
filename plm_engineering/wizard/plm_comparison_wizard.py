@@ -40,13 +40,13 @@ class PlmComparisonWizard(models.TransientModel):
   <div style="background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);
               color:white; padding:20px 24px; border-radius:10px; margin-bottom:20px;">
     <div style="font-size:18px; font-weight:700; margin-bottom:6px;">
-      🔄 Change Comparison Report
+      Change Comparison Report
     </div>
     <div style="font-size:13px; opacity:0.85; display:flex; gap:24px; flex-wrap:wrap;">
-      <span>📋 <b>ECO:</b> {eco.reference} — {eco.name}</span>
-      <span>🏷 <b>Type:</b> {eco_type_label}</span>
-      <span>📦 <b>Product:</b> {product_name}</span>
-      <span>🔖 <b>Version:</b> {eco.current_version} → {eco.new_version_label}</span>
+      <span> <b>ECO:</b> {eco.reference} — {eco.name}</span>
+      <span> <b>Type:</b> {eco_type_label}</span>
+      <span> <b>Product:</b> {product_name}</span>
+      <span> <b>Version:</b> {eco.current_version} → {eco.new_version_label}</span>
     </div>
   </div>
 
@@ -102,7 +102,7 @@ class PlmComparisonWizard(models.TransientModel):
         return f"""
   <div style="font-size:15px;font-weight:700;color:#343a40;margin-bottom:8px;
               padding-bottom:6px;border-bottom:2px solid #dee2e6;">
-    📝 Product Field Changes
+    Product Field Changes
   </div>
   <table style="width:100%;border-collapse:collapse;margin-bottom:24px;
                 border-radius:8px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,0.08);">
@@ -146,7 +146,7 @@ class PlmComparisonWizard(models.TransientModel):
         return f"""
   <div style="font-size:15px;font-weight:700;color:#343a40;margin-bottom:8px;
               padding-bottom:6px;border-bottom:2px solid #dee2e6;">
-    🔩 Component Changes
+    Component Changes
     <small style="font-size:12px;color:#6c757d;font-weight:400;margin-left:8px;">BoM: {bom_label}</small>
   </div>
   <table style="width:100%;border-collapse:collapse;margin-bottom:24px;
@@ -192,7 +192,7 @@ class PlmComparisonWizard(models.TransientModel):
         return f"""
   <div style="font-size:15px;font-weight:700;color:#343a40;margin-bottom:8px;
               padding-bottom:6px;border-bottom:2px solid #dee2e6;">
-    ⚙️ Operation Changes
+    Operation Changes
   </div>
   <table style="width:100%;border-collapse:collapse;margin-bottom:24px;
                 border-radius:8px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,0.08);">
@@ -212,9 +212,9 @@ class PlmComparisonWizard(models.TransientModel):
     # ── Helpers ───────────────────────────────────────
     def _row_style(self, change_type):
         styles = {
-            'added':     ('background:#d4edda;border-left:4px solid #28a745;', '🟢'),
-            'removed':   ('background:#f8d7da;border-left:4px solid #dc3545;', '🔴'),
-            'modified':  ('background:#fff3cd;border-left:4px solid #ffc107;', '🟡'),
-            'unchanged': ('background:#f8f9fa;', '⚪'),
+            'added':     ('background:#d4edda;border-left:4px solid #28a745;'),
+            'removed':   ('background:#f8d7da;border-left:4px solid #dc3545;'),
+            'modified':  ('background:#fff3cd;border-left:4px solid #ffc107;'),
+            'unchanged': ('background:#f8f9fa;'),
         }
         return styles.get(change_type, ('', '—'))

@@ -63,6 +63,6 @@ class PlmEcoApproveWizard(models.TransientModel):
             )
         if self.closing_note:
             self.eco_id.message_post(
-                body=_('📝 Closing Note: %s') % self.closing_note
+                body=_('Closing Note: %s') % self.closing_note
             )
         return self.eco_id.action_validate()

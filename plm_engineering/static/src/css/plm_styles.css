@@ -1,15 +1,14 @@
 /* ════════════════════════════════════════════════════════
-   PLM Engineering — Custom Stylesheet
-   Odoo 18 Backend
+   PLM Engineering — Complete Stylesheet (Odoo 18)
+   Includes: Base styles + Real-Time Dashboard
 ════════════════════════════════════════════════════════ */
 
-/* ── PLM Root App icon color accent ───────────────── */
+/* ── App icon ──────────────────────────────────────────── */
 .o_app[data-menu-xmlid="plm_engineering.menu_plm_root"] .o_app_icon {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
     border-radius: 12px;
 }
 
-/* ── Version badge pill ────────────────────────────── */
+/* ── Version badge pill ────────────────────────────────── */
 .plm-version-badge {
     display: inline-block;
     font-size: 11px;
@@ -21,7 +20,7 @@
     letter-spacing: 0.03em;
 }
 
-/* ── Archived product / BoM warning strip ──────────── */
+/* ── Archived warning strip ────────────────────────────── */
 .o_form_sheet_warning.alert-danger {
     border-left: 5px solid #dc3545;
     border-radius: 0 6px 6px 0;
@@ -29,20 +28,20 @@
     margin-bottom: 14px;
 }
 
-/* ── Smart buttons: statinfo larger number ─────────── */
+/* ── Smart buttons ─────────────────────────────────────── */
 .oe_stat_button .o_stat_value {
     font-size: 20px;
     font-weight: 700;
     color: #1a1a2e;
 }
 
-/* ── ECO Form: stage status bar accent ─────────────── */
+/* ── Stage statusbar ───────────────────────────────────── */
 .o_statusbar_status .o_arrow_button.btn-primary {
     background-color: #0f3460 !important;
     border-color: #0f3460 !important;
 }
 
-/* ── Kanban card: PLM override ─────────────────────── */
+/* ── Kanban card override ──────────────────────────────── */
 .o_kanban_record.oe_kanban_card {
     border-radius: 10px;
     border: 1px solid #dee2e6;
@@ -54,122 +53,683 @@
     transform: translateY(-1px);
 }
 
-/* ── Kanban: Done column header ────────────────────── */
-.o_kanban_group .o_column_title:has(+ .o_kanban_counter) {
-    font-weight: 700;
+/* ════════════════════════════════════════════════════════
+   REAL-TIME OWL DASHBOARD
+════════════════════════════════════════════════════════ */
+
+.plm-dashboard {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    height: 100%;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
 }
 
-/* ── Change comparison dialog: wider modal ──────────── */
-.modal-dialog:has(.plm-comparison-body) {
-    max-width: 900px;
-}
-
-/* ── Diff table: smooth row colors ─────────────────── */
-.plm-diff-table tbody tr {
-    transition: filter 0.1s ease;
-}
-.plm-diff-table tbody tr:hover {
-    filter: brightness(0.97);
-}
-
-/* ── ECO list: Reference column ────────────────────── */
-.o_list_view td[name="reference"] {
-    font-family: 'SFMono-Regular', 'Consolas', monospace;
-    font-size: 12px;
+/* ── Loading / Error ────────────────────────────────────── */
+.plm-dash-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
+    gap: 16px;
     color: #6c757d;
 }
-
-/* ── Audit log: action column highlight ─────────────── */
-.o_list_view td[name="action"] {
-    font-weight: 600;
-    color: #0f3460;
+.plm-spinner { color: #0f3460; }
+.plm-dash-error {
+    margin: 32px;
+    padding: 24px;
+    border-radius: 12px;
+    font-size: 15px;
 }
 
-/* ── Audit log: immutable notice in form ─────────────── */
-.alert-warning {
-    border-left: 4px solid #ffc107;
-}
-
-/* ── ECO type badge overrides ───────────────────────── */
-.o_field_badge span.badge[class*="text-bg-info"] {
-    background-color: #0dcaf0 !important;
-    color: #000 !important;
-}
-
-/* ── Priority stars ─────────────────────────────────── */
-.o_priority .fa-star { color: #ffc107; }
-.o_priority .fa-star-o { color: #dee2e6; }
-
-/* ── Product/BoM form: version info strip ───────────── */
-.plm-version-strip {
+/* ── Header ─────────────────────────────────────────────── */
+.plm-dash-header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+    color: #fff;
+    padding: 20px 28px;
+    flex-wrap: wrap;
     gap: 12px;
-    padding: 6px 0 10px 0;
-    border-bottom: 1px dashed #dee2e6;
-    margin-bottom: 8px;
+}
+.plm-dash-header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.plm-dash-logo {
+    width: 52px;
+    height: 52px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    backdrop-filter: blur(4px);
+}
+.plm-dash-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+    color: white;
+    letter-spacing: -0.3px;
+}
+.plm-dash-subtitle {
     font-size: 13px;
-    color: #6c757d;
+    margin: 2px 0 0;
+    opacity: 0.8;
+}
+.plm-dash-header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.plm-refresh-time {
+    font-size: 12px;
+    opacity: 0.7;
+}
+.plm-btn-refresh {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+    font-size: 13px;
+}
+.plm-btn-refresh:hover {
+    background: rgba(255,255,255,0.25);
+    color: #fff;
+}
+.plm-btn-new-eco {
+    background: #e63946;
+    color: #fff;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+.plm-btn-new-eco:hover {
+    background: #c1121f;
+    color: #fff;
 }
 
-/* ── BoM component table: subtotal row ──────────────── */
-.oe_subtotal_footer_separator {
+/* ── Role badges in header ──────────────────────────────── */
+.plm-badge {
+    font-size: 10px;
     font-weight: 700;
-    font-size: 14px;
-    border-top: 2px solid #dee2e6 !important;
-}
-
-/* ── State badge colors (force override) ────────────── */
-.o_field_badge[name="state"] .badge,
-.o_field_badge[name="status"] .badge {
-    font-size: 11px;
-    font-weight: 700;
-    padding: 4px 10px;
+    padding: 2px 8px;
     border-radius: 20px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+.plm-badge-admin    { background: #dc3545; color: #fff; }
+.plm-badge-approver { background: #ffc107; color: #212529; }
+.plm-badge-engineer { background: #0dcaf0; color: #212529; }
+
+/* ── KPI Row ─────────────────────────────────────────────── */
+.plm-kpi-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    padding: 20px 24px;
+}
+.plm-kpi-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 18px 16px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border-top: 4px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+.plm-kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    opacity: 0.06;
+    background: currentColor;
+    transform: translate(20px, -20px);
+}
+.plm-kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+.plm-kpi-primary { border-top-color: #0d6efd; color: #0d6efd; }
+.plm-kpi-warning  { border-top-color: #ffc107; color: #e6a817; }
+.plm-kpi-success  { border-top-color: #198754; color: #198754; }
+.plm-kpi-info     { border-top-color: #0dcaf0; color: #0aa2c0; }
+.plm-kpi-purple   { border-top-color: #6f42c1; color: #6f42c1; }
+.plm-kpi-teal     { border-top-color: #20c997; color: #1aa179; }
+
+.plm-kpi-icon {
+    font-size: 22px;
+    opacity: 0.9;
+}
+.plm-kpi-body {}
+.plm-kpi-value {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1;
+    color: #1a1a2e;
+}
+.plm-kpi-label {
+    font-size: 12px;
+    color: #6c757d;
+    font-weight: 500;
+    margin-top: 2px;
+}
+.plm-kpi-sub {
+    font-size: 11px;
+    color: #adb5bd;
+}
+.plm-pulse {
+    color: #e6a817;
+    animation: plm-pulse-anim 1.5s ease-in-out infinite;
+}
+@keyframes plm-pulse-anim {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* ── Main Grid ──────────────────────────────────────────── */
+.plm-main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 14px;
+    padding: 0 24px 24px;
+}
+.plm-col-left, .plm-col-right {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* ── Panel ──────────────────────────────────────────────── */
+.plm-panel {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    overflow: hidden;
+}
+.plm-panel-urgent {
+    border: 1px solid #ffc10744;
+    background: #fffdf5;
+}
+.plm-panel-stats {}
+.plm-panel-header {
+    display: flex;
+    align-items: center;
+    padding: 14px 18px;
+    font-weight: 700;
+    font-size: 13px;
+    color: #1a1a2e;
+    border-bottom: 1px solid #f0f2f5;
+}
+.plm-panel-count {
+    margin-left: auto;
+    font-size: 11px;
+    color: #adb5bd;
+    font-weight: 500;
+}
+.plm-panel-divider {
+    height: 1px;
+    background: #f0f2f5;
+    margin: 4px 0;
+}
+
+/* ── Stage Pipeline ─────────────────────────────────────── */
+.plm-pipeline { padding: 10px 18px 16px; }
+.plm-pipeline-stage {
+    padding: 10px 0;
+    cursor: pointer;
+    transition: background 0.1s;
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin: 0 -10px;
+}
+.plm-pipeline-stage:hover { background: #f8f9fa; }
+.plm-pipeline-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+.plm-stage-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.plm-stage-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #212529;
+    flex: 1;
+}
+.plm-stage-count {
+    font-size: 16px;
+    font-weight: 800;
+    color: #1a1a2e;
+}
+.plm-pipeline-bar-track {
+    height: 6px;
+    background: #f0f2f5;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+.plm-pipeline-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+}
+.plm-stage-badges { display: flex; gap: 4px; flex-wrap: wrap; }
+.plm-stage-tag {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 7px;
+    border-radius: 20px;
+    text-transform: uppercase;
     letter-spacing: 0.04em;
 }
+.plm-tag-start    { background: #e9ecef; color: #495057; }
+.plm-tag-approval { background: #fff3cd; color: #856404; }
+.plm-tag-final    { background: #d1e7dd; color: #0a3622; }
 
-/* ── Notebook active tab ─────────────────────────────── */
-.o_notebook .nav-link.active {
-    font-weight: 700;
-    border-bottom: 3px solid #0f3460;
-    color: #0f3460;
+/* ── State Grid ─────────────────────────────────────────── */
+.plm-state-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 12px 18px;
+}
+.plm-state-item {
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.plm-state-count {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1a1a2e;
+}
+.plm-state-label {
+    font-size: 11px;
+    color: #6c757d;
+    font-weight: 500;
 }
 
-/* ── Report list: change count center ───────────────── */
-.o_list_view td[name="change_count"] {
+/* ── Type Split ─────────────────────────────────────────── */
+.plm-type-split { padding: 8px 18px 16px; }
+.plm-type-bar-wrap { margin-bottom: 10px; }
+.plm-type-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #495057;
+    margin-bottom: 4px;
+}
+.plm-type-track {
+    height: 8px;
+    background: #f0f2f5;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.plm-type-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.6s ease;
+}
+.plm-fill-product { background: #0d6efd; }
+.plm-fill-bom     { background: #20c997; }
+
+/* ── Priority List ──────────────────────────────────────── */
+.plm-priority-list { padding: 8px 18px 16px; }
+.plm-priority-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.plm-prio-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.plm-prio-label {
+    font-size: 12px;
+    color: #495057;
+    width: 80px;
+    flex-shrink: 0;
+}
+.plm-prio-track {
+    flex: 1;
+    height: 6px;
+    background: #f0f2f5;
+    border-radius: 3px;
+    overflow: hidden;
+}
+.plm-prio-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+}
+.plm-prio-count {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a1a2e;
+    width: 20px;
+    text-align: right;
+}
+
+/* ── 7-Day Trend Chart ──────────────────────────────────── */
+.plm-trend-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    padding: 12px 18px 16px;
+    height: 110px;
+}
+.plm-trend-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    height: 100%;
+}
+.plm-trend-bar-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 1;
+    width: 100%;
+    gap: 3px;
+}
+.plm-trend-count {
+    font-size: 11px;
+    font-weight: 700;
+    color: #495057;
+}
+.plm-trend-bar {
+    width: 100%;
+    background: linear-gradient(180deg, #0d6efd 0%, #0a58ca 100%);
+    border-radius: 4px 4px 0 0;
+    min-height: 4px;
+    transition: height 0.5s ease;
+}
+.plm-trend-day {
+    font-size: 10px;
+    color: #adb5bd;
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+/* ── Approval List ──────────────────────────────────────── */
+.plm-approval-list { padding: 4px 0; }
+.plm-approval-item {
+    padding: 10px 18px;
+    cursor: pointer;
+    border-bottom: 1px solid #f8f9fa;
+    transition: background 0.1s;
+}
+.plm-approval-item:hover { background: #fffcf0; }
+.plm-approval-item:last-of-type { border-bottom: none; }
+.plm-approval-ref {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+.plm-ref-badge {
+    font-size: 11px;
+    font-weight: 700;
+    background: #1a1a2e;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+.plm-approval-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 4px;
+}
+.plm-approval-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 11px;
+    color: #6c757d;
+    flex-wrap: wrap;
+}
+
+/* Priority tags */
+.plm-prio-tag {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.plm-prio-0 { background: #e9ecef; color: #495057; }
+.plm-prio-1 { background: #cfe2ff; color: #0a58ca; }
+.plm-prio-2 { background: #ffe5d0; color: #fd7e14; }
+.plm-prio-3 { background: #f8d7da; color: #842029; }
+
+/* ── ECO Table ──────────────────────────────────────────── */
+.plm-eco-table { width: 100%; }
+.plm-eco-table-header {
+    display: grid;
+    grid-template-columns: 100px 1fr 70px 90px 90px;
+    gap: 8px;
+    padding: 8px 18px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #adb5bd;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #f0f2f5;
+}
+.plm-eco-row {
+    display: grid;
+    grid-template-columns: 100px 1fr 70px 90px 90px;
+    gap: 8px;
+    align-items: center;
+    padding: 9px 18px;
+    border-bottom: 1px solid #f8f9fa;
+    cursor: pointer;
+    transition: background 0.1s;
+    font-size: 12px;
+}
+.plm-eco-row:hover { background: #f8f9fa; }
+.plm-eco-row:last-child { border-bottom: none; }
+.plm-ref-sm {
+    font-size: 11px;
+    font-weight: 700;
+    color: #0d6efd;
+}
+.plm-eco-name {
+    font-weight: 500;
+    color: #212529;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.plm-stage-text {
+    font-size: 11px;
+    color: #6c757d;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.plm-state-pill {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    display: inline-block;
+}
+.plm-type-tag {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+.plm-type-product { background: #cfe2ff; color: #0a58ca; }
+.plm-type-bom     { background: #d1e7dd; color: #0a3622; }
+
+/* ── Audit Feed ─────────────────────────────────────────── */
+.plm-audit-feed { padding: 8px 18px 14px; }
+.plm-audit-item {
+    display: flex;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f8f9fa;
+}
+.plm-audit-item:last-child { border-bottom: none; }
+.plm-audit-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #0d6efd;
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+.plm-audit-content { flex: 1; }
+.plm-audit-action {
+    font-size: 12px;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 2px;
+}
+.plm-audit-diff {
+    font-size: 11px;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 2px;
+}
+.plm-diff-old {
+    text-decoration: line-through;
+    color: #dc3545;
+    background: #f8d7da;
+    padding: 1px 5px;
+    border-radius: 3px;
+}
+.plm-diff-new {
+    color: #198754;
+    background: #d1e7dd;
+    padding: 1px 5px;
+    border-radius: 3px;
+}
+.plm-audit-meta {
+    font-size: 10px;
+    color: #adb5bd;
+}
+
+/* ── Empty States ───────────────────────────────────────── */
+.plm-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    color: #adb5bd;
     text-align: center;
+    gap: 8px;
+}
+.plm-empty-state p { margin: 0; font-size: 13px; }
+.plm-link {
+    color: #0d6efd;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+/* ── View All link ──────────────────────────────────────── */
+.plm-view-all {
+    padding: 10px 18px;
+    font-size: 12px;
+    color: #0d6efd;
+    cursor: pointer;
+    font-weight: 600;
+    border-top: 1px solid #f0f2f5;
+    transition: background 0.1s;
+}
+.plm-view-all:hover { background: #f0f6ff; }
+
+/* ── Badge urgent count ─────────────────────────────────── */
+.plm-badge-urgent {
+    margin-left: auto;
+    background: #dc3545;
+    color: #fff;
+    font-size: 11px;
     font-weight: 700;
+    min-width: 22px;
+    height: 22px;
+    border-radius: 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
 }
 
-/* ── Responsive adjustments ─────────────────────────── */
+/* ── Footer ─────────────────────────────────────────────── */
+.plm-dash-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    font-size: 11px;
+    color: #adb5bd;
+    background: #fff;
+    border-top: 1px solid #e9ecef;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 1100px) {
+    .plm-main-grid {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 1200px) {
+    .plm-kpi-row {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
 @media (max-width: 768px) {
-    .plm-comparison-body table {
-        font-size: 12px;
+    .plm-kpi-row {
+        grid-template-columns: repeat(2, 1fr);
     }
-    .plm-comparison-body table td,
-    .plm-comparison-body table th {
-        padding: 6px 8px !important;
+    .plm-eco-table-header,
+    .plm-eco-row {
+        grid-template-columns: 80px 1fr 70px;
     }
-    .modal-dialog:has(.plm-comparison-body) {
-        max-width: 98vw;
+    .plm-eco-table-header span:nth-child(4),
+    .plm-eco-table-header span:nth-child(5),
+    .plm-eco-row span:nth-child(4),
+    .plm-eco-row span:nth-child(5) {
+        display: none;
     }
-}
-
-/* ── Kanban: stage column header colors ─────────────── */
-.o_kanban_view .o_kanban_group:nth-child(1) .o_column_title { color: #6c757d; }
-.o_kanban_view .o_kanban_group:nth-child(2) .o_column_title { color: #0d6efd; }
-.o_kanban_view .o_kanban_group:nth-child(3) .o_column_title { color: #fd7e14; }
-.o_kanban_view .o_kanban_group:nth-child(4) .o_column_title { color: #28a745; font-weight: 700; }
-
-/* ── ECO form header button spacing ─────────────────── */
-.o_form_statusbar > .btn {
-    margin-right: 6px;
-    border-radius: 6px;
-}
-
-/* ── Toggle button for version_update ───────────────── */
-.o_field_toggle_button.o_field_widget .o_toggle_button_success {
-    background-color: #28a745;
-    border-color: #28a745;
+    .plm-dash-header { flex-direction: column; align-items: flex-start; }
 }
