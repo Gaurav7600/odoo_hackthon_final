@@ -135,7 +135,6 @@ body.o_auth_page::before {
     width: 72px;
     height: 72px;
     border-radius: 20px;
-    background: linear-gradient(135deg, #7c3aed, #4f46e5);
     box-shadow:
         0 0 0 8px rgba(124,58,237,0.12),
         0 0 40px rgba(124,58,237,0.4);

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="approval_form_success" name="Hackathon — Registration Pending">
+    <template id="approval_form_success" name="Portal — Registration Pending">
         <html lang="en">
             <head>
                 <meta charset="UTF-8"/>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-                <title>Registration Received — Odoo Hackathon Portal</title>
+                <title>Registration Received — Portal</title>
                 <link rel="stylesheet"
                       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
                       crossorigin="anonymous"/>
@@ -25,14 +25,10 @@
 
                         <div class="do-auth-brand">
                             <div class="do-auth-logo-ring">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34"
-                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-                                </svg>
+                                <img src="/plm_engineering/static/description/icon.png" alt="Logo"
+                                    style="width:62px;height:62px;"/>
                             </div>
-                            <p class="do-auth-brand-name">Odoo Hackathon</p>
-                            <span class="do-badge do-badge--purple" style="margin-top:4px;">2025</span>
+                            <p class="do-auth-brand-name">PLM Engineering</p>
                         </div>
 
                         <div class="do-status-icon do-status-icon--warning">
@@ -92,12 +88,12 @@
     <!-- =========================================================================
          /wait-approval — "Account Pending Approval"
          ========================================================================= -->
-    <template id="wait_for_approval_page" name="Hackathon — Wait for Approval">
+    <template id="wait_for_approval_page" name="Portal — Wait for Approval">
         <html lang="en">
             <head>
                 <meta charset="UTF-8"/>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-                <title>Pending Approval — Odoo Hackathon Portal</title>
+                <title>Pending Approval — Portal</title>
                 <link rel="stylesheet"
                       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
                       crossorigin="anonymous"/>
@@ -116,14 +112,10 @@
 
                         <div class="do-auth-brand">
                             <div class="do-auth-logo-ring">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34"
-                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-                                </svg>
+                                <img src="/plm_engineering/static/description/icon.png" alt="Logo"
+                                    style="width:62px;height:62px;"/>
                             </div>
-                            <p class="do-auth-brand-name">Odoo Hackathon</p>
-                            <span class="do-badge do-badge--purple" style="margin-top:4px;">2025</span>
+                            <p class="do-auth-brand-name">PLM Engineering</p>
                         </div>
 
                         <div class="do-status-icon do-status-icon--info">
@@ -167,7 +159,7 @@
 
                         <p style="text-align:center;font-size:0.82rem;color:rgba(148,163,184,0.7);
                                   margin:1rem 0 1.5rem;">
-                            Need urgent access? Please contact the hackathon administrators.
+                            Need urgent access? Please contact the administrators.
                         </p>
 
                         <div style="text-align:center;display:flex;justify-content:center;

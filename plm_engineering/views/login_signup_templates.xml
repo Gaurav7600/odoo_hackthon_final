@@ -5,12 +5,12 @@
          CUSTOM LOGIN PAGE  —  Standalone full-HTML template
          Rendered directly by the controller override of web_login.
          ========================================================================= -->
-    <template id="custom_login_page" name="Hackathon — Custom Login">
+    <template id="custom_login_page" name="Portal — Custom Login">
         <html lang="en">
             <head>
                 <meta charset="UTF-8"/>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-                <title>Sign In — Odoo Hackathon Portal</title>
+                <title>Sign In — Portal</title>
                 <link rel="stylesheet"
                       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
                       crossorigin="anonymous"/>
@@ -31,19 +31,15 @@
                         <!-- ── Brand ── -->
                         <div class="do-auth-brand">
                             <div class="do-auth-logo-ring">
-                                <!-- Hackathon trophy / bolt icon -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34"
-                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-                                </svg>
+                                <!-- Portal trophy / bolt icon -->
+                                <img src="/plm_engineering/static/description/icon.png" alt="Logo"
+                                    style="width:62px;height:62px;"/>
                             </div>
-                            <p class="do-auth-brand-name">Odoo Hackathon</p>
-                            <span class="do-badge do-badge--purple" style="margin-top:4px;">2025</span>
+                            <p class="do-auth-brand-name">PLM Engineering</p>
                         </div>
 
                         <h1 class="do-auth-title">Welcome Back</h1>
-                        <p class="do-auth-subtitle">Sign in to your hackathon portal account</p>
+                        <p class="do-auth-subtitle">Sign in to your portal account</p>
 
                         <!-- Error alert -->
                         <t t-if="error">
@@ -127,12 +123,12 @@
          CUSTOM SIGNUP PAGE  —  Standalone full-HTML template
          Rendered directly by the controller override of web_auth_signup.
          ========================================================================= -->
-    <template id="custom_signup_page" name="Hackathon — Custom Signup">
+    <template id="custom_signup_page" name="Portal — Custom Signup">
         <html lang="en">
             <head>
                 <meta charset="UTF-8"/>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-                <title>Create Account — Odoo Hackathon Portal</title>
+                <title>Create Account — Portal</title>
                 <link rel="stylesheet"
                       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
                       crossorigin="anonymous"/>
@@ -153,14 +149,10 @@
                         <!-- ── Brand ── -->
                         <div class="do-auth-brand">
                             <div class="do-auth-logo-ring">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34"
-                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-                                </svg>
+                                <img src="/plm_engineering/static/description/icon.png" alt="Logo"
+                                    style="width:62px;height:62px;"/>
                             </div>
-                            <p class="do-auth-brand-name">Odoo Hackathon</p>
-                            <span class="do-badge do-badge--purple" style="margin-top:4px;">2025</span>
+                            <p class="do-auth-brand-name">PLM Engineering</p>
                         </div>
 
                         <h1 class="do-auth-title">Join the Portal</h1>

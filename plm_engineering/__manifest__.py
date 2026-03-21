@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'PLM Engineering — Hackathon 2025',
+    'name': 'PLM Engineering',
     'version': '18.0.2.0.0',
-    'summary': 'Custom PLM: ECO Workflows + Custom Auth Portal (merged)',
+    'summary': 'Custom PLM: ECO Workflows + Custom Auth Portal',
     'description': """
-        PLM Engineering Change Order System — Odoo Hackathon 2025
+        PLM Engineering Change Order System
         ==========================================================
         Single self-contained module. No dependency on website/website_sale.
 
@@ -19,7 +19,7 @@
         ─ Auto version bump on ECO apply
         ─ Immutable audit trail
     """,
-    'author': 'PLM Hackathon Team',
+    'author': 'Coding War Team',
     'category': 'Manufacturing/PLM',
     'depends': ['base', 'mail', 'web', 'auth_signup'],
     'data': [

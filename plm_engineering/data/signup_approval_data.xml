@@ -15,7 +15,7 @@
 
         <!-- ══ Email: Waiting for Authorization (sent immediately on registration) ══ -->
         <record id="mail_template_waiting_approval" model="mail.template">
-            <field name="name">Hackathon Signup: Waiting for Authorization</field>
+            <field name="name">Portal Signup: Waiting for Authorization</field>
             <field name="model_id" ref="plm_engineering.model_res_users_approve"/>
             <field name="subject">Your Registration is Under Review</field>
             <field name="email_to">{{ object.email }}</field>
@@ -26,7 +26,7 @@
                     <div style="background:linear-gradient(135deg,#7c3aed,#4f46e5);
                                 padding:32px 40px;text-align:center;">
                         <h1 style="margin:0;font-size:1.5rem;color:#fff;letter-spacing:-0.02em;">
-                            Odoo Hackathon Portal
+                            Portal
                         </h1>
                         <p style="margin:6px 0 0;color:rgba(255,255,255,0.8);font-size:0.9rem;">
                             Registration Received ⏳
@@ -37,7 +37,7 @@
                             Dear <strong>{{ object.name }}</strong>,
                         </p>
                         <p style="margin:0 0 16px;">
-                            Thank you for registering on the Hackathon Portal.
+                            Thank you for registering on the Portal.
                             Your account request has been <strong>successfully received</strong>
                             and is currently pending review by our team.
                         </p>
@@ -57,7 +57,7 @@
                     </div>
                     <div style="padding:20px 40px;background:#f1f5f9;
                                 text-align:center;color:#94a3b8;font-size:0.8rem;">
-                        Odoo Hackathon 2025 Team
+                        Team
                     </div>
                 </div>
             </field>
@@ -66,7 +66,7 @@
 
         <!-- ══ Email: Registration Approved (sent when admin clicks Approve) ══ -->
         <record id="mail_template_registration_approved" model="mail.template">
-            <field name="name">Hackathon Signup: Registration Approved</field>
+            <field name="name">Portal Signup: Registration Approved</field>
             <field name="model_id" ref="plm_engineering.model_res_users_approve"/>
             <field name="subject">Your Registration Has Been Approved!</field>
             <field name="email_to">{{ object.email }}</field>
@@ -77,7 +77,7 @@
                     <div style="background:linear-gradient(135deg,#059669,#0284c7);
                                 padding:32px 40px;text-align:center;">
                         <h1 style="margin:0;font-size:1.5rem;color:#fff;letter-spacing:-0.02em;">
-                            Odoo Hackathon Portal
+                            Portal
                         </h1>
                         <p style="margin:6px 0 0;color:rgba(255,255,255,0.8);font-size:0.9rem;">
                             Registration Approved ✓
@@ -90,7 +90,7 @@
                         <p style="margin:0 0 16px;">
                             Great news! Your account has been
                             <strong style="color:#059669;">approved</strong>.
-                            You can now log in to the Hackathon Portal using your
+                            You can now log in to the Portal using your
                             registered email and password.
                         </p>
                         <div style="text-align:center;margin:28px 0;">
@@ -103,12 +103,12 @@
                             </a>
                         </div>
                         <p style="color:#64748b;font-size:0.85rem;">
-                            If you have any questions, please contact the hackathon team.
+                            If you have any questions, please contact the portal team.
                         </p>
                     </div>
                     <div style="padding:20px 40px;background:#f1f5f9;
                                 text-align:center;color:#94a3b8;font-size:0.8rem;">
-                        Odoo Hackathon 2025 Team
+                        Team
                     </div>
                 </div>
             </field>

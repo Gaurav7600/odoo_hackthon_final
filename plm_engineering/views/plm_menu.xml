@@ -137,7 +137,7 @@
 			groups="plm_engineering.group_plm_approver"/>
 
 	<menuitem id="menu_plm_settings_root"
-			name="Settings"
+			name="Configurations"
 			parent="menu_plm_root"
 			sequence="99"
 			groups="plm_engineering.group_plm_manager,base.group_system"/>
