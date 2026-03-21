@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_plm_eco_comparison_wizard_form" model="ir.ui.view">
+        <field name="name">plm.eco.comparison.wizard.form</field>
+        <field name="model">plm.eco.comparison.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Versioned Change Comparison" class="o_form_readonly">
+
+                <!-- Invisible field bindings -->
+                <field name="eco_id" invisible="1"/>
+                <field name="eco_type" invisible="1"/>
+                <field name="eco_name" invisible="1"/>
+                <field name="current_version" invisible="1"/>
+                <field name="new_version_label" invisible="1"/>
+
+                <sheet>
+
+                    <!-- Top info bar -->
+                    <div style="background:#f8f9fa;border:1px solid #dee2e6;
+                                border-radius:6px;padding:10px 16px;
+                                margin-bottom:14px;display:flex;
+                                justify-content:space-between;align-items:center;
+                                flex-wrap:wrap;gap:8px;">
+                        <div>
+                            <span style="font-size:11px;color:#888;
+                                        text-transform:uppercase;
+                                        letter-spacing:0.5px;">ECO</span>
+                            <br/>
+                            <span style="font-size:14px;font-weight:700;
+                                        color:#333;">
+                                <field name="eco_name" readonly="1"
+                                        class="o_field_text"
+                                        style="display:inline;"/>
+                            </span>
+                        </div>
+                        <div style="display:flex;gap:20px;">
+                            <div>
+                                <span style="font-size:11px;color:#888;">
+                                    Current Version</span><br/>
+                                <span style="font-size:13px;font-weight:600;
+                                            color:#dc3545;">
+                                    <field name="current_version" readonly="1"/>
+                                </span>
+                            </div>
+                            <div style="align-self:center;font-size:20px;
+                                        color:#888;">→</div>
+                            <div>
+                                <span style="font-size:11px;color:#888;">
+                                    Proposed Version</span><br/>
+                                <span style="font-size:13px;font-weight:600;
+                                            color:#28a745;">
+                                    <field name="new_version_label" readonly="1"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- The comparison HTML output -->
+                    <div class="o_field_widget">
+                        <field name="comparison_html"
+                                widget="html"
+                                readonly="1"
+                                nolabel="1"/>
+                    </div>
+
+                </sheet>
+
+                <footer>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+
+            </form>
+        </field>
+    </record>
+
+</odoo>

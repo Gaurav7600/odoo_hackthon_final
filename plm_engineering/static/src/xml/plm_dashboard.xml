@@ -371,7 +371,7 @@
             </div>
 
             <div class="plm-dash-footer">
-                <span><i class="fa fa-sync me-1"/>Auto-refreshes every 30 seconds</span>
+                <span>Auto-refreshes every 30 seconds</span>
                 <span>PLM Engineering Change Control</span>
             </div>
 

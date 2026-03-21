@@ -30,10 +30,13 @@
                         decoration-info="state == 'approved'"
                         decoration-muted="state == 'draft'"/>
                 <field name="change_count" string="# Changes"/>
-                <button name="action_view_comparison" type="object"
+                <button name="action_view_change_comparison"
                         string="View Changes"
-                        class="btn-sm btn-outline-primary"
-                        invisible="change_count == 0"/>
+                        type="object"
+                        icon="fa-columns"
+                        class="btn-sm btn-secondary"
+                        invisible="change_count == 0"
+                        title="Open diff comparison view"/>
             </list>
         </field>
     </record>

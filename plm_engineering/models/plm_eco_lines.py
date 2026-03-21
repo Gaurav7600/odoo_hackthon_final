@@ -109,10 +109,10 @@ class PlmEcoBomChange(models.Model):
         digits=(12, 4),
     )
 
-    @api.depends('component_id')
+    @api.depends('component_id', 'component_id.product_uom', 'component_id.product_uom.name')
     def _compute_product_uom(self):
         for r in self:
-            r.product_uom = r.component_id.product_uom if r.component_id else ''
+            r.product_uom = r.component_id.product_uom.name if r.component_id and r.component_id.product_uom else ''
 
     @api.depends('old_qty', 'new_qty')
     def _compute_diff(self):

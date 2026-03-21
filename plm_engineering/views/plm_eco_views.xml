@@ -55,17 +55,20 @@
                             invisible="state == 'draft' or state == 'done'"
                             groups="plm_engineering.group_plm_manager"/>
 
+                    <!-- Versioned Change Comparison button -->
+                    <button name="action_view_change_comparison"
+                            string=" View Comparison"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="change_count == 0"
+                            title="Open side-by-side diff view of all proposed changes"/>
+
                     <field name="state" widget="statusbar"
                         statusbar_visible="draft,in_review,approved,done"/>
                 </header>
 
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_view_comparison" type="object"
-                                class="oe_stat_button" icon="fa-exchange"
-                                invisible="change_count == 0">
-                            <field name="change_count" widget="statinfo" string="Changes"/>
-                        </button>
                         <button name="action_view_audit" type="object"
                                 class="oe_stat_button" icon="fa-history">
                             <field name="audit_count" widget="statinfo" string="Audit Events"/>
@@ -74,6 +77,15 @@
                                 class="oe_stat_button" icon="fa-check-circle"
                                 invisible="approval_count == 0">
                             <field name="approval_count" widget="statinfo" string="Approvals"/>
+                        </button>
+                        <!-- Versioned Change Comparison smart button -->
+                        <button name="action_view_change_comparison"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-columns"
+                                invisible="change_count == 0"
+                                title="Side-by-side diff view of all proposed changes">
+                            <field name="change_count" widget="statinfo" string="View Changes"/>
                         </button>
                     </div>
 
@@ -308,9 +320,6 @@
                     decoration-muted="state == 'draft'"/>
                 <field name="change_count" string="Changes"/>
                 <field name="is_approved" string="Approved" optional="show"/>
-                <button name="action_view_comparison" type="object"
-                        string=" Compare" class="btn-sm btn-outline-primary"
-                        invisible="change_count == 0"/>
             </list>
         </field>
     </record>

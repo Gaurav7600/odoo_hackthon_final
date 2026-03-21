@@ -305,7 +305,7 @@ class PlmEco(models.Model):
                     'change_type': 'unchanged',
                     'old_qty': line.quantity,
                     'new_qty': line.quantity,
-                    'product_uom': line.product_uom or '',
+                    'product_uom': line.product_uom.name if line.product_uom else '',
                 }))
             self.bom_change_ids = comp_vals
 
@@ -361,7 +361,7 @@ class PlmEco(models.Model):
         old = self.stage_id.name
         self.write({'stage_id': next_stage.id, 'kanban_state': 'normal'})
         self._log('Stage Transition', 'plm.eco.stage', self.reference, old, next_stage.name)
-        self.message_post(body=_(f' ECO moved to stage: ') % next_stage.name)
+        self.message_post(body=f'ECO moved to stage: {next_stage.name}')
 
     def action_request_approval(self):
         self.ensure_one()
@@ -458,17 +458,6 @@ class PlmEco(models.Model):
         self._log('Reset to Draft', 'plm.eco', self.reference, 'Various', 'Draft')
         self.message_post(body=_(' ECO reset to Draft.'))
 
-    def action_view_comparison(self):
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Change Comparison — %s') % self.name,
-            'res_model': 'plm.comparison.wizard',
-            'view_mode': 'form',
-            'target': 'new',
-            'context': {'default_eco_id': self.id},
-        }
-
     def action_view_audit(self):
         self.ensure_one()
         return {
@@ -509,8 +498,8 @@ class PlmEco(models.Model):
         self._log('ECO Applied', 'plm.eco', self.reference, 'Open', 'Done')
         self.message_post(
             body=_(
-                ' ECO <b>applied successfully</b>.<br/>'
-                'Version: <b>%s → %s</b>'
+                ' ECO applied successfully,'
+                'Version: %s → %s'
             ) % (self.current_version, self.new_version_label)
         )
         return True
@@ -559,7 +548,7 @@ class PlmEco(models.Model):
                 'description': vals.get('description', p.description),
                 'internal_ref': p.internal_ref,
                 'category': p.category,
-                'product_uom': p.product_uom,
+                'product_uom': p.product_uom.id,
                 'version': new_ver,
                 'version_number': (p.version_number or 1) + 1,
                 'parent_product_id': p.id,
@@ -690,6 +679,21 @@ class PlmEco(models.Model):
             'user_id': self.env.user.id,
             'timestamp': fields.Datetime.now(),
         })
+
+    def action_view_change_comparison(self):
+        """Open the versioned change comparison wizard for this ECO."""
+        self.ensure_one()
+        wizard = self.env['plm.eco.comparison.wizard'].create({'eco_id': self.id})
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Versioned Change Comparison — %s') % self.name,
+            'res_model': 'plm.eco.comparison.wizard',
+            'res_id': wizard.id,
+            'view_mode': 'form',
+            'views': [(False, 'form')],
+            'target': 'new',
+            'context': {'form_view_initial_mode': 'readonly'},
+        }
 
     @api.model
     def _read_group_stage_ids(self, stages, domain):
