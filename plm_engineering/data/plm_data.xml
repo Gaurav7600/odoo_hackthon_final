@@ -74,5 +74,17 @@
             <field name="description">ECO applied. New version is active; old version is archived. Changes are live.</field>
         </record>
 
+        <record id="plm_stage_cancelled" model="plm.eco.stage">
+            <field name="name">Cancelled</field>
+            <field name="sequence">50</field>
+            <field name="is_start_stage">False</field>
+            <field name="is_approval_required">False</field>
+            <field name="is_final_stage">False</field>
+            <field name="is_cancel_stage">True</field>
+            <field name="fold">True</field>
+            <field name="color">1</field>
+            <field name="description">ECO has been cancelled. Record is permanently read-only. Retained for audit trail.</field>
+        </record>
+
     </data>
 </odoo>

@@ -624,9 +624,10 @@
             <field name="eco_type">bom</field>
             <field name="product_id" ref="demo_prod_iphone17"/>
             <field name="bom_id" ref="demo_bom_smartdevice_v1"/>
-            <field name="stage_id" ref="plm_stage_new"/>
+            <field name="stage_id" ref="plm_stage_cancelled"/>
             <field name="priority">0</field>
             <field name="version_update">False</field>
+            <field name="is_cancelled">True</field>
             <field name="effective_date" eval="(DateTime.now() - timedelta(days=30)).strftime('%Y-%m-%d')"/>
             <field name="kanban_state">blocked</field>
             <field name="note">&lt;p&gt;Cancelled — superseded by ECO/DEMO/0002 which already covers protective foam tray requirements as part of the dual-PCB housing redesign.&lt;/p&gt;</field>
@@ -639,6 +640,31 @@
             <field name="old_qty">0.0</field>
             <field name="new_qty">2.0</field>
             <field name="product_uom">Unit</field>
+        </record>
+
+        <!-- ECO 009 — Another cancelled ECO (explicit cancel scenario for demo) -->
+        <record id="demo_eco_009" model="plm.eco">
+            <field name="name">Reduce aluminum panel thickness for cost saving</field>
+            <field name="reference">ECO/DEMO/0009</field>
+            <field name="eco_type">bom</field>
+            <field name="product_id" ref="demo_prod_control_unit"/>
+            <field name="bom_id" ref="demo_bom_control_unit_v1"/>
+            <field name="stage_id" ref="plm_stage_cancelled"/>
+            <field name="priority">1</field>
+            <field name="version_update">True</field>
+            <field name="is_cancelled">True</field>
+            <field name="effective_date" eval="(DateTime.now() - timedelta(days=15)).strftime('%Y-%m-%d')"/>
+            <field name="kanban_state">blocked</field>
+            <field name="note">&lt;p&gt;Cancelled after structural review — thickness reduction compromises IP65 rating. Proposal rejected by engineering team.&lt;/p&gt;</field>
+        </record>
+
+        <record id="demo_eco_009_bom_alum" model="plm.eco.bom.change">
+            <field name="eco_id" ref="demo_eco_009"/>
+            <field name="component_id" ref="demo_prod_aluminum_sheet"/>
+            <field name="change_type">modified</field>
+            <field name="old_qty">1.2</field>
+            <field name="new_qty">0.8</field>
+            <field name="product_uom">Kg</field>
         </record>
 
         <!-- ─────────────────────────────────────────────────────────────

@@ -8,51 +8,46 @@
             <form string="Engineering Change Order">
                 <header>
                     <field name="stage_id" widget="statusbar"
-                        options="{'clickable': '1'}"
-                        readonly="state == 'done'"/>
+                        options="{'clickable': '0'}"
+                        readonly="state in ('done', 'cancelled')"/>
 
                     <button name="action_start_review"
                             string="Start Review"
                             type="object"
                             class="btn-primary"
-                            invisible="state != 'draft'"/>
+                            invisible="state != 'draft' or state == 'cancelled'"/>
 
                     <button name="action_request_approval"
                             string=" Request Approval"
                             type="object"
                             class="btn-warning"
-                            invisible="state == 'draft' or state == 'done' or not stage_id"/>
+                            invisible="state in ('draft', 'done', 'cancelled') or not stage_id"/>
 
                     <button name="action_approve"
                             string=" Approve"
                             type="object"
                             class="btn-success"
                             groups="plm_engineering.group_plm_approver"
-                            invisible="state != 'in_review'"/>
+                            invisible="state != 'in_review' or state == 'cancelled'"/>
 
-                    <button name="action_reject"
-                            string=" Reject"
-                            type="object"
-                            class="btn-danger"
-                            groups="plm_engineering.group_plm_approver"
-                            invisible="state != 'in_review'"/>
 
                     <button name="action_validate"
                             string="Validate &amp; Apply"
                             type="object"
                             class="btn-success"
-                            invisible="state not in ['approved', 'in_review'] or state == 'draft' or state == 'done'"/>
+                            invisible="state not in ('approved', 'in_review') or state == 'cancelled'"/>
 
                     <button name="action_cancel"
-                            string=" Cancel"
+                            string="🚫 Cancel ECO"
                             type="object"
-                            invisible="state == 'done' or state == 'draft'"
-                            confirm="Are you sure you want to cancel this ECO?"/>
+                            class="btn-danger"
+                            invisible="state in ('done', 'draft', 'cancelled')"
+                            confirm="Cancel this ECO? It becomes permanently read-only."/>
 
                     <button name="action_reset_to_draft"
                             string="Reset to Draft"
                             type="object"
-                            invisible="state == 'draft' or state == 'done'"
+                            invisible="state in ('draft', 'done', 'cancelled')"
                             groups="plm_engineering.group_plm_manager"/>
 
                     <!-- Versioned Change Comparison button -->
@@ -60,11 +55,10 @@
                             string=" View Comparison"
                             type="object"
                             class="btn-secondary"
-                            invisible="change_count == 0"
+                            invisible="change_count == 0 or state == 'cancelled'"
                             title="Open side-by-side diff view of all proposed changes"/>
 
-                    <field name="state" widget="statusbar"
-                        statusbar_visible="draft,in_review,approved,done"/>
+
                 </header>
 
                 <sheet>
@@ -89,9 +83,25 @@
                         </button>
                     </div>
 
+                    <!-- is_cancelled hidden field for invisible/readonly expressions -->
+                    <field name="is_cancelled" invisible="1"/>
+
+                    <!-- CANCELLED banner — shown when state = cancelled -->
+                    <div class="alert alert-secondary" role="alert"
+                         style="margin-bottom:12px;border-left:5px solid #6c757d;
+                                background:#f1f3f5;display:flex;align-items:center;gap:10px;"
+                         invisible="state != 'cancelled'">
+                        <i class="fa fa-ban fa-lg" style="color:#6c757d;"/>
+                        <div>
+                            <strong>This ECO has been cancelled.</strong>
+                            All fields are read-only. No further action can be taken.
+                        </div>
+                    </div>
+
+                    <!-- OVERDUE banner — hidden when cancelled -->
                     <div class="alert alert-danger" role="alert"
                         style="margin-bottom:12px;border-left:5px solid #dc3545;"
-                        invisible="not is_overdue">
+                        invisible="not is_overdue or state == 'cancelled'">
                         <strong>This ECO is OVERDUE.</strong>
                         The effective date has passed and the ECO has not been applied.
                         Please review and take action immediately.
@@ -101,7 +111,7 @@
                         <label for="name"/>
                         <h1>
                             <field name="name" placeholder="ECO Title..."
-                                readonly="state == 'done'"/>
+                                readonly="state in ('done', 'cancelled')"/>
                         </h1>
                         <div style="display:flex; gap:16px; align-items:center; margin-top:4px;">
                             <span class="text-muted">
@@ -120,32 +130,32 @@
                             <field name="eco_type"
                                     widget="radio"
                                     options="{'horizontal': true}"
-                                    readonly="state == 'done'"/>
+                                    readonly="state in ('done', 'cancelled')"/>
                             <field name="product_id"
                                     domain="[('status', '=', 'active')]"
                                     options="{'no_create_edit': True}"
-                                    readonly="state == 'done'"/>
+                                    readonly="state in ('done', 'cancelled')"/>
                             <field name="bom_id"
                                     invisible="eco_type != 'bom'"
                                     domain="[('product_id', '=', product_id), ('status', '=', 'active')]"
                                     options="{'no_create_edit': True}"
-                                    readonly="state == 'done'"/>
+                                    readonly="state in ('done', 'cancelled')"/>
                             <field name="user_id" widget="many2one_avatar_user"/>
                             <field name="effective_date"
-                                    readonly="state == 'done'"/>
+                                    readonly="state in ('done', 'cancelled')"/>
                         </group>
                         <group string="Versioning">
                             <field name="version_update"
                                     widget="toggle_button"
                                     options="{'active': 'Create New Version', 'inactive': 'Apply to Same Version'}"
-                                    readonly="state == 'done'"/>
+                                    readonly="state in ('done', 'cancelled')"/>
                             <field name="current_version" readonly="1"
                                     string="Current Version"/>
                             <field name="new_version_label" readonly="1"
                                     string="New Version (Preview)"
                                     invisible="not version_update"/>
                             <field name="kanban_state" widget="state_selection"
-                                    readonly="state == 'done'"/>
+                                    readonly="state in ('done', 'cancelled')"/>
                         </group>
                     </group>
 
@@ -166,7 +176,7 @@
                                 Then update the <b>Proposed Value</b> column with your changes.
                             </div>
                             <field name="product_change_ids" nolabel="1"
-                                    readonly="state == 'done'">
+                                    readonly="state in ('done', 'cancelled')">
                                 <list editable="bottom"
                                     decoration-success="change_status == 'modified'"
                                     decoration-danger="change_status == 'removed'"
@@ -195,7 +205,7 @@
                                 Adjust quantities, or set Change Type to Added / Removed.
                             </div>
                             <field name="bom_change_ids" nolabel="1"
-                                readonly="state == 'done'">
+                                readonly="state in ('done', 'cancelled')">
                                 <list editable="bottom"
                                     decoration-success="change_type == 'added'"
                                     decoration-danger="change_type == 'removed'"
@@ -221,7 +231,7 @@
                         <page string="Operation Changes" name="op_changes"
                                 invisible="eco_type != 'bom'">
                             <field name="operation_change_ids" nolabel="1"
-                                    readonly="state == 'done'">
+                                    readonly="state in ('done', 'cancelled')">
                                 <list editable="bottom"
                                     decoration-success="change_type == 'added'"
                                     decoration-danger="change_type == 'removed'"

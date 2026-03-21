@@ -11,6 +11,7 @@
                 <field name="is_start_stage" string="Start Stage"/>
                 <field name="is_approval_required" string="Approval Required"/>
                 <field name="is_final_stage" string="Final Stage"/>
+                <field name="is_cancel_stage" string="Cancel Stage"/>
                 <field name="fold" string="Folded"/>
                 <field name="eco_count" string="ECOs" readonly="1"/>
             </list>
@@ -21,7 +22,7 @@
         <field name="name">plm.eco.stage.form</field>
         <field name="model">plm.eco.stage</field>
         <field name="arch" type="xml">
-            <form string="ECO Stage">
+            <form string="ECO Stage">"
                 <sheet>
                     <div class="oe_title">
                         <h1><field name="name" placeholder="Stage Name..."/></h1>

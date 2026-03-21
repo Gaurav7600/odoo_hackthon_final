@@ -37,6 +37,11 @@ class PlmEcoStage(models.Model):
         help='ECOs reaching this stage are applied: new version becomes active, '
              'old version is archived.',
     )
+    is_cancel_stage = fields.Boolean(
+        string='Cancelled Stage',
+        default=False,
+        help='ECOs moved to this stage are permanently cancelled and become read-only.',
+    )
 
     eco_count = fields.Integer(
         compute='_compute_eco_count',
@@ -60,6 +65,10 @@ class PlmEcoStage(models.Model):
     @api.model
     def _get_final_stage(self):
         return self.search([('is_final_stage', '=', True)], limit=1)
+
+    @api.model
+    def _get_cancel_stage(self):
+        return self.search([('is_cancel_stage', '=', True)], limit=1)
 
     def _get_next_stage(self):
         """Return the next stage in sequence after self."""

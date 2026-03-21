@@ -111,6 +111,12 @@ class PlmEco(models.Model):
         copy=False,
         tracking=True,
     )
+    is_cancelled = fields.Boolean(
+        string='Cancelled',
+        default=False,
+        copy=False,
+        tracking=True,
+    )
 
     version_update = fields.Boolean(
         string='Create New Version on Apply',
@@ -190,13 +196,18 @@ class PlmEco(models.Model):
         store=True,
     )
 
-    @api.depends('stage_id', 'stage_id.is_final_stage',
+    @api.depends('stage_id', 'stage_id.is_final_stage', 'stage_id.is_cancel_stage',
                 'stage_id.is_start_stage', 'stage_id.is_approval_required',
-                'is_approved')
+                'is_approved', 'is_cancelled')
     def _compute_state(self):
         for eco in self:
-            if not eco.stage_id:
+            # is_cancelled overrides ALL stage logic — checked first
+            if eco.is_cancelled:
+                eco.state = 'cancelled'
+            elif not eco.stage_id:
                 eco.state = 'draft'
+            elif eco.stage_id.is_cancel_stage:
+                eco.state = 'cancelled'
             elif eco.stage_id.is_final_stage:
                 eco.state = 'done'
             elif eco.stage_id.is_start_stage:
@@ -437,14 +448,43 @@ class PlmEco(models.Model):
         return self._apply_eco()
 
     def action_cancel(self):
+        """
+        Cancel this ECO permanently.
+        - Sets is_cancelled = True so _compute_state returns 'cancelled'
+        - Stage is NOT changed — ECO stays frozen at its current stage
+        - All pending approvals are cancelled
+        - Form returns in read-only mode (every field is readonly when state='cancelled')
+        """
         self.ensure_one()
         if self.state == 'done':
             raise UserError(_("A completed ECO cannot be cancelled."))
-        start = self.env['plm.eco.stage']._get_start_stage()
-        self.approval_ids.filtered(lambda a: a.state == 'pending').write({'state': 'cancelled'})
-        self.write({'stage_id': start.id, 'kanban_state': 'blocked', 'is_approved': False})
-        self._log('ECO Cancelled', 'plm.eco', self.reference, self.state, 'Cancelled')
-        self.message_post(body=_('ECO has been cancelled.'))
+        if self.is_cancelled:
+            raise UserError(_("This ECO is already cancelled."))
+
+        prev_state = self.state
+
+        # Cancel pending approvals
+        self.approval_ids.filtered(
+            lambda a: a.state == 'pending'
+        ).write({'state': 'cancelled'})
+
+        # Find the Cancelled stage (configured in Settings > ECO Stages)
+        cancel_stage = self.env['plm.eco.stage']._get_cancel_stage()
+
+        # Move to Cancelled stage + set the flag
+        # Both together ensure: statusbar shows Cancelled + state computes to 'cancelled'
+        vals = {'is_cancelled': True}
+        if cancel_stage:
+            vals['stage_id'] = cancel_stage.id
+        self.write(vals)
+
+        self._log(
+            'ECO Cancelled', 'plm.eco',
+            self.reference, prev_state, 'Cancelled'
+        )
+        self.message_post(
+            body=_('🚫 ECO has been <b>cancelled</b>. This record is now read-only.')
+        )
 
     def action_reset_to_draft(self):
         self.ensure_one()
