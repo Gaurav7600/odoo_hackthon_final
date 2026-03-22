@@ -164,6 +164,10 @@ class PlmEco(models.Model):
         compute='_compute_approval_count',
         string='Approvals',
     )
+    has_pending_approval_request = fields.Boolean(
+        string='Has Pending Approval Request',
+        compute='_compute_has_pending_approval_request',
+    )
 
     audit_log_ids = fields.One2many(
         'plm.audit.log',
@@ -194,6 +198,10 @@ class PlmEco(models.Model):
         string='Days to Effective',
         compute='_compute_is_overdue',
         store=True,
+    )
+    is_engineering_only_user = fields.Boolean(
+        compute='_compute_is_engineering_only_user',
+        compute_sudo=False,
     )
 
     @api.depends('stage_id', 'stage_id.is_final_stage', 'stage_id.is_cancel_stage',
@@ -253,6 +261,13 @@ class PlmEco(models.Model):
                 eco.approval_ids.filtered(lambda a: a.state == 'approved')
             )
 
+    @api.depends('approval_ids', 'approval_ids.state')
+    def _compute_has_pending_approval_request(self):
+        for eco in self:
+            eco.has_pending_approval_request = bool(
+                eco.approval_ids.filtered(lambda a: a.state == 'pending')
+            )
+
     @api.depends('audit_log_ids')
     def _compute_audit_count(self):
         for eco in self:
@@ -269,6 +284,27 @@ class PlmEco(models.Model):
             else:
                 eco.days_until_effective = 0
                 eco.is_overdue = False
+
+    @api.depends_context('uid')
+    def _compute_is_engineering_only_user(self):
+        user = self.env.user
+        is_engineering_only = (
+            user.has_group('plm_engineering.group_plm_user')
+            and not user.has_group('plm_engineering.group_plm_approver')
+            and not user.has_group('plm_engineering.group_plm_manager')
+        )
+        for eco in self:
+            eco.is_engineering_only_user = is_engineering_only
+
+    def _check_engineering_only_user(self):
+        user = self.env.user
+        if (
+            user.has_group('plm_engineering.group_plm_user')
+            and not user.has_group('plm_engineering.group_plm_approver')
+            and not user.has_group('plm_engineering.group_plm_manager')
+        ):
+            return
+        raise UserError(_('Only Engineering User can request approval.'))
 
     @api.onchange('eco_type')
     def _onchange_eco_type(self):
@@ -371,20 +407,26 @@ class PlmEco(models.Model):
         old = self.stage_id.name
         self.write({'stage_id': next_stage.id, 'kanban_state': 'normal'})
         self._log('Stage Transition', 'plm.eco.stage', self.reference, old, next_stage.name)
-        self.message_post(body=f'ECO moved to stage: {next_stage.name}')
+        self.sudo().message_post(body=f'ECO moved to stage: {next_stage.name}')
 
     def action_request_approval(self):
         self.ensure_one()
+        self._check_engineering_only_user()
         self._validate_mandatory_fields()
-        if not self.stage_id.is_approval_required:
-            raise UserError(f"The current stage {self.stage_id.name} does not require approval.\n Use 'Validate & Apply' instead.")
+        # if not self.stage_id or not self.stage_id.is_approval_required:
+        #     raise UserError(_('This stage does not require approval. Use Validate & Apply.'))
+        if self.state in ('done', 'cancelled'):
+            raise UserError(_('Approval request is not allowed in this state.'))
+        if self.approval_ids.filtered(lambda a: a.state == 'pending'):
+            raise UserError(_('Approval already requested and pending.'))
+
         self.env['plm.eco.approval'].create({
             'eco_id': self.id,
             'requested_by_id': self.env.user.id,
             'state': 'pending',
         })
         self._log('Approval Requested', 'plm.eco', self.reference, 'Draft', 'Pending Approval')
-        self.message_post(
+        self.sudo().message_post(
             body=_('Approval requested by %s. '
                 'Awaiting Approver review.') % self.env.user.name
         )
@@ -393,7 +435,7 @@ class PlmEco(models.Model):
         )
         if approver_group:
             for user in approver_group.users:
-                self.activity_schedule(
+                self.sudo().activity_schedule(
                     'mail.mail_activity_data_todo',
                     user_id=user.id,
                     note=_('ECO "%s" is awaiting your approval.') % self.name,
@@ -416,7 +458,7 @@ class PlmEco(models.Model):
 
         self.write({'is_approved': True})
         self._log('ECO Approved', 'plm.eco', self.reference, 'Pending', 'Approved')
-        self.message_post(
+        self.sudo().message_post(
             body=_(' ECO approved by %s.') % self.env.user.name
         )
         self._advance_stage()
@@ -435,7 +477,7 @@ class PlmEco(models.Model):
         })
         self.write({'is_approved': False, 'kanban_state': 'blocked'})
         self._log('ECO Rejected', 'plm.eco', self.reference, 'Pending', 'Rejected')
-        self.message_post(
+        self.sudo().message_post(
             body=_(' ECO rejected by %s. '
                 'Please revise and re-submit.') % self.env.user.name
         )
@@ -470,7 +512,7 @@ class PlmEco(models.Model):
             'ECO Cancelled', 'plm.eco',
             self.reference, prev_state, 'Cancelled'
         )
-        self.message_post(
+        self.sudo().message_post(
             body=_('ECO has been <b>cancelled</b>. This record is now read-only.')
         )
 
@@ -484,7 +526,7 @@ class PlmEco(models.Model):
         )
         self.write({'stage_id': start.id, 'is_approved': False, 'kanban_state': 'normal'})
         self._log('Reset to Draft', 'plm.eco', self.reference, 'Various', 'Draft')
-        self.message_post(body=_(' ECO reset to Draft.'))
+        self.sudo().message_post(body=_(' ECO reset to Draft.'))
 
     def action_view_audit(self):
         self.ensure_one()
@@ -524,7 +566,7 @@ class PlmEco(models.Model):
             'applied_by_id': self.env.user.id,
         })
         self._log('ECO Applied', 'plm.eco', self.reference, 'Open', 'Done')
-        self.message_post(
+        self.sudo().message_post(
             body=_(
                 ' ECO applied successfully,'
                 'Version: %s → %s'

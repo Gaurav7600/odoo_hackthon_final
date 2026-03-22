@@ -21,11 +21,11 @@
 				sequence="10"
 				groups="plm_engineering.group_plm_operations"/>
 
-		<menuitem id="menu_plm_products_active"
-				name="Active Products"
-				parent="menu_plm_products_root"
-				action="action_plm_product"
-				sequence="10"/>
+	<menuitem id="menu_plm_products_active"
+			name="Active Products"
+			parent="menu_plm_products_root"
+			action="action_plm_product"
+			sequence="10"/>
 
 	<menuitem id="menu_plm_products_all"
 			name="All Versions"
