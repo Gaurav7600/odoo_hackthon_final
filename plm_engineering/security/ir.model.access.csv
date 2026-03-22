@@ -42,10 +42,7 @@ access_plm_eco_approval_manager,plm.eco.approval manager,model_plm_eco_approval,
 access_plm_eco_approval_approver,plm.eco.approval approver,model_plm_eco_approval,plm_engineering.group_plm_approver,1,1,1,0
 access_plm_eco_approval_user,plm.eco.approval user,model_plm_eco_approval,plm_engineering.group_plm_user,1,1,1,0
 access_plm_eco_approval_op,plm.eco.approval op,model_plm_eco_approval,plm_engineering.group_plm_operations,1,0,0,0
-access_plm_audit_log_manager,plm.audit.log manager,model_plm_audit_log,plm_engineering.group_plm_manager,1,1,1,0
-access_plm_audit_log_approver,plm.audit.log approver,model_plm_audit_log,plm_engineering.group_plm_approver,1,0,0,0
-access_plm_audit_log_user,plm.audit.log user,model_plm_audit_log,plm_engineering.group_plm_user,1,0,0,0
-access_plm_audit_log_op,plm.audit.log op,model_plm_audit_log,plm_engineering.group_plm_operations,1,0,0,0
+access_plm_audit_log_manager,plm.audit.log manager,model_plm_audit_log,,1,1,1,1
 access_plm_dashboard_manager,plm.dashboard manager,model_plm_dashboard,plm_engineering.group_plm_manager,1,0,0,0
 access_plm_dashboard_user,plm.dashboard user,model_plm_dashboard,plm_engineering.group_plm_user,1,0,0,0
 access_plm_dashboard_approver,plm.dashboard approver,model_plm_dashboard,plm_engineering.group_plm_approver,1,0,0,0

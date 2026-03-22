@@ -155,4 +155,11 @@
 			sequence="20"
 			groups="base.group_system"/>
 
+	<menuitem id="menu_plm_signup_requests"
+                name="Signup Requests"
+                parent="menu_plm_settings_root"
+                action="action_res_users_approve"
+                sequence="30"
+                groups="plm_engineering.group_plm_manager"/>
+
 </odoo>
