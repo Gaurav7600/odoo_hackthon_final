@@ -17,11 +17,6 @@ _PLM_BASE_GROUP = 'plm_engineering.group_plm_operations'
 
 
 class AuthSignupHome(Home):
-    """
-    PLM Engineering — custom login / signup controller.
-    No website module dependency. Approval always on.
-    After login, PLM users are redirected to the PLM Dashboard.
-    """
 
     @staticmethod
     def _is_redirect(response):
@@ -47,7 +42,6 @@ class AuthSignupHome(Home):
         except Exception:
             return False
 
-    # ── LOGIN ──────────────────────────────────────────────────────────────────
 
     @http.route()
     def web_login(self, redirect=None, **kw):
@@ -80,7 +74,6 @@ class AuthSignupHome(Home):
         response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
         return response
 
-    # ── SIGNUP ─────────────────────────────────────────────────────────────────
 
     @http.route('/web/signup', type='http', auth='public', sitemap=False)
     def web_auth_signup(self, *args, **kw):
@@ -153,7 +146,7 @@ class AuthSignupHome(Home):
         elif 'signup_email' in qcontext:
             user = request.env['res.users'].sudo().search(
                 [('email', '=', qcontext.get('signup_email')),
-                 ('state', '!=', 'new')], limit=1)
+                ('state', '!=', 'new')], limit=1)
             if user:
                 return request.redirect('/web/login?%s' % url_encode(
                     {'login': user.login, 'redirect': '/web'}))
@@ -163,7 +156,6 @@ class AuthSignupHome(Home):
         response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
         return response
 
-    # ── STATUS PAGES ───────────────────────────────────────────────────────────
 
     @http.route('/success', type='http', auth='public', sitemap=False)
     def approval_success(self):

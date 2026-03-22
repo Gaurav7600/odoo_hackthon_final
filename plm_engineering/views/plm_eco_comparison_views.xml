@@ -19,7 +19,6 @@
                         <field name="new_version_label" readonly="1"/>
                     </group>
 
-                    <!-- The comparison HTML output -->
                     <div class="o_field_widget">
                         <field name="comparison_html"
                                 widget="html"

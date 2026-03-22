@@ -37,7 +37,7 @@ class PlmEco(models.Model):
         required=True,
         tracking=True,
         help='Product ECO: changes to product name, pricing, attachments.\n'
-             'BoM ECO: changes to components, quantities, and operations.',
+            'BoM ECO: changes to components, quantities, and operations.',
     )
 
     product_id = fields.Many2one(

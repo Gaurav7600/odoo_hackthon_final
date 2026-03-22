@@ -8,10 +8,10 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
                 <title>Registration Received — Portal</title>
                 <link rel="stylesheet"
-                      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-                      crossorigin="anonymous"/>
+                    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+                    crossorigin="anonymous"/>
                 <link rel="stylesheet" type="text/css"
-                      t-attf-href="/plm_engineering/static/src/css/custom_auth.css"/>
+                    t-attf-href="/plm_engineering/static/src/css/custom_auth.css"/>
                 <style>*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; } html { height: 100%; }</style>
             </head>
             <body class="o_auth_page">
@@ -65,7 +65,7 @@
                         </div>
 
                         <p style="text-align:center;font-size:0.82rem;color:rgba(148,163,184,0.7);
-                                  margin:1rem 0 1.5rem;">
+                                margin:1rem 0 1.5rem;">
                             A confirmation email has been sent to your address.
                             Check your inbox and spam folder.
                         </p>
@@ -84,10 +84,6 @@
         </html>
     </template>
 
-
-    <!-- =========================================================================
-         /wait-approval — "Account Pending Approval"
-         ========================================================================= -->
     <template id="wait_for_approval_page" name="Portal — Wait for Approval">
         <html lang="en">
             <head>
@@ -95,10 +91,10 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
                 <title>Pending Approval — Portal</title>
                 <link rel="stylesheet"
-                      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-                      crossorigin="anonymous"/>
+                    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+                    crossorigin="anonymous"/>
                 <link rel="stylesheet" type="text/css"
-                      t-attf-href="/plm_engineering/static/src/css/custom_auth.css"/>
+                    t-attf-href="/plm_engineering/static/src/css/custom_auth.css"/>
                 <style>*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; } html { height: 100%; }</style>
             </head>
             <body class="o_auth_page">
@@ -158,7 +154,7 @@
                         </div>
 
                         <p style="text-align:center;font-size:0.82rem;color:rgba(148,163,184,0.7);
-                                  margin:1rem 0 1.5rem;">
+                                margin:1rem 0 1.5rem;">
                             Need urgent access? Please contact the administrators.
                         </p>
 

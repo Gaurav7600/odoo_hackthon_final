@@ -1,18 +1,12 @@
 /** @odoo-module **/
-/**
- * DO SIGNUP APPROVAL — Advanced Auth Page Animations
- * Particle canvas, form interactivity, loading states
- */
 
 (function () {
     "use strict";
 
-    /* ── Guard: only run on our custom auth pages ─────────────────────────── */
     function isAuthPage() {
         return document.body.classList.contains("o_auth_page");
     }
 
-    /* ── 1. PARTICLE CANVAS ────────────────────────────────────────────────── */
     function initParticles() {
         const canvas = document.getElementById("do-particle-canvas");
         if (!canvas) return;
@@ -35,7 +29,6 @@
             pulse: Math.random() * Math.PI * 2,
         }));
 
-        /* Connect nearby particles with lines */
         function drawConnections() {
             const threshold = 120;
             for (let i = 0; i < particles.length; i++) {
@@ -56,10 +49,8 @@
             }
         }
 
-        let frame = 0;
         function animate() {
             ctx.clearRect(0, 0, W, H);
-            frame++;
 
             drawConnections();
 
@@ -94,7 +85,6 @@
         });
     }
 
-    /* ── 2. MOUSE PARALLAX on the card ────────────────────────────────────── */
     function initParallax() {
         const card = document.querySelector(".do-auth-card");
         if (!card) return;
@@ -112,12 +102,10 @@
                 "perspective(1000px) rotateX(0deg) rotateY(0deg)";
         });
 
-        /* Smooth transition on card itself */
         card.style.transition =
             "transform 0.15s ease, box-shadow 0.3s ease, opacity 0.7s ease";
     }
 
-    /* ── 3. FORM SUBMIT LOADING STATE ────────────────────────────────────── */
     function initFormLoading() {
         const forms = document.querySelectorAll(".do-auth-form");
         forms.forEach((form) => {
@@ -128,21 +116,22 @@
         });
     }
 
-    /* ── 4. INPUT FLOATING LABEL EFFECT (aria + visual) ─────────────────── */
     function initInputEffects() {
         const inputs = document.querySelectorAll(".do-auth-form input");
         inputs.forEach((input) => {
-            if (input.value) input.closest(".do-input-group") &&
-                input.closest(".do-input-group").classList.add("has-value");
+            const group = input.closest(".do-input-group");
+            if (input.value && group) {
+                group.classList.add("has-value");
+            }
 
             input.addEventListener("input", () => {
-                const group = input.closest(".do-input-group");
-                if (group) group.classList.toggle("has-value", input.value.length > 0);
+                if (group) {
+                    group.classList.toggle("has-value", input.value.length > 0);
+                }
             });
         });
     }
 
-    /* ── 5. ANIMATED COUNTER (for waiting page) ──────────────────────────── */
     function initWaitingDots() {
         const el = document.querySelector(".do-waiting-dots");
         if (!el) return;
@@ -153,11 +142,11 @@
         }, 500);
     }
 
-    /* ── 6. PASSWORD TOGGLE ──────────────────────────────────────────────── */
     function initPasswordToggle() {
         document.querySelectorAll(".do-pw-toggle").forEach((btn) => {
             btn.addEventListener("click", () => {
-                const input = btn.closest(".do-input-group").querySelector("input");
+                const group = btn.closest(".do-input-group");
+                const input = group ? group.querySelector("input") : null;
                 if (!input) return;
                 const isPassword = input.type === "password";
                 input.type = isPassword ? "text" : "password";
@@ -170,7 +159,6 @@
         });
     }
 
-    /* ── 7. TYPEWRITER EFFECT on heading ─────────────────────────────────── */
     function initTypewriter() {
         const el = document.querySelector("[data-typewriter]");
         if (!el) return;
@@ -183,7 +171,6 @@
         }, 60);
     }
 
-    /* ── BOOT ────────────────────────────────────────────────────────────── */
     function boot() {
         if (!isAuthPage()) return;
         initParticles();

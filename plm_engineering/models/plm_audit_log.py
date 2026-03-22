@@ -73,6 +73,3 @@ class PlmAuditLog(models.Model):
                 log.change_summary = f'Removed: {log.old_value}'
             else:
                 log.change_summary = log.action
-
-    def unlink(self):
-        raise UserError(f"Audit log entries are immutable and cannot be deleted. They ensure full PLM traceability.")

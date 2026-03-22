@@ -23,14 +23,11 @@
     'category': 'Manufacturing/PLM',
     'depends': ['base', 'mail', 'web', 'auth_signup'],
     'data': [
-        # 1. Security
         'security/plm_security.xml',
         'security/ir.model.access.csv',
-        # 2. Seed data
         'data/plm_data.xml',
         'data/signup_approval_data.xml',
         'data/plm_demo_data.xml',
-        # 3. PLM backend views
         'views/plm_dashboard_views.xml',
         'views/plm_uom_views.xml',
         'views/plm_product_views.xml',
@@ -40,11 +37,8 @@
         'views/plm_eco_comparison_views.xml',
         'views/plm_audit_log_views.xml',
         'views/plm_report_views.xml',
-        # 4. Signup approval backend views (includes Settings menu item)
         'views/res_users_approve_views.xml',
-        # 5. Menus
         'views/plm_menu.xml',
-        # 6. Frontend auth pages (standalone HTML, no website module)
         'views/login_signup_templates.xml',
         'views/approval_request_templates.xml',
     ],
@@ -56,10 +50,8 @@
             'plm_engineering/static/src/js/plm_sidebar.js',
             'plm_engineering/static/src/js/plm_dashboard.js',
         ],
-        # Auth CSS/JS loaded via <link>/<script> in standalone HTML templates
     },
     'installable': True,
     'application': True,
-    'auto_install': False,
     'license': 'LGPL-3',
 }

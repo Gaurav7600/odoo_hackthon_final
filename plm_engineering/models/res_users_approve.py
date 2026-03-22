@@ -6,7 +6,6 @@ _logger = logging.getLogger(__name__)
 
 
 class ResUsersApprove(models.Model):
-    """Store Signup Information of Users from Website - Approval Queue"""
     _name = 'res.users.approve'
     _description = "Approval Request Details"
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -29,14 +28,7 @@ class ResUsersApprove(models.Model):
         help="True when either Approve or Reject has been actioned")
 
     def action_approve_login(self):
-        """
-        Admin approves the registration:
-        1. Create the real res.users portal account
-        2. Send 'Registration Approved' email to the client
-        3. Mark this record as approved
-        """
         self.ensure_one()
-        # Check if user already exists (guard against double-click)
         user = self.env['res.users'].sudo().search(
             [('login', '=', self.email)], limit=1)
         if not user:
@@ -47,7 +39,6 @@ class ResUsersApprove(models.Model):
                 'groups_id': [(4, self.env.ref('base.group_portal').id)],
             })
 
-        # Send "Registration Approved" email
         template = self.env.ref(
             'plm_engineering.mail_template_registration_approved',
             raise_if_not_found=False)
@@ -64,11 +55,6 @@ class ResUsersApprove(models.Model):
         })
 
     def action_reject_login(self):
-        """
-        Admin rejects the registration:
-        1. Remove the real user if it was accidentally created
-        2. Mark this record as rejected (hide buttons, keep record for audit)
-        """
         self.ensure_one()
         user = self.env['res.users'].sudo().search(
             [('login', '=', self.email)], limit=1)

@@ -84,9 +84,9 @@
                     <field name="is_cancelled" invisible="1"/>
 
                     <div class="alert alert-secondary" role="alert"
-                         style="margin-bottom:12px;border-left:5px solid #6c757d;
+                            style="margin-bottom:12px;border-left:5px solid #6c757d;
                                 background:#f1f3f5;display:flex;align-items:center;gap:10px;"
-                         invisible="state != 'cancelled'">
+                            invisible="state != 'cancelled'">
                         <i class="fa fa-ban fa-lg" style="color:#6c757d;" title='cancel'/>
                         <div>
                             <strong>This ECO has been cancelled.</strong>
@@ -94,7 +94,6 @@
                         </div>
                     </div>
 
-                    <!-- OVERDUE banner — hidden when cancelled -->
                     <div class="alert alert-danger" role="alert"
                         style="margin-bottom:12px;border-left:5px solid #dc3545;"
                         invisible="not is_overdue or state == 'cancelled'">
@@ -191,7 +190,6 @@
                             </field>
                         </page>
 
-                        <!-- Component Changes Tab -->
                         <page string="Component Changes" name="bom_changes"
                             invisible="eco_type != 'bom'">
                             <div class="alert alert-info mb-3" role="alert"

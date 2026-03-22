@@ -12,7 +12,7 @@
     </t>
 </t>
 
-<t t-name="plm_engineering.SidebarLevel2">
+    <t t-name="plm_engineering.SidebarLevel2">
     <t t-foreach="items" t-as="item" t-key="item.id">
         <t t-if="hasChildren(item)">
             <div t-att-class="'plm-si' + (isActive(item.id) || isSectionOpen(item.id) ? ' plm-si--on' : '')"
@@ -21,10 +21,10 @@
                 <span class="plm-dot"/>
                 <span style="flex:1" t-esc="item.name"/>
                 <i t-att-class="'fa ' + (isSectionOpen(item.id) ? 'fa-chevron-down' : 'fa-chevron-right')"
-                   style="font-size:9px; color:var(--sm);"/>
+                   style="font-size:9px;color:var(--plm-muted);"/>
             </div>
             <t t-if="isSectionOpen(item.id)">
-                <div class="plm-sg" style="margin-left:0">
+                <div class="plm-sg">
                     <t t-call="plm_engineering.SidebarLevel3">
                         <t t-set="items" t-value="getChildren(item)"/>
                     </t>
@@ -42,69 +42,58 @@
     </t>
 </t>
 
-
-<t t-name="plm_engineering.PlmSidebar">
-
+    <!-- ════════════ MAIN SIDEBAR ════════════ -->
+    <t t-name="plm_engineering.PlmSidebar">
     <div t-att-class="isMobileOpen() ? 'plm-backdrop on' : 'plm-backdrop'"
          t-on-click="closeMobile"/>
 
-    <nav t-att-class="'plm-sb' + (isMobileOpen() ? ' mob-open' : '')">
-
-        <div class="plm-hdr">
-            <div class="plm-logo" title="Current App">
+        <nav t-att-class="'plm-sb' + (isMobileOpen() ? ' mob-open' : '')">
+        <!-- HEADER -->
+            <div class="plm-hdr">
+            <div class="plm-logo">
                 <t t-set="_app" t-value="getCurrentApp()"/>
                 <t t-if="_app and _app.web_icon_data">
                     <img t-att-src="'data:image/png;base64,' + _app.web_icon_data" alt=""/>
                 </t>
-                <t t-else="">
-                    <i class="fa fa-th-large"/>
-                </t>
+                <t t-else=""><i class="fa fa-bar-chart"/></t>
             </div>
-
-            <div class="plm-brand">
+                <div class="plm-brand">
                 <t t-set="_app2" t-value="getCurrentApp()"/>
-                <span class="plm-brand-n" t-esc="_app2 ? _app2.name : 'Menu'"/>
+                    <span class="plm-brand-n" t-esc="_app2 ? _app2.name : 'Menu'"/>
             </div>
-
-            <button class="plm-cbtn" t-on-click="collapse" title="Collapse">
+                <button class="plm-cbtn" t-on-click="collapse" title="Collapse">
                 <i class="fa fa-angle-left"/>
             </button>
-
-            <t t-if="isMobileOpen()">
-                <button class="plm-cbtn" t-on-click="closeMobile" title="Close">
+                <t t-if="isMobileOpen()">
+                <button class="plm-cbtn" t-on-click="closeMobile">
                     <i class="fa fa-times"/>
                 </button>
             </t>
         </div>
 
-        <button class="plm-expand-btn" t-on-click="expand" title="Expand">
+            <button class="plm-expand-btn" t-on-click="expand">
             <i class="fa fa-angle-right"/>
         </button>
 
-        <div class="plm-nav">
-
+            <!-- NAV -->
+            <div class="plm-nav">
             <t t-set="_menus" t-value="getTopMenus()"/>
-
-            <t t-if="_menus.length === 0">
-                <div style="padding:20px 12px; color:var(--sm); font-size:12px; text-align:center;">
-                    <i class="fa fa-spinner fa-spin" style="display:block; font-size:20px; margin-bottom:8px;"/>
-                    Loading menu...
+                <t t-if="_menus.length === 0">
+                <div style="padding:24px 14px;color:var(--plm-muted);font-size:12px;text-align:center;">
+                    <i class="fa fa-spinner fa-spin" style="display:block;font-size:18px;margin-bottom:8px;"/>
+                    Loading…
                 </div>
             </t>
 
-            <t t-foreach="_menus" t-as="menuItem" t-key="menuItem.id">
-
+                <t t-foreach="_menus" t-as="menuItem" t-key="menuItem.id">
                 <t t-if="hasChildren(menuItem)">
                     <div t-att-class="'plm-ni' + (isActive(menuItem.id) || isSectionOpen(menuItem.id) ? ' plm-ni--on' : '')"
                          t-att-data-tip="menuItem.name"
                          t-on-click="() => this.onMenuClick(menuItem)">
-                        <div class="plm-iw">
-                            <i t-att-class="getMenuIcon(menuItem)"/>
-                        </div>
+                        <div class="plm-iw"><i t-att-class="getMenuIcon(menuItem)"/></div>
                         <span class="plm-nl" t-esc="menuItem.name"/>
                         <i t-att-class="'fa plm-ch' + (isSectionOpen(menuItem.id) ? ' fa-chevron-down plm-ch--o' : ' fa-chevron-right')"/>
                     </div>
-
                     <t t-if="isSectionOpen(menuItem.id)">
                         <div class="plm-sg">
                             <t t-call="plm_engineering.SidebarLevel2">
@@ -112,48 +101,95 @@
                             </t>
                         </div>
                     </t>
-
                 </t>
-                <t t-else="">
+                    <t t-else="">
                     <div t-att-class="'plm-ni' + (isActive(menuItem.id) ? ' plm-ni--on' : '')"
                          t-att-data-tip="menuItem.name"
                          t-on-click="() => this.onMenuClick(menuItem)">
-                        <div class="plm-iw">
-                            <i t-att-class="getMenuIcon(menuItem)"/>
-                        </div>
+                        <div class="plm-iw"><i t-att-class="getMenuIcon(menuItem)"/></div>
                         <span class="plm-nl" t-esc="menuItem.name"/>
                     </div>
                 </t>
-
             </t>
 
-            <div class="plm-divider"/>
-            <div class="plm-lbl">Switch App</div>
-
-            <t t-foreach="getAllApps()" t-as="app" t-key="app.id">
-                <t t-set="_isCurrent" t-value="getCurrentApp() and getCurrentApp().id === app.id"/>
-                <div t-att-class="'plm-ni' + (_isCurrent ? ' plm-ni--on' : '')"
-                     t-att-data-tip="app.name"
-                     t-on-click="() => this.switchApp(app)">
+                <!-- Master App -->
+                <div class="plm-divider"/>
+                <div class="plm-lbl">Master App</div>
+                <t t-foreach="getAllApps()" t-as="app" t-key="app.id">
+                <t t-set="_isCur" t-value="getCurrentApp() and getCurrentApp().id === app.id"/>
+                    <div t-att-class="'plm-ni' + (_isCur ? ' plm-ni--on' : '')"
+                         t-att-data-tip="app.name"
+                         t-on-click="() => this.switchApp(app)">
                     <div class="plm-iw">
                         <t t-if="app.web_icon_data">
                             <img t-att-src="'data:image/png;base64,' + app.web_icon_data"
-                                 style="width:16px;height:16px;object-fit:contain;filter:brightness(0) invert(0.6);"/>
+                                 style="width:15px;height:15px;object-fit:contain;filter:brightness(0) invert(0.55);"/>
                         </t>
-                        <t t-else="">
-                            <i t-att-class="getMenuIcon(app)"/>
-                        </t>
+                        <t t-else=""><i t-att-class="getMenuIcon(app)"/></t>
                     </div>
-                    <span class="plm-nl" t-esc="app.name"/>
+                        <span class="plm-nl" t-esc="app.name"/>
                 </div>
             </t>
-
         </div>
 
-        <button class="plm-logout" t-on-click="logout" title="Log Out">
-            <i class="fa fa-sign-out"/>
-            <span class="plm-logout-txt">Log Out</span>
-        </button>
+        <div class="plm-user-wrap">
+            <div t-att-class="'plm-profile-dd' + (isProfileOpen() ? ' open' : '')">
+                <div class="plm-dd-hdr">
+                    <div class="plm-dd-av">
+                        <span class="plm-dd-av-initials" t-esc="getUserInitials()"/>
+                        <t t-if="hasAvatar()">
+                            <img class="plm-dd-av-photo"
+                                t-att-src="getUserAvatar()"
+                                t-att-alt="getUserInitials()"/>
+                        </t>
+                    </div>
+                    <div class="plm-dd-info">
+                        <div class="plm-dd-name" t-esc="getUserName()"/>
+                        <div class="plm-dd-email" t-esc="getUserEmail()"/>
+                        <t t-if="getCompanyName()">
+                            <div class="plm-dd-co">
+                                <i class="fa fa-building-o"/>
+                                <span t-esc="getCompanyName()"/>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+
+                <div class="plm-dd-menu">
+                    <button class="plm-dd-item" t-on-click="openPreferences">
+                        <i class="fa fa-sliders"/>
+                        <span>My Preferences</span>
+                    </button>
+                        <button class="plm-dd-item" t-on-click="openNotifications">
+                        <i class="fa fa-bell-o"/>
+                            <span>Notifications</span>
+                    </button>
+                        <div class="plm-dd-sep"/>
+                        <button class="plm-dd-item danger" t-on-click="logout">
+                        <i class="fa fa-sign-out"/>
+                            <span>Log Out</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="plm-user" t-on-click="toggleProfileDropdown">
+                <div class="plm-user-av">
+                    <span class="plm-av-initials" t-esc="getUserInitials()"/>
+                    <t t-if="hasAvatar()">
+                        <img class="plm-av-photo"
+                            t-att-src="getUserAvatar()"
+                            t-att-alt="getUserInitials()"/>
+                    </t>
+                    <span class="plm-av-dot"/>
+                </div>
+                <div class="plm-user-info">
+                    <span class="plm-user-name" t-esc="getUserName()"/>
+                    <span class="plm-user-email" t-esc="getUserEmail()"/>
+                </div>
+                <i t-att-class="'fa fa-chevron-up plm-user-caret' + (isProfileOpen() ? ' open' : '')"/>
+            </div>
+        </div>
     </nav>
 </t>
+
 </templates>

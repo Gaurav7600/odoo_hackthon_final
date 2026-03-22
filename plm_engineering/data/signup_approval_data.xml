@@ -2,7 +2,6 @@
 <odoo>
     <data noupdate="1">
 
-        <!-- ══ AUTO-ENABLE signup approval on install — no manual toggle needed ══ -->
         <record id="param_signup_approval_enabled" model="ir.config_parameter">
             <field name="key">plm_engineering.auth_signup_approval</field>
             <field name="value">True</field>
@@ -13,7 +12,6 @@
             <value eval="'b2c'"/>
         </function>
 
-        <!-- ══ Email: Waiting for Authorization (sent immediately on registration) ══ -->
         <record id="mail_template_waiting_approval" model="mail.template">
             <field name="name">Portal Signup: Waiting for Authorization</field>
             <field name="model_id" ref="plm_engineering.model_res_users_approve"/>
@@ -64,7 +62,6 @@
             <field name="auto_delete" eval="True"/>
         </record>
 
-        <!-- ══ Email: Registration Approved (sent when admin clicks Approve) ══ -->
         <record id="mail_template_registration_approved" model="mail.template">
             <field name="name">Portal Signup: Registration Approved</field>
             <field name="model_id" ref="plm_engineering.model_res_users_approve"/>
@@ -95,10 +92,10 @@
                         </p>
                         <div style="text-align:center;margin:28px 0;">
                             <a href="/web/login"
-                               style="background:linear-gradient(135deg,#7c3aed,#4f46e5);
-                                      color:#fff;padding:14px 36px;text-decoration:none;
-                                      border-radius:10px;font-size:0.95rem;font-weight:600;
-                                      display:inline-block;">
+                                style="background:linear-gradient(135deg,#7c3aed,#4f46e5);
+                                    color:#fff;padding:14px 36px;text-decoration:none;
+                                    border-radius:10px;font-size:0.95rem;font-weight:600;
+                                    display:inline-block;">
                                 Log In Now →
                             </a>
                         </div>

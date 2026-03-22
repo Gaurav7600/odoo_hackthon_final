@@ -18,7 +18,6 @@ class PlmEcoStage(models.Model):
         help='Folded stages are collapsed in the Kanban view.',
     )
 
-    # ── Stage Role Flags ─────────────────────────────────────────────
     is_start_stage = fields.Boolean(
         string='Starting Stage',
         default=False,
@@ -28,14 +27,14 @@ class PlmEcoStage(models.Model):
         string='Approval Required',
         default=False,
         help='ECOs in this stage must be approved before advancing.\n'
-             'An "Approve" button is shown when enabled.\n'
-             'A "Validate" button is shown when disabled.',
+            'An "Approve" button is shown when enabled.\n'
+            'A "Validate" button is shown when disabled.',
     )
     is_final_stage = fields.Boolean(
         string='Final / Done Stage',
         default=False,
         help='ECOs reaching this stage are applied: new version becomes active, '
-             'old version is archived.',
+            'old version is archived.',
     )
     is_cancel_stage = fields.Boolean(
         string='Cancelled Stage',

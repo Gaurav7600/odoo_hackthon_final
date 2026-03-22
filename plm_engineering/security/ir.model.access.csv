@@ -58,5 +58,4 @@ access_signup_approval_user,access.signup.approval.user,plm_engineering.model_si
 access_res_users_approve_user,access.res.users.approve.user,plm_engineering.model_res_users_approve,base.group_user,1,1,1,1
 access_res_users_approve_public,access.res.users.approve.public,plm_engineering.model_res_users_approve,base.group_public,1,1,1,0
 access_res_users_approve_portal,access.res.users.approve.portal,plm_engineering.model_res_users_approve,base.group_portal,1,1,1,0
-access_document_attachment_user,access.document.attachment.user,plm_engineering.model_document_attachment,base.group_user,1,1,1,1
 plm_engineering.access_user_approval_window,access_user_approval_window,plm_engineering.model_user_approval_window,base.group_user,1,0,0,0

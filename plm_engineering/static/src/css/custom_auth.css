@@ -1,45 +1,51 @@
-/* =============================================================================
-   DO SIGNUP APPROVAL — Advanced Custom Auth Theme
-   Glassmorphism Dark UI  |  No website module dependency
-   ============================================================================= */
+:root {
+    --plm-bg: #0f1923;
+    --plm-bg2: #162032;
+    --plm-bg3: #1c2b3a;
+    --plm-bg4: #1a2535;
+    --plm-border: rgba(255,255,255,0.07);
+    --plm-text: #c9d1d9;
+    --plm-muted: #5a6a7a;
+    --plm-cyan: #29b6f6;
+    --plm-cyan2: #1a8fe3;
+    --plm-green: #3fb950;
+    --plm-red: #f85149;
+}
 
-/* ── 1. RESET + PAGE SHELL ─────────────────────────────────────────────────── */
 body.o_auth_page {
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: #05050f;
+    font-family: 'Sora', 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--plm-bg);
     overflow-x: hidden;
-    color: #e2e8f0;
+    color: var(--plm-text);
 }
 
-/* ── 2. ANIMATED GRADIENT BACKGROUND ──────────────────────────────────────── */
 body.o_auth_page::before {
     content: '';
     position: fixed;
     inset: 0;
     background:
-        radial-gradient(ellipse 80% 60% at 20% 20%, rgba(124,58,237,0.35) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(6,182,212,0.25) 0%, transparent 55%),
-        radial-gradient(ellipse 50% 70% at 50% 50%, rgba(16,10,40,0.95) 0%, transparent 100%),
-        linear-gradient(135deg, #05050f 0%, #0f0a2a 50%, #050a1a 100%);
+        radial-gradient(ellipse 80% 60% at 20% 20%, rgba(41,182,246,0.25) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(26,143,227,0.2) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 70% at 50% 50%, #0f1923 0%, transparent 100%),
+        linear-gradient(135deg, var(--plm-bg) 0%, var(--plm-bg2) 50%, var(--plm-bg) 100%);
     z-index: 0;
     animation: bgShift 12s ease-in-out infinite alternate;
 }
 
 @keyframes bgShift {
-    0%   { filter: hue-rotate(0deg) brightness(1); }
-    50%  { filter: hue-rotate(15deg) brightness(1.05); }
-    100% { filter: hue-rotate(-10deg) brightness(0.95); }
+    0%   { filter: brightness(1) saturate(1); }
+    50%  { filter: brightness(1.02) saturate(1.1); }
+    100% { filter: brightness(0.98) saturate(0.95); }
 }
 
-/* ── 3. FLOATING ORB ANIMATIONS ────────────────────────────────────────────── */
 .do-auth-orb {
     position: fixed;
     border-radius: 50%;
     filter: blur(80px);
-    opacity: 0.18;
+    opacity: 0.15;
     pointer-events: none;
     z-index: 0;
     animation: orbFloat 8s ease-in-out infinite;
@@ -47,14 +53,14 @@ body.o_auth_page::before {
 
 .do-auth-orb-1 {
     width: 500px; height: 500px;
-    background: radial-gradient(circle, #7c3aed, #4f46e5);
+    background: radial-gradient(circle, var(--plm-cyan), var(--plm-cyan2));
     top: -150px; left: -150px;
     animation-duration: 9s;
 }
 
 .do-auth-orb-2 {
     width: 400px; height: 400px;
-    background: radial-gradient(circle, #06b6d4, #0284c7);
+    background: radial-gradient(circle, var(--plm-cyan2), #0d47a1);
     bottom: -100px; right: -100px;
     animation-duration: 11s;
     animation-delay: -3s;
@@ -62,11 +68,11 @@ body.o_auth_page::before {
 
 .do-auth-orb-3 {
     width: 300px; height: 300px;
-    background: radial-gradient(circle, #ec4899, #db2777);
+    background: radial-gradient(circle, var(--plm-cyan), #1a8fe3);
     top: 40%; left: 60%;
     animation-duration: 13s;
     animation-delay: -5s;
-    opacity: 0.1;
+    opacity: 0.08;
 }
 
 @keyframes orbFloat {
@@ -75,7 +81,6 @@ body.o_auth_page::before {
     66%       { transform: translate(-20px, 30px) scale(0.95); }
 }
 
-/* ── 4. PARTICLE CANVAS ─────────────────────────────────────────────────────── */
 #do-particle-canvas {
     position: fixed;
     inset: 0;
@@ -84,7 +89,6 @@ body.o_auth_page::before {
     opacity: 0.4;
 }
 
-/* ── 5. AUTH WRAPPER (centres the card) ────────────────────────────────────── */
 .do-auth-wrapper {
     position: relative;
     z-index: 1;
@@ -95,20 +99,19 @@ body.o_auth_page::before {
     padding: 2rem 1rem;
 }
 
-/* ── 6. GLASSMORPHISM CARD ─────────────────────────────────────────────────── */
 .do-auth-card {
     width: 100%;
     max-width: 440px;
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(22, 32, 50, 0.4);
     backdrop-filter: blur(24px) saturate(180%);
     -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(41,182,246,0.15);
     border-radius: 24px;
     padding: 3rem 2.5rem;
     box-shadow:
-        0 0 0 1px rgba(124,58,237,0.15),
+        0 0 0 1px rgba(41,182,246,0.1),
         0 24px 80px rgba(0, 0, 0, 0.6),
-        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        inset 0 1px 0 rgba(41,182,246,0.06);
     animation: cardReveal 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
@@ -117,12 +120,10 @@ body.o_auth_page::before {
     to   { opacity: 1; transform: translateY(0)    scale(1); }
 }
 
-/* Wider card for info pages */
 .do-auth-card.do-auth-card--wide {
     max-width: 540px;
 }
 
-/* ── 7. LOGO / BRAND AREA ─────────────────────────────────────────────────── */
 .do-auth-brand {
     text-align: center;
     margin-bottom: 2rem;
@@ -136,8 +137,8 @@ body.o_auth_page::before {
     height: 72px;
     border-radius: 20px;
     box-shadow:
-        0 0 0 8px rgba(124,58,237,0.12),
-        0 0 40px rgba(124,58,237,0.4);
+        0 0 0 8px rgba(41,182,246,0.12),
+        0 0 40px rgba(41,182,246,0.4);
     margin-bottom: 1.25rem;
     animation: logoPulse 3s ease-in-out infinite;
     position: relative;
@@ -148,13 +149,13 @@ body.o_auth_page::before {
     position: absolute;
     inset: -4px;
     border-radius: 24px;
-    border: 2px solid rgba(124,58,237,0.3);
+    border: 2px solid rgba(41,182,246,0.3);
     animation: ringExpand 3s ease-in-out infinite;
 }
 
 @keyframes logoPulse {
-    0%, 100% { box-shadow: 0 0 0 8px rgba(124,58,237,0.12), 0 0 40px rgba(124,58,237,0.4); }
-    50%       { box-shadow: 0 0 0 12px rgba(124,58,237,0.08), 0 0 60px rgba(124,58,237,0.5); }
+    0%, 100% { box-shadow: 0 0 0 8px rgba(41,182,246,0.12), 0 0 40px rgba(41,182,246,0.4); }
+    50%       { box-shadow: 0 0 0 12px rgba(41,182,246,0.08), 0 0 60px rgba(41,182,246,0.5); }
 }
 
 @keyframes ringExpand {
@@ -173,19 +174,18 @@ body.o_auth_page::before {
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    background: linear-gradient(135deg, #a78bfa, #67e8f9);
+    background: linear-gradient(135deg, var(--plm-cyan), #67e8f9);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin: 0;
 }
 
-/* ── 8. HEADINGS ──────────────────────────────────────────────────────────── */
 .do-auth-title {
     font-size: 1.65rem;
     font-weight: 700;
     text-align: center;
-    color: #f1f5f9;
+    color: var(--plm-text);
     margin: 0 0 0.4rem;
     letter-spacing: -0.02em;
 }
@@ -193,11 +193,10 @@ body.o_auth_page::before {
 .do-auth-subtitle {
     font-size: 0.875rem;
     text-align: center;
-    color: rgba(148, 163, 184, 0.8);
+    color: var(--plm-muted);
     margin: 0 0 2rem;
 }
 
-/* ── 9. FORM INPUTS ─────────────────────────────────────────────────────────── */
 .do-auth-form .form-group,
 .do-auth-form .mb-3 {
     margin-bottom: 1.25rem;
@@ -209,7 +208,7 @@ body.o_auth_page::before {
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: rgba(148, 163, 184, 0.9);
+    color: var(--plm-muted);
     margin-bottom: 0.4rem;
 }
 
@@ -218,10 +217,10 @@ body.o_auth_page::before {
 .do-auth-form input[type="email"],
 .do-auth-form input[type="password"] {
     width: 100%;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(28, 43, 58, 0.5);
+    border: 1px solid rgba(41,182,246,0.15);
     border-radius: 12px;
-    color: #f1f5f9;
+    color: var(--plm-text);
     font-size: 0.95rem;
     padding: 0.8rem 1.1rem;
     transition: all 0.25s ease;
@@ -232,20 +231,19 @@ body.o_auth_page::before {
 
 .do-auth-form .form-control::placeholder,
 .do-auth-form input::placeholder {
-    color: rgba(100, 116, 139, 0.7);
+    color: var(--plm-muted);
 }
 
 .do-auth-form .form-control:focus,
 .do-auth-form input:focus {
-    background: rgba(124,58,237,0.08);
-    border-color: rgba(124,58,237,0.6);
+    background: rgba(41,182,246,0.08);
+    border-color: rgba(41,182,246,0.6);
     box-shadow:
-        0 0 0 3px rgba(124,58,237,0.18),
+        0 0 0 3px rgba(41,182,246,0.18),
         inset 0 2px 4px rgba(0,0,0,0.2);
-    color: #f1f5f9;
+    color: var(--plm-text);
 }
 
-/* Input icon wrapper */
 .do-input-group {
     position: relative;
 }
@@ -255,7 +253,7 @@ body.o_auth_page::before {
     left: 14px;
     top: 50%;
     transform: translateY(-50%);
-    color: rgba(100, 116, 139, 0.7);
+    color: var(--plm-muted);
     font-size: 0.95rem;
     pointer-events: none;
     transition: color 0.25s;
@@ -267,15 +265,14 @@ body.o_auth_page::before {
 
 .do-input-group input:focus ~ .do-input-icon,
 .do-input-group:focus-within .do-input-icon {
-    color: #a78bfa;
+    color: var(--plm-cyan);
 }
 
-/* ── 10. PRIMARY BUTTON ─────────────────────────────────────────────────────── */
 .do-auth-btn {
     display: block;
     width: 100%;
     padding: 0.875rem 1.5rem;
-    background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+    background: linear-gradient(135deg, var(--plm-cyan2) 0%, var(--plm-cyan) 100%);
     color: #fff;
     font-size: 0.95rem;
     font-weight: 600;
@@ -287,7 +284,7 @@ body.o_auth_page::before {
     position: relative;
     overflow: hidden;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 24px rgba(124,58,237,0.45);
+    box-shadow: 0 4px 24px rgba(41,182,246,0.45);
 }
 
 .do-auth-btn::before {
@@ -310,7 +307,7 @@ body.o_auth_page::before {
 
 .do-auth-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 40px rgba(124,58,237,0.6);
+    box-shadow: 0 8px 40px rgba(41,182,246,0.6);
 }
 
 .do-auth-btn:hover::after {
@@ -321,7 +318,6 @@ body.o_auth_page::before {
     transform: translateY(0);
 }
 
-/* Loading spinner inside button */
 .do-auth-btn .do-btn-spinner {
     display: none;
     width: 18px; height: 18px;
@@ -340,7 +336,6 @@ body.o_auth_page::before {
     to { transform: rotate(360deg); }
 }
 
-/* ── 11. ALERT / ERROR ────────────────────────────────────────────────────── */
 .do-auth-alert {
     padding: 0.75rem 1rem;
     border-radius: 10px;
@@ -381,13 +376,12 @@ body.o_auth_page::before {
     color: #6ee7b7;
 }
 
-/* ── 12. DIVIDER ─────────────────────────────────────────────────────────── */
 .do-auth-divider {
     display: flex;
     align-items: center;
     gap: 0.75rem;
     margin: 1.5rem 0;
-    color: rgba(100,116,139,0.6);
+    color: var(--plm-muted);
     font-size: 0.8rem;
 }
 
@@ -396,20 +390,19 @@ body.o_auth_page::before {
     content: '';
     flex: 1;
     height: 1px;
-    background: rgba(255,255,255,0.07);
+    background: rgba(41,182,246,0.15);
 }
 
-/* ── 13. FOOTER LINKS ────────────────────────────────────────────────────── */
 .do-auth-footer {
     text-align: center;
     margin-top: 1.5rem;
     font-size: 0.85rem;
-    color: rgba(100,116,139,0.8);
+    color: var(--plm-muted);
 }
 
 .do-auth-footer a,
 .do-auth-link {
-    color: #a78bfa;
+    color: var(--plm-cyan);
     text-decoration: none;
     font-weight: 500;
     transition: color 0.2s;
@@ -422,19 +415,18 @@ body.o_auth_page::before {
     position: absolute;
     bottom: -2px; left: 0;
     width: 0; height: 1px;
-    background: #a78bfa;
+    background: var(--plm-cyan);
     transition: width 0.3s ease;
 }
 
 .do-auth-footer a:hover,
 .do-auth-link:hover {
-    color: #c4b5fd;
+    color: #67e8f9;
 }
 
 .do-auth-footer a:hover::after,
 .do-auth-link:hover::after { width: 100%; }
 
-/* ── 14. STATUS ICON (success / wait pages) ─────────────────────────────── */
 .do-status-icon {
     width: 88px; height: 88px;
     border-radius: 50%;
@@ -447,22 +439,22 @@ body.o_auth_page::before {
 }
 
 .do-status-icon--warning {
-    background: rgba(245,158,11,0.12);
-    border: 2px solid rgba(245,158,11,0.3);
-    color: #fbbf24;
+    background: rgba(41,182,246,0.12);
+    border: 2px solid rgba(41,182,246,0.3);
+    color: var(--plm-cyan);
     animation: statusPulse 2.5s ease-in-out infinite;
 }
 
 .do-status-icon--info {
-    background: rgba(6,182,212,0.12);
-    border: 2px solid rgba(6,182,212,0.3);
-    color: #22d3ee;
+    background: rgba(41,182,246,0.12);
+    border: 2px solid rgba(41,182,246,0.3);
+    color: var(--plm-cyan);
     animation: statusPulse 2.5s ease-in-out infinite;
 }
 
 @keyframes statusPulse {
-    0%, 100% { box-shadow: 0 0 0 0px rgba(245,158,11,0.2); }
-    50%       { box-shadow: 0 0 0 14px rgba(245,158,11,0.0); }
+    0%, 100% { box-shadow: 0 0 0 0px rgba(41,182,246,0.2); }
+    50%       { box-shadow: 0 0 0 14px rgba(41,182,246,0.0); }
 }
 
 .do-status-icon--info { animation-name: statusPulseInfo; }
@@ -471,7 +463,6 @@ body.o_auth_page::before {
     50%       { box-shadow: 0 0 0 14px rgba(6,182,212,0.0); }
 }
 
-/* ── 15. STEP LIST (for info pages) ─────────────────────────────────────── */
 .do-step-list {
     list-style: none;
     padding: 0; margin: 1rem 0 0;
@@ -485,7 +476,7 @@ body.o_auth_page::before {
     align-items: flex-start;
     gap: 0.65rem;
     font-size: 0.88rem;
-    color: rgba(203,213,225,0.9);
+    color: var(--plm-text);
     animation: stepFade 0.5s ease both;
 }
 
@@ -510,11 +501,10 @@ body.o_auth_page::before {
     margin-top: 1px;
 }
 
-.do-step-dot--warning { background: rgba(245,158,11,0.2); color: #fbbf24; border: 1px solid rgba(245,158,11,0.4); }
-.do-step-dot--info    { background: rgba(6,182,212,0.2);  color: #22d3ee; border: 1px solid rgba(6,182,212,0.4); }
-.do-step-dot--success { background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.4); }
+.do-step-dot--warning { background: rgba(41,182,246,0.2); color: var(--plm-cyan); border: 1px solid rgba(41,182,246,0.4); }
+.do-step-dot--info    { background: rgba(41,182,246,0.2);  color: var(--plm-cyan); border: 1px solid rgba(41,182,246,0.4); }
+.do-step-dot--success { background: rgba(41,182,246,0.2); color: var(--plm-cyan); border: 1px solid rgba(41,182,246,0.4); }
 
-/* ── 16. ACTION BUTTONS (ghost) ─────────────────────────────────────────── */
 .do-ghost-btn {
     display: inline-flex;
     align-items: center;
@@ -530,43 +520,42 @@ body.o_auth_page::before {
 }
 
 .do-ghost-btn--purple {
-    background: rgba(124,58,237,0.12);
-    border-color: rgba(124,58,237,0.3);
-    color: #c4b5fd;
+    background: rgba(41,182,246,0.12);
+    border-color: rgba(41,182,246,0.3);
+    color: var(--plm-cyan);
 }
 .do-ghost-btn--purple:hover {
-    background: rgba(124,58,237,0.22);
-    border-color: rgba(124,58,237,0.5);
-    color: #ddd6fe;
+    background: rgba(41,182,246,0.22);
+    border-color: rgba(41,182,246,0.5);
+    color: #67e8f9;
     transform: translateY(-1px);
     text-decoration: none;
 }
 
 .do-ghost-btn--cyan {
-    background: rgba(6,182,212,0.1);
-    border-color: rgba(6,182,212,0.25);
-    color: #67e8f9;
+    background: rgba(41,182,246,0.1);
+    border-color: rgba(41,182,246,0.25);
+    color: var(--plm-cyan);
 }
 .do-ghost-btn--cyan:hover {
-    background: rgba(6,182,212,0.2);
-    border-color: rgba(6,182,212,0.4);
-    color: #a5f3fc;
+    background: rgba(41,182,246,0.2);
+    border-color: rgba(41,182,246,0.4);
+    color: #67e8f9;
     transform: translateY(-1px);
     text-decoration: none;
 }
 
-/* ── 17. PROGRESS BAR (decorative, on pending page) ─────────────────────── */
 .do-progress-bar {
     height: 3px;
     border-radius: 99px;
-    background: rgba(255,255,255,0.06);
+    background: rgba(41,182,246,0.1);
     overflow: hidden;
     margin: 1rem 0;
 }
 
 .do-progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #7c3aed, #06b6d4);
+    background: linear-gradient(90deg, var(--plm-cyan2), var(--plm-cyan));
     border-radius: 99px;
     animation: progressIndeterminate 2s ease-in-out infinite;
 }
@@ -577,24 +566,22 @@ body.o_auth_page::before {
     100% { transform: translateX(200%)  scaleX(0.4); }
 }
 
-/* ── 18. CHECKBOX (remember me) ─────────────────────────────────────────── */
 .do-auth-check {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     font-size: 0.85rem;
-    color: rgba(148,163,184,0.8);
+    color: var(--plm-muted);
     cursor: pointer;
     margin-bottom: 0.75rem;
 }
 
 .do-auth-check input[type="checkbox"] {
     width: 16px; height: 16px;
-    accent-color: #7c3aed;
+    accent-color: var(--plm-cyan);
     cursor: pointer;
 }
 
-/* ── 19. BADGE TAG ────────────────────────────────────────────────────────── */
 .do-badge {
     display: inline-flex;
     align-items: center;
@@ -608,20 +595,17 @@ body.o_auth_page::before {
 }
 
 .do-badge--purple {
-    background: rgba(124,58,237,0.15);
-    border: 1px solid rgba(124,58,237,0.3);
-    color: #c4b5fd;
+    background: rgba(41,182,246,0.15);
+    border: 1px solid rgba(41,182,246,0.3);
+    color: var(--plm-cyan);
 }
 
-/* ── 20. SCROLLBAR ────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
-::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.4); border-radius: 99px; }
+::-webkit-scrollbar-thumb { background: rgba(41,182,246,0.4); border-radius: 99px; }
 
-/* ── 21. SELECTION ────────────────────────────────────────────────────────── */
-::selection { background: rgba(124,58,237,0.35); color: #f1f5f9; }
+::selection { background: rgba(41,182,246,0.35); color: var(--plm-text); }
 
-/* ── 22. RESPONSIVE ──────────────────────────────────────────────────────── */
 @media (max-width: 480px) {
     .do-auth-card  { padding: 2rem 1.5rem; border-radius: 18px; }
     .do-auth-title { font-size: 1.4rem; }

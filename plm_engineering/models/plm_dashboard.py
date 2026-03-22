@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, _
+from odoo import models, fields, api
 from datetime import datetime, timedelta
 
 
@@ -9,18 +9,28 @@ class PlmDashboard(models.AbstractModel):
 
     @api.model
     def get_dashboard_data(self):
-        EcoModel = self.env['plm.eco']
-        ProductModel = self.env['plm.product']
-        BomModel = self.env['plm.bom']
-        AuditModel = self.env['plm.audit.log']
-        StageModel = self.env['plm.eco.stage']
-
         today = fields.Date.today()
         now = fields.Datetime.now()
         week_ago = now - timedelta(days=7)
-        month_ago = now - timedelta(days=30)
+        today_start = datetime.combine(today, datetime.min.time())
 
-        all_ecos = EcoModel.search([])
+        eco_model = self.env['plm.eco']
+        stage_model = self.env['plm.eco.stage']
+        product_model = self.env['plm.product']
+        bom_model = self.env['plm.bom']
+        audit_model = self.env['plm.audit.log']
+
+        user = self.env.user
+        is_manager = user.has_group('plm_engineering.group_plm_manager')
+        is_approver = user.has_group('plm_engineering.group_plm_approver')
+        is_engineer = user.has_group('plm_engineering.group_plm_user')
+        is_operations_only = (
+            user.has_group('plm_engineering.group_plm_operations')
+            and not is_engineer
+            and not is_approver
+            and not is_manager
+        )
+
         state_counts = {
             'draft': 0,
             'in_review': 0,
@@ -28,105 +38,121 @@ class PlmDashboard(models.AbstractModel):
             'done': 0,
             'cancelled': 0,
         }
-        for eco in all_ecos:
-            if eco.state in state_counts:
-                state_counts[eco.state] += 1
+        for row in eco_model.read_group([], ['state'], ['state']):
+            state = row.get('state')
+            count = row.get('state_count', 0)
+            if state in state_counts:
+                state_counts[state] = count
 
-        total_ecos = len(all_ecos)
+        total_ecos = sum(state_counts.values())
         pending_approval = state_counts['in_review']
-        applied_today = EcoModel.search_count([
+
+        applied_today = eco_model.search_count([
             ('state', '=', 'done'),
-            ('applied_date', '>=', fields.Datetime.to_string(
-                datetime.combine(today, datetime.min.time())
-            )),
+            ('applied_date', '>=', today_start),
         ])
-        applied_this_week = EcoModel.search_count([
+        applied_this_week = eco_model.search_count([
             ('state', '=', 'done'),
-            ('applied_date', '>=', fields.Datetime.to_string(week_ago)),
+            ('applied_date', '>=', week_ago),
         ])
 
         priority_counts = {'0': 0, '1': 0, '2': 0, '3': 0}
-        for eco in all_ecos.filtered(lambda e: e.state not in ('done', 'cancelled')):
-            if eco.priority in priority_counts:
-                priority_counts[eco.priority] += 1
+        for row in eco_model.read_group(
+            [('state', 'not in', ['done', 'cancelled'])],
+            ['priority'],
+            ['priority'],
+        ):
+            priority = row.get('priority')
+            count = row.get('priority_count', 0)
+            if priority in priority_counts:
+                priority_counts[priority] = count
 
-        product_ecos = len(all_ecos.filtered(lambda e: e.eco_type == 'product'))
-        bom_ecos = len(all_ecos.filtered(lambda e: e.eco_type == 'bom'))
+        product_ecos = eco_model.search_count([('eco_type', '=', 'product')])
+        bom_ecos = eco_model.search_count([('eco_type', '=', 'bom')])
 
-        stages = StageModel.search([], order='sequence asc')
-        stage_pipeline = []
-        for stage in stages:
-            count = EcoModel.search_count([('stage_id', '=', stage.id)])
-            stage_pipeline.append({
+        stage_count_map = {
+            row['stage_id'][0]: row['stage_id_count']
+            for row in eco_model.read_group([], ['stage_id'], ['stage_id'])
+            if row.get('stage_id')
+        }
+        stages = stage_model.search([], order='sequence asc, id asc')
+        stage_pipeline = [
+            {
                 'id': stage.id,
                 'name': stage.name,
-                'count': count,
+                'count': stage_count_map.get(stage.id, 0),
                 'color': stage.color,
                 'is_start': stage.is_start_stage,
                 'is_final': stage.is_final_stage,
                 'is_approval': stage.is_approval_required,
                 'fold': stage.fold,
-            })
+            }
+            for stage in stages
+        ]
 
-        active_products = ProductModel.search_count([('status', '=', 'active')])
-        archived_products = ProductModel.search_count([('status', '=', 'archived')])
-        active_boms = BomModel.search_count([('status', '=', 'active')])
-        archived_boms = BomModel.search_count([('status', '=', 'archived')])
+        product_domain = [('status', '=', 'active')] if is_operations_only else []
+        bom_domain = [('status', '=', 'active')] if is_operations_only else []
 
-        recent_ecos = EcoModel.search([], order='create_date desc', limit=8)
-        recent_eco_list = []
-        for eco in recent_ecos:
-            recent_eco_list.append({
+        active_products = product_model.search_count(product_domain + [('status', '=', 'active')])
+        archived_products = 0 if is_operations_only else product_model.search_count([('status', '=', 'archived')])
+
+        active_boms = bom_model.search_count(bom_domain + [('status', '=', 'active')])
+        archived_boms = 0 if is_operations_only else bom_model.search_count([('status', '=', 'archived')])
+
+        recent_ecos = eco_model.search([], order='create_date desc', limit=8)
+        recent_eco_list = [
+            {
                 'id': eco.id,
                 'reference': eco.reference or '',
                 'name': eco.name or '',
-                'product': eco.product_id.name if eco.product_id else '',
+                'product': eco.product_id.name or '',
                 'eco_type': eco.eco_type or '',
                 'state': eco.state or 'draft',
-                'stage': eco.stage_id.name if eco.stage_id else '',
+                'stage': eco.stage_id.name or '',
                 'priority': eco.priority or '0',
-                'user': eco.user_id.name if eco.user_id else '',
+                'user': eco.user_id.name or '',
                 'effective_date': fields.Date.to_string(eco.effective_date) if eco.effective_date else '',
                 'create_date': fields.Datetime.to_string(eco.create_date) if eco.create_date else '',
-            })
+            }
+            for eco in recent_ecos
+        ]
 
-        pending_ecos = EcoModel.search([('state', '=', 'in_review')], limit=5)
-        pending_list = []
-        for eco in pending_ecos:
-            pending_list.append({
+        pending_ecos = eco_model.search([('state', '=', 'in_review')], order='create_date desc', limit=5)
+        pending_list = [
+            {
                 'id': eco.id,
                 'reference': eco.reference or '',
                 'name': eco.name or '',
-                'product': eco.product_id.name if eco.product_id else '',
+                'product': eco.product_id.name or '',
                 'priority': eco.priority or '0',
-                'user': eco.user_id.name if eco.user_id else '',
+                'user': eco.user_id.name or '',
                 'effective_date': fields.Date.to_string(eco.effective_date) if eco.effective_date else '',
-            })
+            }
+            for eco in pending_ecos
+        ]
 
-        recent_audit = AuditModel.search([], order='timestamp desc', limit=5)
-        audit_list = []
-        for log in recent_audit:
-            audit_list.append({
-                'action': log.action or '',
-                'record': log.record_name or '',
-                'user': log.user_id.name if log.user_id else '',
-                'timestamp': fields.Datetime.to_string(log.timestamp) if log.timestamp else '',
-                'old_value': log.old_value or '',
-                'new_value': log.new_value or '',
-            })
+        audits = audit_model.search([], order='timestamp desc', limit=5)
+        audit_list = [
+            {
+                'action': audit.action or '',
+                'record': audit.record_name or '',
+                'user': audit.user_id.name or '',
+                'timestamp': fields.Datetime.to_string(audit.timestamp) if audit.timestamp else '',
+                'old_value': audit.old_value or '',
+                'new_value': audit.new_value or '',
+            }
+            for audit in audits
+        ]
 
+        trend_start = today - timedelta(days=6)
         weekly_trend = []
-        for i in range(6, -1, -1):
-            day = today - timedelta(days=i)
-            day_start = fields.Datetime.to_string(
-                datetime.combine(day, datetime.min.time())
-            )
-            day_end = fields.Datetime.to_string(
-                datetime.combine(day, datetime.max.time())
-            )
-            count = EcoModel.search_count([
+        for day_offset in range(7):
+            day = trend_start + timedelta(days=day_offset)
+            day_start = datetime.combine(day, datetime.min.time())
+            next_day_start = day_start + timedelta(days=1)
+            count = eco_model.search_count([
                 ('create_date', '>=', day_start),
-                ('create_date', '<=', day_end),
+                ('create_date', '<', next_day_start),
             ])
             weekly_trend.append({
                 'day': day.strftime('%a'),
@@ -134,12 +160,7 @@ class PlmDashboard(models.AbstractModel):
                 'count': count,
             })
 
-        user = self.env.user
-        is_approver = user.has_group('plm_engineering.group_plm_approver')
-        is_manager = user.has_group('plm_engineering.group_plm_manager')
-        is_engineer = user.has_group('plm_engineering.group_plm_user')
-
-        my_ecos_count = EcoModel.search_count([
+        my_ecos_count = eco_model.search_count([
             ('user_id', '=', user.id),
             ('state', 'not in', ['done', 'cancelled']),
         ])

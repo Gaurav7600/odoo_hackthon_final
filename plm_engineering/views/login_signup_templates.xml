@@ -28,20 +28,17 @@
                 <div class="do-auth-wrapper">
                     <div class="do-auth-card">
 
-                        <!-- ── Brand ── -->
                         <div class="do-auth-brand">
                             <div class="do-auth-logo-ring">
-                                <!-- Portal trophy / bolt icon -->
                                 <img src="/plm_engineering/static/description/icon.png" alt="Logo"
                                     style="width:62px;height:62px;"/>
                             </div>
                             <p class="do-auth-brand-name">PLM Engineering</p>
                         </div>
 
-                        <h1 class="do-auth-title">Welcome Back</h1>
+                        <h1 class="do-auth-title">Welcome</h1>
                         <p class="do-auth-subtitle">Sign in to your portal account</p>
 
-                        <!-- Error alert -->
                         <t t-if="error">
                             <div class="do-auth-alert do-auth-alert-error" role="alert">
                                 <i class="fa fa-circle-exclamation" style="flex-shrink:0;margin-top:1px;"/>
@@ -49,43 +46,40 @@
                             </div>
                         </t>
 
-                        <!-- ── Login Form — field names are exactly what Odoo expects ── -->
                         <form class="do-auth-form" method="post" action="/web/login">
                             <input type="hidden" name="csrf_token"
-                                   t-att-value="request.csrf_token()"/>
+                                t-att-value="request.csrf_token()"/>
                             <t t-if="redirect">
                                 <input type="hidden" name="redirect" t-att-value="redirect"/>
                             </t>
 
-                            <!-- Email -->
                             <div class="mb-3">
                                 <label for="login">Email Address</label>
                                 <div class="do-input-group">
                                     <input type="email" id="login" name="login"
-                                           class="form-control"
-                                           placeholder="you@example.com"
-                                           autocomplete="username email"
-                                           t-att-value="login"
-                                           required="required"/>
+                                            class="form-control"
+                                            placeholder="you@example.com"
+                                            autocomplete="username email"
+                                            t-att-value="login"
+                                            required="required"/>
                                     <span class="do-input-icon"><i class="fa fa-envelope"/></span>
                                 </div>
                             </div>
 
-                            <!-- Password -->
                             <div class="mb-3">
                                 <label for="password">Password</label>
                                 <div class="do-input-group">
                                     <input type="password" id="password" name="password"
-                                           class="form-control"
-                                           placeholder="Enter your password"
-                                           autocomplete="current-password"
-                                           required="required"/>
+                                            class="form-control"
+                                            placeholder="Enter your password"
+                                            autocomplete="current-password"
+                                            required="required"/>
                                     <span class="do-input-icon"><i class="fa fa-lock"/></span>
                                     <button type="button" class="do-pw-toggle"
                                             style="position:absolute;right:12px;top:50%;
-                                                   transform:translateY(-50%);background:none;
-                                                   border:none;cursor:pointer;padding:4px;
-                                                   color:rgba(100,116,139,0.7);">
+                                                    transform:translateY(-50%);background:none;
+                                                    border:none;cursor:pointer;padding:4px;
+                                                    color:rgba(100,116,139,0.7);">
                                         <i class="fa fa-eye-slash" style="font-size:14px;"/>
                                     </button>
                                 </div>
@@ -97,10 +91,8 @@
                             </button>
                         </form>
 
-                        <!-- ── Links ── -->
                         <div class="do-auth-divider">or</div>
 
-                        <!-- Sign Up link — uses Odoo's standard /web/signup route -->
                         <div class="do-auth-footer">
                             New to the portal?
                             <a href="/web/signup">Create an account</a>
@@ -118,11 +110,6 @@
         </html>
     </template>
 
-
-    <!-- =========================================================================
-         CUSTOM SIGNUP PAGE  —  Standalone full-HTML template
-         Rendered directly by the controller override of web_auth_signup.
-         ========================================================================= -->
     <template id="custom_signup_page" name="Portal — Custom Signup">
         <html lang="en">
             <head>
@@ -130,10 +117,10 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
                 <title>Create Account — Portal</title>
                 <link rel="stylesheet"
-                      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-                      crossorigin="anonymous"/>
+                        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+                        crossorigin="anonymous"/>
                 <link rel="stylesheet" type="text/css"
-                      t-attf-href="/plm_engineering/static/src/css/custom_auth.css"/>
+                        t-attf-href="/plm_engineering/static/src/css/custom_auth.css"/>
                 <style>*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; } html { height: 100%; }</style>
             </head>
 
@@ -146,7 +133,6 @@
                 <div class="do-auth-wrapper">
                     <div class="do-auth-card">
 
-                        <!-- ── Brand ── -->
                         <div class="do-auth-brand">
                             <div class="do-auth-logo-ring">
                                 <img src="/plm_engineering/static/description/icon.png" alt="Logo"
@@ -158,7 +144,6 @@
                         <h1 class="do-auth-title">Join the Portal</h1>
                         <p class="do-auth-subtitle">Register your account — approval required before login</p>
 
-                        <!-- Error alert -->
                         <t t-if="error">
                             <div class="do-auth-alert do-auth-alert-error" role="alert">
                                 <i class="fa fa-circle-exclamation" style="flex-shrink:0;margin-top:1px;"/>
@@ -166,10 +151,9 @@
                             </div>
                         </t>
 
-                        <!-- ── Signup Form ── -->
                         <form class="do-auth-form" method="post" action="/web/signup">
                             <input type="hidden" name="csrf_token"
-                                   t-att-value="request.csrf_token()"/>
+                                    t-att-value="request.csrf_token()"/>
                             <t t-if="token">
                                 <input type="hidden" name="token" t-att-value="token"/>
                             </t>
@@ -177,67 +161,62 @@
                                 <input type="hidden" name="redirect" t-att-value="redirect"/>
                             </t>
 
-                            <!-- Full Name -->
                             <div class="mb-3">
                                 <label for="name">Full Name</label>
                                 <div class="do-input-group">
                                     <input type="text" id="name" name="name"
-                                           class="form-control" placeholder="John Doe"
-                                           autocomplete="name"
-                                           t-att-value="name"
-                                           required="required"/>
+                                            class="form-control" placeholder="John Doe"
+                                            autocomplete="name"
+                                            t-att-value="name"
+                                            required="required"/>
                                     <span class="do-input-icon"><i class="fa fa-user"/></span>
                                 </div>
                             </div>
 
-                            <!-- Email -->
                             <div class="mb-3">
                                 <label for="login">Email Address</label>
                                 <div class="do-input-group">
                                     <input type="email" id="login" name="login"
-                                           class="form-control" placeholder="you@example.com"
-                                           autocomplete="username email"
-                                           t-att-value="login"
-                                           required="required"/>
+                                            class="form-control" placeholder="you@example.com"
+                                            autocomplete="username email"
+                                            t-att-value="login"
+                                            required="required"/>
                                     <span class="do-input-icon"><i class="fa fa-envelope"/></span>
                                 </div>
                             </div>
 
-                            <!-- Password -->
                             <div class="mb-3">
                                 <label for="password">Password</label>
                                 <div class="do-input-group">
                                     <input type="password" id="password" name="password"
-                                           class="form-control" placeholder="Min. 8 characters"
-                                           autocomplete="new-password"
-                                           required="required"/>
+                                            class="form-control" placeholder="Min. 8 characters"
+                                            autocomplete="new-password"
+                                            required="required"/>
                                     <span class="do-input-icon"><i class="fa fa-lock"/></span>
                                     <button type="button" class="do-pw-toggle"
                                             style="position:absolute;right:12px;top:50%;
-                                                   transform:translateY(-50%);background:none;
-                                                   border:none;cursor:pointer;padding:4px;
-                                                   color:rgba(100,116,139,0.7);">
+                                                    transform:translateY(-50%);background:none;
+                                                    border:none;cursor:pointer;padding:4px;
+                                                    color:rgba(100,116,139,0.7);">
                                         <i class="fa fa-eye-slash" style="font-size:14px;"/>
                                     </button>
                                 </div>
                             </div>
 
-                            <!-- Confirm Password -->
                             <div class="mb-3">
                                 <label for="confirm_password">Confirm Password</label>
                                 <div class="do-input-group">
                                     <input type="password" id="confirm_password"
-                                           name="confirm_password"
-                                           class="form-control" placeholder="Repeat your password"
-                                           autocomplete="new-password"
-                                           required="required"/>
+                                            name="confirm_password"
+                                            class="form-control" placeholder="Repeat your password"
+                                            autocomplete="new-password"
+                                            required="required"/>
                                     <span class="do-input-icon"><i class="fa fa-check"/></span>
                                 </div>
                             </div>
 
-                            <!-- Approval notice -->
                             <div class="do-auth-alert do-auth-alert-info"
-                                 style="font-size:0.82rem;margin-bottom:1rem;">
+                                style="font-size:0.82rem;margin-bottom:1rem;">
                                 <i class="fa fa-circle-info" style="flex-shrink:0;margin-top:1px;"/>
                                 <span>
                                     Your account requires <strong>admin approval</strong>
@@ -258,7 +237,6 @@
 
                     </div>
                 </div>
-
                 <script t-attf-src="/plm_engineering/static/src/js/custom_auth.js"/>
             </body>
         </html>

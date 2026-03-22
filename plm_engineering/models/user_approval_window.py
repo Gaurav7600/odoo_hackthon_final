@@ -1,29 +1,8 @@
 # -*- coding: utf-8 -*-
-#############################################################################
-#
-#    Do Incredible
-#
-#    Copyright (C) 2024-TODAY Do Incredible(<https://www.doincredible.com>)
-#    Author: Do Incredible Team, (odoo@doincredible.com)
-#
-#    You can modify it under the terms of the GNU LESSER
-#    GENERAL PUBLIC LICENSE (LGPL v3), Version 3.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU LESSER GENERAL PUBLIC LICENSE (LGPL v3) for more details.
-#
-#    You should have received a copy of the GNU LESSER GENERAL PUBLIC LICENSE
-#    (LGPL v3) along with this program.
-#    If not, see <http://www.gnu.org/licenses/>.
-#
-#############################################################################
 from odoo import fields, models
 
 
 class UserApprovalWindow(models.Model):
-    """Store Information of Attachment Field"""
     _name = 'user.approval.window'
     _description = 'Attachment Details in User Approval Window'
     _inherit = ['mail.thread', 'mail.activity.mixin']
